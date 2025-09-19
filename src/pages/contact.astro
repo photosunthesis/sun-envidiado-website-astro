@@ -3,21 +3,25 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 type ContactItem = {
   label: string;
-  url: string;
+  value: string;
+  href: string;
 };
 
 const contactItems: ContactItem[] = [
   {
     label: "Email me at",
-    url: "mailto:sunadriann31@gmail.com",
+    value: "sunadriann31@gmail.com",
+    href: "mailto:sunadriann31@gmail.com",
   },
   {
-    label: "Connect on LinkedIn",
-    url: "https://www.linkedin.com/in/sunenvidiado/",
+    label: "Connect on LinkedIn at",
+    value: "in/sunenvidiado/",
+    href: "https://www.linkedin.com/in/sunenvidiado/",
   },
   {
-    label: "Check out my GitHub",
-    url: "https://github.com/photosunthesis",
+    label: "Check out my GitHub at",
+    value: "@photosunthesis",
+    href: "https://github.com/photosunthesis",
   },
 ];
 
@@ -34,15 +38,15 @@ const homeUrlLabel = ":home<Enter>";
       {
         contactItems.map((item) => (
           <div class="contact-row">
-            <span class="contact-type">{item.label}</span>&nbsp;
+            <span class="contact-type">{item.label}</span>
             <a
               class="contact-contact"
-              href={item.url}
+              href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={"Go to " + item.url}
+              aria-label={"Go to " + item.href}
             >
-              {item.url}
+              {item.value}
             </a>
           </div>
         ))
@@ -60,7 +64,7 @@ const homeUrlLabel = ":home<Enter>";
     margin: 1.5rem;
     color: var(--foreground);
     font-size: 1rem;
-    line-height: 1.2;
+    line-height: 1.8;
     text-align: left;
     padding: 0 1rem;
   }
