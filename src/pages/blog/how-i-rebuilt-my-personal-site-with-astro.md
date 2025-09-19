@@ -4,7 +4,6 @@ title: "How I rebuilt my personal site with Astro"
 pubDate: "2025-09-19"
 description: "Why I chose Astro, how I set this site up, tips and small examples — written from the perspective of someone coming from Flutter."
 tags: ["astro", "guide", "webdev", "migration", "react", "flutter"]
-slug: rebuilt-my-site-with-astro
 ---
 
 # How I rebuilt my personal site with Astro
@@ -19,7 +18,7 @@ Since I was coming from Flutter, I figured I'd try React. I mean, everyone uses 
 
 Big mistake. 
 
-Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language — especially something as opinionated as Flutter — the sheer number of decisions you have to make is paralyzing.™¡
+Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language — especially something as opinionated as Flutter — the sheer number of decisions you have to make is paralyzing.
 
 First I have to pick a builder (Vite? Parcel? Rsbuild), then a framework (Next.js? Remix? TanStack?), then routing (React Router? TanStack Router?), then APIs (tRPC, REST, GraphQL?), then figure out React Server Components, client/server boundaries, state managers, data fetching, TypeScript configs, linters and formatters, and a dozen other tools I’ve never heard of. All before I even write a single line of markup. And then React’s hooks model — `useState`, `useEffect`, dependency arrays, rerenders — is a whole new mental maze.
 
