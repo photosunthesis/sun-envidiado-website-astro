@@ -117,19 +117,20 @@
       cursor.style.display = "none";
     });
     window.addEventListener("resize", positionCursor);
-    // Make the entire command bar tappable — focus input when the bar is clicked/tapped
+    // Make the entire command bar clickable — focus input when the bar is clicked.
+    // Use `click` instead of pointer events so we don't interfere with scrolling on mobile.
     const bar = input.closest(".command-bar");
     if (bar) {
-      bar.addEventListener("pointerdown", (ev) => {
+      bar.addEventListener("click", (ev) => {
         // If user clicked directly on the input, let the default happen
         if (ev.target === input) return;
-        // If the input is currently focused, tapping the bar will unfocus it
+        // If the input is currently focused, clicking the bar will unfocus it
         if (document.activeElement === input) {
           input.blur();
           hideVimError();
           return;
         }
-        ev.preventDefault();
+        // Focus the input (do not preventDefault so scrolling isn't blocked)
         input.focus();
         // put caret at end
         setTimeout(
@@ -138,39 +139,6 @@
         );
       });
     }
-
-    // Global tap: toggle command bar focus when tapping non-interactive areas
-    // Use capture so we see taps before other handlers which might steal focus
-    document.addEventListener(
-      "pointerdown",
-      (ev) => {
-        const t = ev.target;
-        if (!t || !(t instanceof Element)) return;
-        // If tap landed inside the command bar, let the bar handler manage it
-        if (t.closest(".command-bar")) return;
-        // Ignore taps on interactive elements (links, inputs, buttons, labels, selects, contenteditable)
-        if (
-          t.closest(
-            "a, button, input, textarea, select, label, [contenteditable]",
-          )
-        )
-          return;
-
-        if (document.activeElement === input) {
-          // If input is focused, tapping outside unfocuses it
-          input.blur();
-          hideVimError();
-        } else {
-          // If input is not focused, tapping outside focuses it
-          // Schedule focus so other event handlers don't immediately steal it
-          setTimeout(() => {
-            input.focus();
-            input.setSelectionRange(input.value.length, input.value.length);
-          }, 0);
-        }
-      },
-      { capture: true },
-    );
 
     function handleCommand(raw) {
       if (!raw) return;
@@ -268,8 +236,8 @@
 
     // If the vim-error element is clicked/tapped, focus input and hide the error
     if (vimError) {
-      vimError.addEventListener("pointerdown", (ev) => {
-        ev.preventDefault();
+      // Use `click` so tapping the error message doesn't interfere with scroll
+      vimError.addEventListener("click", (ev) => {
         hideVimError();
         input.focus();
         setTimeout(
