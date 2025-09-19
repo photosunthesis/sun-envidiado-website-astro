@@ -1,4 +1,7 @@
 ---
+import CommandBar from "../components/CommandBar.astro";
+import "../styles/global.css"; // import global styles
+
 const {
   title = "Sun Envidiado",
   description = "Personal website of Sun Envidiado — tinkering with code, design, and ascii art.",
@@ -10,21 +13,16 @@ const {
 } = Astro.props;
 
 // Normalize site string (Astro.site can be a URL object in some setups)
-const siteStr =
-  typeof Astro.site === "string"
-    ? Astro.site
-    : Astro.site
-      ? String(Astro.site)
-      : "";
-// allow pages to pass a pathname-only `url` (e.g. `/blog/my-post`) or a full URL
-const canonical =
-  url && url.startsWith("http") ? url : `${siteStr.replace(/\/$/, "")}${url}`;
+const siteStr = String(Astro.site || "");
 
-const fullImage =
-  image && image.startsWith("http")
-    ? image
-    : `${siteStr.replace(/\/$/, "")}${image}`;
-import CommandBar from "../components/CommandBar.astro";
+// Allow pages to pass a pathname-only `url` (e.g. `/blog/my-post`) or a full URL
+const canonical = url.startsWith("http")
+  ? url
+  : siteStr.replace(/\/$/, "") + url;
+
+const fullImage = image.startsWith("http")
+  ? image
+  : siteStr.replace(/\/$/, "") + image;
 ---
 
 <html lang="en">
@@ -59,7 +57,6 @@ import CommandBar from "../components/CommandBar.astro";
     <slot name="seo" />
 
     <!-- Site resources -->
-    <link rel="stylesheet" href="/src/styles/global.css" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -104,3 +101,8 @@ import CommandBar from "../components/CommandBar.astro";
     window.addEventListener("DOMContentLoaded", renderTildes);
   </script>
 </html>
+// not accidentally covered by tilde characters on small viewports. const reservedLines
+= 3; const count = Math.max(0, Math.ceil(height / lineHeight) - reservedLines); tildeCol.textContent
+= Array(count).fill("~").join("\n"); } window.addEventListener("resize", renderTildes);
+window.addEventListener("DOMContentLoaded", renderTildes);
+
