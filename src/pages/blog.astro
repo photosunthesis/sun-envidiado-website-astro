@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const blogs = [
+  { title: "First Blog Post", slug: "first-post" },
+  { title: "Second Blog Post", slug: "second-post" },
+  { title: "Third Blog Post", slug: "third-post" },
+];
+---
+
+<BaseLayout title="Blog | Sun Envidiado's Website">
+  <div class="vim-title">Blog</div>
+  <ul id="blog-list" style="list-style:none;padding:0;">
+    {
+      blogs.map((blog, idx) => (
+        <li data-idx={idx} tabindex="0" style="margin:1rem 0;outline:none;">
+          <a href={`/blog/${blog.slug}`}>{blog.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+  <a href="/">Back to Home</a>
+</BaseLayout>
+
+<script type="module">
+  let idx = 0;
+  const items = Array.from(document.querySelectorAll("#blog-list li"));
+  function updateFocus() {
+    items.forEach((el, i) => {
+      el.style.background = i === idx ? "var(--comment)" : "none";
+    });
+    items[idx].focus();
+  }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "j") {
+      idx = (idx + 1) % items.length;
+      updateFocus();
+    }
+    if (e.key === "k") {
+      idx = (idx - 1 + items.length) % items.length;
+      updateFocus();
+    }
+    if (e.key === "Enter") {
+      items[idx].querySelector("a").click();
+    }
+  });
+  updateFocus();
+</script>

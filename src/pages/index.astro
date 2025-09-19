@@ -1,0 +1,62 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
+
+const introHeading = `Hi, I'm Sun, a programmer from the Philippines. Welcome to my little corner of the internet.`;
+const introBody = `I enjoy building software, playing games (currently hooked on Helldivers 2), and singing at karaoke. Here, you'll find my thoughts on coding, gaming, and life.`;
+
+type CommandHint = {
+	type: string;
+	command: string;
+	description: string;
+	href: string;
+};
+
+const commandHints: CommandHint[] = [
+	{
+		type: "type or tap",
+		command: ":about<Enter>",
+		description: "to learn more about me.",
+		href: "/about",
+	},
+	{
+		type: "type or tap",
+		command: ":contact<Enter>",
+		description: "to get in touch.",
+		href: "/contact",
+	},
+	{
+		type: "type or tap",
+		command: ":blog<Enter>",
+		description: "to read my latest blogs.",
+		href: "/blog",
+	},
+];
+---
+
+<BaseLayout title="Sun Envidiado">
+	<div class="index-main-content">
+		<SpinningSunAsciiArt />
+		<div class="intro-container">
+			<span class="intro-heading">{introHeading}</span>
+			<span class="intro-body">{introBody}</span>
+		</div>
+		<div class="command-hints-container">
+			{
+				commandHints.map((hint) => (
+					<div class="command-hint-row">
+						<span class="command-hint-type">{hint.type}</span>
+						<a
+							class="command-hint-command"
+							href={hint.href}
+							aria-label={"Go to " + hint.href}
+						>
+							{hint.command}
+						</a>
+						<span class="command-hint-description">{hint.description}</span>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>
