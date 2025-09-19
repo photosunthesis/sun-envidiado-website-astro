@@ -9,65 +9,83 @@ slug: rebuilt-my-site-with-astro
 
 # How I rebuilt my personal site with Astro
 
-I originally built my website with Flutter. It worked fine, but after a while I thought — hey, maybe it's time I go back to proper web development. Big mistake... or so I thought.
+I originally built my website with Flutter. And look, Flutter is great for mobile apps - I genuinely love it for that. But Flutter web? Man, that's a whole different story. The performance is questionable, SEO is a nightmare, and honestly, it just feels like trying to fit a square peg into a round hole. Flutter wasn't designed for the web, and it shows.
 
-## The React nightmare
+So I decided it was time to do this properly and go back to actual web development. How hard could it be, right?
 
-First, I tried React. Holy shit, has that ecosystem gotten complicated since I last touched web development years ago. Coming from Flutter land, I figured web dev would be familiar territory again. Wrong.
+## The React reality check
 
-`useEffect`, `useState`, tRPC, React Router — my head was spinning trying to catch up with all the new patterns and "best practices." What used to be simple suddenly felt like I needed a PhD in JavaScript frameworks just to render a page.
+Since I was coming from Flutter, I figured I'd try React. I mean, everyone uses it, the job market loves it, seemed like the obvious choice.
 
-But wait, it gets worse. Apparently React Router is old news now? There's TanStack Router. Or maybe I should use Next.js? But then everyone's talking about Remix. Or wait, should I go with Vite? What about server components? Client components? 
+Big mistake. 
 
-A framework... for a framework. Let that sink in. I know React calls itself a UI library and whatever, not an actual framework, but still damn — it has frameworks built on top of it. Like, frameworks within the React ecosystem. Next.js for full-stack. Remix for web standards. Gatsby for static sites (but that's apparently dead now?). Vite for build tooling. TanStack for routing and state management.
+Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language - especially something as opinionated as Flutter - the sheer number of decisions you have to make is paralyzing.
 
-Look, I know this website is relatively small for React — it's not like I'm building the next Facebook. But I thought it would still work fine. I spent weeks fighting with hooks, dependency arrays, and trying to understand why my components were re-rendering 47 times. Then I'd finally fix that, only to discover I needed to choose between a dozen different state management solutions. Redux? Zustand? Jotai? Context? Just `useState` everywhere? 
+Do I use Create React App? Wait, that's deprecated now. Vite then? What about Next.js? Actually, maybe Remix is better? I saw someone mention Astro too. And what about routing? React Router? Wait, there's TanStack Router now? What's the difference?
 
-And don't get me started on the build tooling rabbit hole. Webpack? Vite? Turbopack? ESBuild? The JavaScript fatigue is real. I just wanted to build a simple website, not architect a microservices platform for NASA.
+Then there's state management. Do I need Redux? Zustand? Just useState everywhere? What about server state? Should I use React Query? TanStack Query? Are those the same thing?
 
-It was exhausting. Every tutorial assumed I knew the latest meta-framework du jour, and every solution introduced three new problems I didn't know I had.
+And this is before I've written a single line of actual code for my site.
 
-Look, I'm sure React devs are going to hate me for this take, but I think my frustration is totally valid. When did building a simple website become this complicated? I shouldn't need to make 47 architectural decisions just to display some text and images.
+I know this probably sounds whiny to experienced React developers, but when you're coming from Flutter where there's basically one way to do things (Dart, Flutter's widget system, pub.dev for packages), the React ecosystem feels like analysis paralysis central.
 
-## Then I found Astro
+I spent two weeks just trying to understand the difference between client components and server components in Next.js. TWO WEEKS. For a simple personal website.
 
-After getting frustrated with React's complexity, I stumbled across Astro. The promise was simple: write less JavaScript, ship faster sites. I was skeptical, but desperate enough to try anything.
+Look, I'm sure React is powerful. I'm sure once you know the ecosystem inside and out, it's great. But for someone just trying to rebuild their personal site? The learning curve felt unnecessarily steep.
 
-Honestly? I was shocked. I had a working site in just a few days. Not weeks of configuration hell — *days*.
+## Enter Astro
 
-## What actually worked
+After getting frustrated with React's complexity (and my Flutter web site continuing to load like it's 2003), I stumbled across Astro through a random Hacker News thread.
 
-Here's what I did, in a sentence: followed the Astro docs, organized my content into Markdown files, and built simple layouts. That's it.
+The pitch was simple: write HTML and CSS like it's 2010, but with modern tooling. Less JavaScript, faster sites. Ship actual HTML instead of a JavaScript app that renders HTML.
 
-## How this thing is organized
+I was skeptical - I've been burned by "simple" frameworks before. But I was also desperate to get off Flutter web, so I gave it a shot.
 
-Looking at my project structure, here's what made sense:
+Honestly? I had a working site in three days. Not three weeks of figuring out the "right" way to structure a React app. Three actual days.
 
-- **`src/pages/`** — Every `.astro` or `.md` file here becomes a route automatically. No router config needed.
-- **`src/layouts/`** — Site shells like `BlogLayout.astro` and `BaseLayout.astro` that wrap my content.
-- **`src/components/`** — Small UI pieces (`CommandBar.astro`, `SpinningSunAsciiArt.astro`, etc.).
-- **`public/`** — Static files (favicons, fonts) that get served as-is.
+## What I actually built
 
-The markdown frontmatter + layouts combo is *chef's kiss*. I write posts in markdown, add some metadata at the top, and the layout handles the rest. No more wrestling with component state for static content.
+My setup ended up being stupidly simple:
 
-## Why Astro clicked for me
+- **`src/pages/`** - Every `.astro` or `.md` file becomes a page automatically. No routing configuration, no file-based routing setup, just files.
+- **`src/layouts/`** - Basic templates like `BlogLayout.astro` that wrap my content
+- **`src/components/`** - Small reusable pieces when I need them
+- **`public/`** - Static assets that get served directly
 
-- **Zero JavaScript by default** — Pages are static HTML unless I explicitly add interactivity.
-- **Islands architecture** — I can sprinkle in interactive components only where needed.
-- **Markdown-first** — Perfect for content sites. No fighting with MDX or complex setups.
-- **Fast dev experience** — Hot reload that actually works, builds that don't take forever.
+The killer feature for me was being able to write blog posts in actual Markdown. No JSX, no components for every paragraph, just markdown with a bit of frontmatter at the top. The layout handles everything else automatically.
 
-## My takeaways
+```markdown
+---
+title: "My Post"
+date: "2025-09-19"
+---
 
-Coming from Flutter and then bouncing off React, Astro felt like a breath of fresh air. It's not trying to be everything to everyone — it's focused on making content sites fast and easy to build.
+# This is just markdown
 
-If you're tired of JavaScript framework fatigue and just want to ship something that works, give Astro a shot. The learning curve is refreshingly gentle.
+And it works exactly like you'd expect.
+```
 
-Quick tips that helped me:
-- Think in terms of pages + layouts, not a giant single-page app
-- Put static assets in `public/` and reference them with absolute paths like `/fonts/...`
-- Only use `client:*` directives when you actually need JavaScript
+That's it. No wrestling with MDX, no figuring out how to parse markdown in React, no complex build steps.
 
-The repo for this site is on GitHub if you want to see the actual code: <a href="https://github.com/photosunthesis/sun-envidiado-website-astro" target="_blank" rel="noopener noreferrer">photosunthesis/sun-envidiado-website-astro</a>
+## Why Astro worked for me
 
-That's it — sometimes the best tools are the ones that get out of your way and let you focus on what you're actually building.
+The main thing is that Astro doesn't try to be everything. It's specifically designed for content sites, which is exactly what I needed.
+
+- **Starts with static HTML** - My pages load instantly because they're just HTML and CSS
+- **JavaScript only when needed** - I can add interactive components only where it makes sense
+- **Markdown just works** - No plugins, no configuration, just write markdown
+- **Fast development** - Hot reload actually works, builds are quick
+
+The "islands architecture" thing sounds fancy, but really it just means I can add a React component here and there if I need something interactive, without turning my entire site into a JavaScript app.
+
+## The honest truth
+
+Coming from Flutter and bouncing off React, Astro felt like someone finally built a web framework for people who just want to build websites, not JavaScript applications that happen to run in browsers.
+
+Is it perfect? No. Is it the right choice for every project? Definitely not. But for a personal site with some blog posts and maybe a few interactive elements? It's exactly what I needed.
+
+If you're also frustrated with Flutter web (seriously, why is the bundle size so huge??) or getting overwhelmed by the React ecosystem, maybe give Astro a try. The worst that happens is you waste a weekend, but you might end up with a site that actually loads fast.
+
+The code for this site is on GitHub if you want to see how simple it really is: [photosunthesis/sun-envidiado-website-astro](https://github.com/photosunthesis/sun-envidiado-website-astro)
+
+Sometimes the best tool is the one that just gets out of your way.
