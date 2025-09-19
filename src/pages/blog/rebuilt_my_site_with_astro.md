@@ -3,7 +3,7 @@ layout: ../../layouts/BlogLayout.astro
 title: "How I rebuilt my personal site with Astro"
 pubDate: "2025-09-19"
 description: "Why I chose Astro, how I set this site up, tips and small examples — written from the perspective of someone coming from Flutter."
-tags: ["astro", "guide", "webdev", "migration"]
+tags: ["astro", "guide", "webdev", "migration", "react", "flutter"]
 slug: rebuilt-my-site-with-astro
 ---
 
@@ -57,7 +57,7 @@ The markdown frontmatter + layouts combo is *chef's kiss*. I write posts in mark
 - **Markdown-first** — Perfect for content sites. No fighting with MDX or complex setups.
 - **Fast dev experience** — Hot reload that actually works, builds that don't take forever.
 
-## The honest takeaway
+## My takeaways
 
 Coming from Flutter and then bouncing off React, Astro felt like a breath of fresh air. It's not trying to be everything to everyone — it's focused on making content sites fast and easy to build.
 
