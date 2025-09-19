@@ -51,6 +51,13 @@ pnpm preview
 └─ ...
 ```
 
+## Deployment 🚀
+
+This repo uses GitHub Actions to build and deploy the site to GitHub Pages on every push to `main`.
+
+- To use a custom domain, add a `CNAME` file with your domain (e.g. `example.com`) to the `public/` folder.
+- To change deployment settings, edit `.github/workflows/deploy-pages.yml`.
+
 ### License 🪪
 
 See the [`LICENSE`](LICENSE) file for licensing details.
