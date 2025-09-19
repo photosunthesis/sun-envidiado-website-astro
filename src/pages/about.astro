@@ -1,15 +1,45 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const aboutMeText = `Hey, I'm Sun, a software developer from Manila, Philippines. I like building stuff, and I wanted my own little corner in this vast, chaotic, amazing internet, so I built this site.
+
+I've been coding for a while now, and my dev journey's been all over the place—I began with web development using C# and .NET, then got into Vue and JavaScript, somehow ended up in the PHP world with Laravel, and now I found myself focusing on Flutter development. It's pretty great how you can build for different platforms with one codebase.
+
+When I'm not coding, I'm usually gaming (totally addicted to Helldivers 2 at the moment) or doing karaoke with friends. I spend way too much time scrolling through TikTok, have a soft spot for Lucky Me's chicken sotanghon despite knowing it's terrible for me, and I can't pick between cats and dogs because I love them both equally.
+
+I gave this site a terminal/vim vibe because I think that aesthetic looks cool and techy, even though I still use VS Code like a normal person. I got into the retro-minimal look after switching from Windows to Linux. This is where I'll post about coding, games, and random things I find interesting.`;
+
+const homeUrlLabel = ":home<Enter>";
 ---
+
+<style>
+  .about-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    font-size: 1rem;
+    line-height: 1.7;
+    text-align: left;
+    white-space: pre-line;
+    padding: 0 1rem;
+  }
+
+  .about-end {
+    color: var(--comment);
+  }
+</style>
 
 <BaseLayout
   title="About"
   url="/about"
   description="Learn more about Sun Envidiado."
 >
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-    euismod, nisi eu consectetur.
-  </p>
-  <a href="/">Back to Home</a>
+  <div class="about-content">
+    <p>
+      {aboutMeText}
+    </p>
+    <p class="about-end">
+      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
+    </p>
+  </div>
 </BaseLayout>

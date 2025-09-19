@@ -160,7 +160,9 @@ button {
 }
 
 .command-hint-command[href]:hover,
-.command-hint-command[href]:focus {
+.command-hint-command[href]:focus,
+a:hover,
+a:focus {
   text-decoration: underline;
 }
 
