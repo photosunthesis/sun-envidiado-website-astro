@@ -9,7 +9,7 @@ slug: rebuilt-my-site-with-astro
 
 # How I rebuilt my personal site with Astro
 
-I originally built my website with Flutter. And look, Flutter is great for mobile apps - I genuinely love it for that. But Flutter web? Man, that's a whole different story. The performance is questionable, SEO is a nightmare, and honestly, it just feels like trying to fit a square peg into a round hole. Flutter wasn't designed for the web, and it shows.
+I originally built my website with Flutter. And look, Flutter is great for mobile apps — I genuinely love it for that. On the web, performance can actually be fine for many pages, but there are practical snags: a lot of packages don't target web, code that relies on `dart:io` needs separate handling or replacement, rendering simple images sometimes behaves oddly, and markdown workflows feel awkward compared to the web ecosystem. SEO in particular is still a real pain. Those practical limits made maintaining a content-focused site more work than I wanted.
 
 So I decided it was time to do this properly and go back to actual web development. How hard could it be, right?
 
@@ -19,17 +19,11 @@ Since I was coming from Flutter, I figured I'd try React. I mean, everyone uses 
 
 Big mistake. 
 
-Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language - especially something as opinionated as Flutter - the sheer number of decisions you have to make is paralyzing.
+Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language - especially something as opinionated as Flutter - the sheer number of decisions you have to make is paralyzing.react
 
-Do I use Create React App? Wait, that's deprecated now. Vite then? What about Next.js? Actually, maybe Remix is better? I saw someone mention Astro too. And what about routing? React Router? Wait, there's TanStack Router now? What's the difference?
+First I have to pick a builder like Vite or esbuild, then a framework like Next.js, Remix, or TanStack. Then there are routing libraries (React Router vs TanStack Router), API patterns (tRPC vs REST vs GraphQL), React Server Components and client/server component models, state managers and data-fetching patterns, TypeScript configs, and a dozen linters/formatters. Add JavaScript/TypeScript quirks and tooling footguns, and the decisions stack up before I’ve written a single line of markup. On top of that, React’s hooks model — `useState`, `useEffect`, dependency arrays and rerenders — has its own learning curve. Ensuring effects run correctly, avoiding stale closures, and preventing unnecessary re-renders is extra cognitive overhead for tiny interactive bits.
 
-Then there's state management. Do I need Redux? Zustand? Just useState everywhere? What about server state? Should I use React Query? TanStack Query? Are those the same thing?
-
-And this is before I've written a single line of actual code for my site.
-
-I know this probably sounds whiny to experienced React developers, but when you're coming from Flutter where there's basically one way to do things (Dart, Flutter's widget system, pub.dev for packages), the React ecosystem feels like analysis paralysis central.
-
-I spent two weeks just trying to understand the difference between client components and server components in Next.js. TWO WEEKS. For a simple personal website.
+Coming from Flutter — which tends to have a recommended way and a coherent toolchain — all of that felt needlessly fragmented for a simple personal site.
 
 Look, I'm sure React is powerful. I'm sure once you know the ecosystem inside and out, it's great. But for someone just trying to rebuild their personal site? The learning curve felt unnecessarily steep.
 
