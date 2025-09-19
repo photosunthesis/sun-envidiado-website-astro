@@ -1,6 +1,6 @@
 @font-face {
   font-family: "ToshibaSat8x14";
-  src: url("/fonts/Web437_ToshibaSat_8x14.woff") format("woff");
+  src: url("/fonts/Web437_ToshibaSat_8x14.woff2") format("woff2"), url("/fonts/Web437_ToshibaSat_8x14.woff") format("woff");
   font-display: swap;
   font-weight: normal;
   font-style: normal;
