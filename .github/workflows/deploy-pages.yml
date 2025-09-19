@@ -29,9 +29,10 @@ jobs:
         run: pnpm build
 
       - name: Upload Pages artifact
+        id: deployment
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: dist
 
   deploy:
     needs: build-and-deploy
@@ -40,6 +41,9 @@ jobs:
       name: github-pages
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Deploy to GitHub Pages
-        id: deploy
-        uses: actions/deploy-pages@v1
+        id: deployment
+        uses: actions/deploy-pages@v4
