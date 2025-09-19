@@ -12,6 +12,21 @@ I gave this site a terminal/vim vibe because I think that aesthetic looks cool a
 const homeUrlLabel = ":home<Enter>";
 ---
 
+<BaseLayout
+  title="About"
+  url="/about"
+  description="Learn more about Sun Envidiado."
+>
+  <div class="about-content">
+    <p>
+      {aboutMeText}
+    </p>
+    <p class="about-end">
+      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
+    </p>
+  </div>
+</BaseLayout>
+
 <style>
   .about-content {
     max-width: 600px;
@@ -28,18 +43,3 @@ const homeUrlLabel = ":home<Enter>";
     color: var(--comment);
   }
 </style>
-
-<BaseLayout
-  title="About"
-  url="/about"
-  description="Learn more about Sun Envidiado."
->
-  <div class="about-content">
-    <p>
-      {aboutMeText}
-    </p>
-    <p class="about-end">
-      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
-    </p>
-  </div>
-</BaseLayout>
