@@ -51,32 +51,32 @@
 
 <script type="module">
   document.addEventListener("DOMContentLoaded", () => {
-    const spinningSunAsciiText = `
+    const spinningSunAsciiText = `                         ##                       
+                       #####                      
+                       #####                      
+                       #####                      
+         ####          #####          #####       
+         ######          ##         #######       
+         #######    ############   #######        
+           ##### ################# #####          
+               #####################              
+              #######         #######             
+             ######             ######            
+             #####                ####            
+  ######### #####                 ##### ######### 
+  ######### #####                 ##### ######### 
+    ######   #####                ####   #######  
+             ######              #####            
+              #######          ######             
+               #####################              
+            #### ################## ###           
+          ######   #############   ######         
+         #######                   ########       
+         #####         #####         ######       
+          ##           #####            #         
+                       #####                      
+                       #####                      
                         ###                       
-                        ###                       
-                        ###                       
-          ##            ###            ###        
-          ####                       #####        
-           ####                     ####          
-             ##    ##############    #            
-                ######        #####               
-               ####             ####              
-              ####                ###             
-             ####                  ###            
-    ######   ###                   ###   #######  
-   ########  ###                   ###   #######  
-             ####                  ###            
-              ###                 ###             
-               ####             #####             
-                #####         #####               
-                  ###############                 
-            ###       #######       ####          
-          ####                       ####         
-          ##            ###            ###        
-                        ###                       
-                        ###                       
-                        ###                       
-                                                  
                          ###                      
                         #####                     
                         #####                     
@@ -1090,12 +1090,12 @@
           ###           #####                     
                         #####                     
                         #####                     
-                         ###
-
+                         ###                      
 `;
+
     const FRAME_LINES = 26;
     const FRAMES = (() => {
-      const lines = spinningSunAsciiText.trimEnd().split("\n");
+      const lines = spinningSunAsciiText.split("\n");
       const frames = [];
       for (let i = 0; i < lines.length; i += FRAME_LINES) {
         const frame = lines.slice(i, i + FRAME_LINES).join("\n");
@@ -1104,7 +1104,7 @@
       return frames;
     })();
 
-    const INTERVAL_MS = 200;
+    const INTERVAL_MS = 600;
     const pre = document.getElementById("spinning-sun-pre");
     if (!pre) return;
 
