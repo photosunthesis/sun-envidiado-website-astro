@@ -1,12 +1,71 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+type ContactItem = {
+  label: string;
+  url: string;
+};
+
+const contactItems: ContactItem[] = [
+  {
+    label: "Email me at",
+    url: "mailto:sunadriann31@gmail.com",
+  },
+  {
+    label: "Connect on LinkedIn",
+    url: "https://www.linkedin.com/in/sunenvidiado/",
+  },
+  {
+    label: "Check out my GitHub",
+    url: "https://github.com/photosunthesis",
+  },
+];
+
+const homeUrlLabel = ":home<Enter>";
 ---
 
-<BaseLayout title="Contact | Sun Envidiado's Website">
-  <div class="vim-title">Contact</div>
-  <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque
-    euismod, nisi eu consectetur.
-  </p>
-  <a href="/">Back to Home</a>
+<BaseLayout
+  title="Contact"
+  url="/contact"
+  description="Get in touch with Sun Envidiado."
+>
+  <div class="contact-content">
+    <div class="contact-container">
+      {
+        contactItems.map((item) => (
+          <div class="contact-row">
+            <span class="contact-type">{item.label}</span>&nbsp;
+            <a
+              class="contact-contact"
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={"Go to " + item.url}
+            >
+              {item.url}
+            </a>
+          </div>
+        ))
+      }
+    </div>
+    <p class="contact-end">
+      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
+    </p>
+  </div>
 </BaseLayout>
+
+<style>
+  .contact-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    font-size: 1rem;
+    line-height: 1.7;
+    text-align: left;
+    padding: 0 1rem;
+  }
+
+  .contact-end {
+    color: var(--comment);
+  }
+</style>
