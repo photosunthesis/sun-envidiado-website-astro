@@ -9,7 +9,7 @@ slug: rebuilt-my-site-with-astro
 
 # How I rebuilt my personal site with Astro
 
-I originally built my website with Flutter. And look, Flutter is great for mobile apps — I genuinely love it for that. On the web, performance can actually be fine for many pages, but there are practical snags: a lot of packages don't target web, code that relies on `dart:io` needs separate handling or replacement, rendering simple images sometimes behaves oddly, and markdown workflows feel awkward compared to the web ecosystem. SEO in particular is still a real pain. Those practical limits made maintaining a content-focused site more work than I wanted.
+I originally built my website with Flutter. And look, Flutter is great for mobile apps — I genuinely love it for that. On the web, performance can actually be fine for many pages, but there are practical snags: a lot of packages don't target web, code that relies on `dart:io` needs separate handling or replacement, rendering simple images sometimes behaves oddly, and working with markdown is often trickier than it would be in regular JavaScript. Also, SEO in particular is still a real pain. Those practical limits made maintaining a content-focused site more work than I wanted.
 
 So I decided it was time to do this properly and go back to actual web development. How hard could it be, right?
 
@@ -19,9 +19,9 @@ Since I was coming from Flutter, I figured I'd try React. I mean, everyone uses 
 
 Big mistake. 
 
-Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language - especially something as opinionated as Flutter - the sheer number of decisions you have to make is paralyzing.react
+Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language — especially something as opinionated as Flutter — the sheer number of decisions you have to make is paralyzing.™¡
 
-First I have to pick a builder like Vite or esbuild, then a framework like Next.js, Remix, or TanStack. Then there are routing libraries (React Router vs TanStack Router), API patterns (tRPC vs REST vs GraphQL), React Server Components and client/server component models, state managers and data-fetching patterns, TypeScript configs, and a dozen linters/formatters. Add JavaScript/TypeScript quirks and tooling footguns, and the decisions stack up before I’ve written a single line of markup. On top of that, React’s hooks model — `useState`, `useEffect`, dependency arrays and rerenders — has its own learning curve. Ensuring effects run correctly, avoiding stale closures, and preventing unnecessary re-renders is extra cognitive overhead for tiny interactive bits.
+First I have to pick a builder (Vite? Parcel? Rsbuild), then a framework (Next.js? Remix? TanStack?), then routing (React Router? TanStack Router?), then APIs (tRPC, REST, GraphQL?), then figure out React Server Components, client/server boundaries, state managers, data fetching, TypeScript configs, linters and formatters, and a dozen other tools I’ve never heard of. All before I even write a single line of markup. And then React’s hooks model — `useState`, `useEffect`, dependency arrays, rerenders — is a whole new mental maze.
 
 Coming from Flutter — which tends to have a recommended way and a coherent toolchain — all of that felt needlessly fragmented for a simple personal site.
 
@@ -29,13 +29,11 @@ Look, I'm sure React is powerful. I'm sure once you know the ecosystem inside an
 
 ## Enter Astro
 
-After getting frustrated with React's complexity (and my Flutter web site continuing to load like it's 2003), I stumbled across Astro through a random Hacker News thread.
+After getting frustrated with React's complexity, I stumbled across Astro through a random Reddit thread.
 
 The pitch was simple: write HTML and CSS like it's 2010, but with modern tooling. Less JavaScript, faster sites. Ship actual HTML instead of a JavaScript app that renders HTML.
 
-I was skeptical - I've been burned by "simple" frameworks before. But I was also desperate to get off Flutter web, so I gave it a shot.
-
-Honestly? I had a working site in three days. Not three weeks of figuring out the "right" way to structure a React app. Three actual days.
+Astro promised simplicity, and it delivered exactly what I needed. Wanting to move away from Flutter web, I gave it a try—and within three days, I had a working site. Not a week spent figuring out the "right" way to structure a React app. Three actual days, start to finish.
 
 ## What I actually built
 
@@ -72,14 +70,14 @@ The main thing is that Astro doesn't try to be everything. It's specifically des
 
 The "islands architecture" thing sounds fancy, but really it just means I can add a React component here and there if I need something interactive, without turning my entire site into a JavaScript app.
 
-## The honest truth
+## Final thoughts
 
 Coming from Flutter and bouncing off React, Astro felt like someone finally built a web framework for people who just want to build websites, not JavaScript applications that happen to run in browsers.
 
-Is it perfect? No. Is it the right choice for every project? Definitely not. But for a personal site with some blog posts and maybe a few interactive elements? It's exactly what I needed.
+Is it great? Pretty great! Is it the right choice for every project? Definitely not. But for a personal site with some blog posts and maybe a few interactive elements? It's exactly what I needed.
 
-If you're also frustrated with Flutter web (seriously, why is the bundle size so huge??) or getting overwhelmed by the React ecosystem, maybe give Astro a try. The worst that happens is you waste a weekend, but you might end up with a site that actually loads fast.
+If you're also frustrated with Flutter web or getting overwhelmed by the React ecosystem, maybe give Astro a try. The worst that happens is you waste a weekend, but you might end up with a site that actually loads fast.
 
-The code for this site is on GitHub if you want to see how simple it really is: [photosunthesis/sun-envidiado-website-astro](https://github.com/photosunthesis/sun-envidiado-website-astro)
+The code for this site is on GitHub if you want to see how simple it really is: https://github.com/photosunthesis/sun-envidiado-website-astro
 
 Sometimes the best tool is the one that just gets out of your way.
