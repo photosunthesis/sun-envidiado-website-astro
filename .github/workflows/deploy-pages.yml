@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy Astro Site to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -11,7 +11,8 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build Astro Site
     runs-on: ubuntu-latest
 
     steps:
@@ -35,7 +36,8 @@ jobs:
           path: dist
 
   deploy:
-    needs: build-and-deploy
+    name: Deploy to GitHub Pages
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
