@@ -150,8 +150,8 @@ a:focus {
 
 .vim-error {
   position: fixed;
-  left: 2.5rem;
-  bottom: 0.7rem;
+  left: 0.5rem;
+  bottom: 0.4rem;
   display: inline-flex;
   align-items: center;
   padding: 0.3rem 0.4rem;
@@ -169,6 +169,10 @@ a:focus {
   position: relative;
   display: inline-block;
   margin-left: -8px;
+}
+
+.command-bar {
+  margin-left: 0.5rem;
 }
 
 .command-bar:focus-within {
@@ -194,12 +198,11 @@ a:focus {
   position: absolute;
   top: 0;
   left: 0;
-  width: 0.8ch;
   background: var(--foreground);
   opacity: 0.95;
   display: none;
   transform: translateY(0.1em);
-  border-radius: 1px;
+  border-radius: 2px;
   pointer-events: none;
   z-index: 10001;
   animation: cmd-cursor-blink 1s steps(1) infinite;
@@ -216,9 +219,7 @@ a:focus {
 }
 
 .cmd-cursor {
+  /* Default block caret sizing; width/height set dynamically by script */
   display: inline-block;
-  width: 1ch;
-  background: var(--foreground);
   height: 1em;
-  margin-left: -2px;
 }

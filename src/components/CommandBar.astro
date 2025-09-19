@@ -3,7 +3,7 @@
 ---
 
 <div class="command-bar" role="region" aria-label="Command bar">
-  <span class="cmd-colon">:</span>
+  <!-- removed static colon so users must type ':' themselves -->
   <span class="cmd-wrapper">
     <input
       id="site-command-input"
@@ -34,7 +34,7 @@
     function showVimError(text) {
       if (!vimError) return;
       // Use the classic Vim code for unknown command
-      vimError.textContent = `E492: Not an editor command: ${text}`;
+      vimError.textContent = `ERROR: "${text}" is not a valid command`;
       vimError.style.display = "block";
     }
 
@@ -71,15 +71,25 @@
       if (!wrapper) return;
       // measure the input's value width
       const value = input.value || "";
-      // If value starts with ':' and it's added automatically, include it in measurement
       const textForMeasure = value;
       const textWidth = measureTextWidth(textForMeasure);
-      // left offset: input's left inside wrapper plus measured width
-      const inputRect = input.getBoundingClientRect();
-      const wrapperRect = wrapper.getBoundingClientRect();
-      const left =
-        textWidth + (parseFloat(getComputedStyle(input).paddingLeft) || 0);
+      const style = getComputedStyle(input);
+      const paddingLeft = parseFloat(style.paddingLeft) || 0;
+      const scrollLeft = input.scrollLeft || 0;
+      // input offset relative to wrapper
+      const inputOffsetLeft = input.offsetLeft || 0;
+      // left position relative to wrapper
+      const left = inputOffsetLeft + paddingLeft + textWidth - scrollLeft;
       cursor.style.left = `${left}px`;
+
+      // caret width: measure last character if present, otherwise 0.8ch
+      const lastChar = value.slice(-1) || " ";
+      const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
+      // fallback to 0.6em if measurement fails
+      const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
+      const caretWidth = Math.max(charWidth, fallbackWidth);
+      cursor.style.width = `${caretWidth}px`;
+
       cursor.style.height = `${input.clientHeight}px`;
       cursor.style.display =
         document.activeElement === input ? "block" : "none";
@@ -113,6 +123,12 @@
       bar.addEventListener("pointerdown", (ev) => {
         // If user clicked directly on the input, let the default happen
         if (ev.target === input) return;
+        // If the input is currently focused, tapping the bar will unfocus it
+        if (document.activeElement === input) {
+          input.blur();
+          hideVimError();
+          return;
+        }
         ev.preventDefault();
         input.focus();
         // put caret at end
@@ -123,6 +139,39 @@
       });
     }
 
+    // Global tap: toggle command bar focus when tapping non-interactive areas
+    // Use capture so we see taps before other handlers which might steal focus
+    document.addEventListener(
+      "pointerdown",
+      (ev) => {
+        const t = ev.target;
+        if (!t || !(t instanceof Element)) return;
+        // If tap landed inside the command bar, let the bar handler manage it
+        if (t.closest(".command-bar")) return;
+        // Ignore taps on interactive elements (links, inputs, buttons, labels, selects, contenteditable)
+        if (
+          t.closest(
+            "a, button, input, textarea, select, label, [contenteditable]",
+          )
+        )
+          return;
+
+        if (document.activeElement === input) {
+          // If input is focused, tapping outside unfocuses it
+          input.blur();
+          hideVimError();
+        } else {
+          // If input is not focused, tapping outside focuses it
+          // Schedule focus so other event handlers don't immediately steal it
+          setTimeout(() => {
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+          }, 0);
+        }
+      },
+      { capture: true },
+    );
+
     function handleCommand(raw) {
       if (!raw) return;
       const val = raw.trim();
@@ -131,6 +180,41 @@
       if (!token) return;
 
       const cmd = token.toLowerCase();
+
+      // Support explicit blog selection syntax like `blog[1]` or `b[1]` (case-insensitive)
+      const blogMatch = cmd.match(/^(?:blog|b)\[(\d+)\]$/i);
+      if (blogMatch) {
+        const idx = Number(blogMatch[1]);
+        const el = document.querySelector(`[data-blog-index="${idx}"]`);
+        if (el && el instanceof HTMLElement) {
+          const url = el.getAttribute("data-blog-url");
+          if (url) {
+            window.location.href = url;
+            return;
+          }
+        }
+        showVimError(cmd);
+        return;
+      }
+
+      // If we're on the blog index and the command is just a number, treat it as selecting that indexed post
+      const numeric = Number(cmd);
+      if (
+        !Number.isNaN(numeric) &&
+        typeof window !== "undefined" &&
+        window.location.pathname.startsWith("/blog")
+      ) {
+        const el = document.querySelector(`[data-blog-index="${numeric}"]`);
+        if (el && el instanceof HTMLElement) {
+          const url = el.getAttribute("data-blog-url");
+          if (url) {
+            window.location.href = url;
+            return;
+          }
+        }
+        showVimError(cmd);
+        return;
+      }
 
       switch (cmd) {
         case "home":
@@ -217,8 +301,6 @@
       ) {
         e.preventDefault();
         input.focus();
-        // Put leading ':' if not present
-        if (!input.value.startsWith(":")) input.value = ":";
         setTimeout(
           () => input.setSelectionRange(input.value.length, input.value.length),
           0,

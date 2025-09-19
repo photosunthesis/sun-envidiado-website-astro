@@ -1,0 +1,140 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const backUrlLabel = ":back<Enter>";
+const homeUrlLabel = ":home<Enter>";
+const { frontmatter = {}, ...restProps } = Astro.props || {};
+const { title = "Blog", description = "" } = frontmatter;
+const rest = { ...restProps };
+
+delete rest.title;
+delete rest.description;
+delete rest.frontmatter;
+---
+
+<BaseLayout title={title} description={description} {...rest}>
+  <div class="blog-layout">
+    <slot />
+    <footer class="blog-footer">
+      <p class="blog-footer-text">
+        Tap or type
+        <a href="#" onclick="history.back(); return false;">{backUrlLabel}</a>
+        or
+        <a href="/">{homeUrlLabel}</a>
+        to go back or return to the homepage.
+      </p>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .blog-layout {
+    margin: 1.5rem;
+    max-width: 600px;
+  }
+
+  h1 {
+    line-height: 1.2;
+    font-size: 1.4rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+  h2 {
+    line-height: 1.2;
+    font-size: 1.2rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+  h3 {
+    line-height: 1.2;
+    font-size: 1.1rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+  h4 {
+    line-height: 1.2;
+    font-size: 1rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+  h5 {
+    line-height: 1.2;
+    font-size: 0.9rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+  h6 {
+    line-height: 1.2;
+    font-size: 0.8rem;
+    text-align: left;
+    padding-bottom: 0.5rem;
+    color: var(--purple);
+  }
+
+  p {
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .blog-layout,
+  .blog-layout * {
+    text-align: left !important;
+  }
+
+  .blog-layout pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: 1rem;
+    border-radius: 8px;
+    overflow: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+      "DejaVu Sans Mono", monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 1rem 0;
+  }
+
+  .blog-layout code {
+    background: transparent;
+    padding: 0;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.98em;
+    color: var(--code-inline-color, #b16286);
+  }
+
+  .blog-layout pre {
+    white-space: pre-wrap;
+    word-break: break-word;
+    text-align: left;
+  }
+
+  .blog-layout pre code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
+      "DejaVu Sans Mono", monospace;
+    color: var(--code-fg);
+  }
+
+  .blog-layout ul,
+  .blog-layout ol {
+    margin-left: 1.1rem;
+    padding-left: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .blog-layout li {
+    margin: 0.45rem 0;
+    line-height: 1.5;
+  }
+
+  .blog-footer {
+    margin-top: 2rem;
+    color: var(--comment);
+  }
+</style>

@@ -1,48 +1,149 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const blogs = [
-  { title: "First Blog Post", slug: "first-post" },
-  { title: "Second Blog Post", slug: "second-post" },
-  { title: "Third Blog Post", slug: "third-post" },
-];
+// Import all Markdown blog posts in this folder (eager so frontmatter is available)
+const modules = import.meta.glob("./blog/*.md", { eager: true });
+
+// Build an array of posts with frontmatter and url
+type Post = { title: string; pubDate: Date; url: string; index?: number };
+const postList = Object.entries(modules)
+  .map(([path, mod]) => {
+    const parts = path.split("/");
+    const last = parts.pop() || "";
+    const slug = last.replace(/\.md$/, "");
+    const fm = (mod as any).frontmatter || {};
+    const pubDate = fm.pubDate ? new Date(fm.pubDate) : null;
+    return {
+      title: fm.title || slug,
+      pubDate,
+      url: `/blog/${slug}`,
+    } as Post;
+  })
+  .filter((p) => p.pubDate) as Post[];
+
+// Sort by date desc
+postList.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+
+// Add stable numeric index (1-based) for command selection and index listing
+postList.forEach((p, i) => (p.index = i));
+
+// Group by year
+const grouped: Record<number, Post[]> = {};
+for (const post of postList) {
+  const year = post.pubDate.getFullYear();
+  if (!grouped[year]) grouped[year] = [];
+  grouped[year].push(post);
+}
+
+const homeUrlLabel = ":home<Enter>";
+const blogIndexLabel = ":blog[index]";
 ---
 
-<BaseLayout title="Blog | Sun Envidiado's Website">
-  <div class="vim-title">Blog</div>
-  <ul id="blog-list" style="list-style:none;padding:0;">
-    {
-      blogs.map((blog, idx) => (
-        <li data-idx={idx} tabindex="0" style="margin:1rem 0;outline:none;">
-          <a href={`/blog/${blog.slug}`}>{blog.title}</a>
-        </li>
-      ))
-    }
-  </ul>
-  <a href="/">Back to Home</a>
+<BaseLayout title="Blog" description="List of all blog posts.">
+  <div class="blog-content">
+    <p class="blog-content-start">
+      Select a blog post by tapping its title or typing <a href="/"
+        >{blogIndexLabel}</a
+      >. To return to the homepage, tap or type <a href="/">{homeUrlLabel}</a>.
+    </p>
+    <div class="posts-wrapper">
+      {
+        Object.keys(grouped)
+          .sort((a, b) => Number(b) - Number(a))
+          .map((year) => (
+            <section class="year-group">
+              <h2 class="year-heading">{year}</h2>
+              <ul class="year-list">
+                {grouped[Number(year)].map((post) => (
+                  <li
+                    class="post-row"
+                    data-blog-index={post.index}
+                    data-blog-url={post.url}
+                  >
+                    <span class="post-index">{post.index}</span>
+                    <a class="post-link" href={post.url}>
+                      {post.title}
+                    </a>
+                    <time class="post-date">
+                      {post.pubDate.toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+      }
+    </div>
+  </div>
 </BaseLayout>
 
-<script type="module">
-  let idx = 0;
-  const items = Array.from(document.querySelectorAll("#blog-list li"));
-  function updateFocus() {
-    items.forEach((el, i) => {
-      el.style.background = i === idx ? "var(--comment)" : "none";
-    });
-    items[idx].focus();
+<style>
+  .blog-content-start {
+    color: var(--comment);
+    margin-bottom: 1rem;
   }
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "j") {
-      idx = (idx + 1) % items.length;
-      updateFocus();
-    }
-    if (e.key === "k") {
-      idx = (idx - 1 + items.length) % items.length;
-      updateFocus();
-    }
-    if (e.key === "Enter") {
-      items[idx].querySelector("a").click();
-    }
-  });
-  updateFocus();
-</script>
+
+  .blog-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+  }
+
+  .year-heading {
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: left;
+    color: var(--yellow);
+  }
+
+  .year-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .post-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: 0.8rem;
+  }
+
+  .post-index {
+    color: var(--foreground);
+    font-weight: 700;
+    min-width: 2.4ch;
+    text-align: left;
+    display: inline-block;
+    margin-right: 0.6rem;
+  }
+
+  .post-link {
+    color: var(--cyan);
+    font-weight: 600;
+    text-decoration: none;
+    text-align: left;
+    line-height: 1.2rem;
+  }
+
+  .post-link:hover,
+  .post-link:focus {
+    text-decoration: underline;
+  }
+
+  .post-date {
+    color: var(--foreground);
+    font-size: 0.9rem;
+    white-space: nowrap;
+    margin-left: auto;
+  }
+</style>
