@@ -2,53 +2,54 @@
 layout: ../../layouts/BlogLayout.astro
 title: "How I rebuilt my personal site with Astro"
 pubDate: "2025-09-19"
-description: "Why I chose Astro, how I set this site up, tips and small examples — written from the perspective of someone coming from Flutter."
-tags: ["astro", "guide", "webdev", "migration", "react", "flutter"]
+description: "A Flutter developer's journey through React's complexity to building a fast, content-focused personal site with Astro."
+tags: ["astro", "webdev", "content-site", "flutter-to-web", "personal-site"]
 ---
 
 # How I rebuilt my personal site with Astro
 
-I originally built my website with Flutter. And look, Flutter is great for mobile apps — I genuinely love it for that. On the web, performance can actually be fine for many pages, but there are practical snags: a lot of packages don't target web, code that relies on `dart:io` needs separate handling or replacement, rendering simple images sometimes behaves oddly, and working with markdown is often trickier than it would be in regular JavaScript. Also, SEO in particular is still a real pain. Those practical limits made maintaining a content-focused site more work than I wanted.
+I originally built my website with Flutter. Just a simple home page, about, and contact — nothing fancy. I had plans to add a blog section but never got around to it.
 
-So I decided it was time to do this properly and go back to actual web development. How hard could it be, right?
+Flutter's great for mobile apps, but on the web it has some rough edges: packages that don't support web, `dart:io` compatibility issues, weird image rendering quirks, and SEO that's more trouble than it's worth. For a simple content site, these friction points added up. Time to go back to actual web development.
 
-## The React reality check
+## Why I tried React first
 
-Since I was coming from Flutter, I figured I'd try React. I mean, everyone uses it, the job market loves it, seemed like the obvious choice.
+When you think "web development," you think React. It's everywhere, every job posting wants it, every tutorial assumes you're using it. I actually did web development years ago before switching to Flutter, so coming back to it seemed like a natural next step.
 
-Big mistake. 
+Holy shit, what a mess the web has become.
 
-Maybe this is just a "me" problem, but holy hell, has the React ecosystem gotten overwhelming. I spent more time researching what I should use than actually building anything. When you're coming from a different framework or language — especially something as opinionated as Flutter — the sheer number of decisions you have to make is paralyzing.
+React itself? Honestly, I think it sucks. Though to be fair, I'm a Dart/Flutter dev, so my opinion on JavaScript frameworks is probably about as valid as asking a cat about dog food. But seriously, the mental model is weird to me. You're constantly thinking about renders, dependencies, when effects run, what causes what to update. For something as simple as "show some text on a page," you're managing state and lifecycle hooks.
 
-First I have to pick a builder (Vite? Parcel? Rsbuild), then a framework (Next.js? Remix? TanStack?), then routing (React Router? TanStack Router?), then APIs (tRPC, REST, GraphQL?), then figure out React Server Components, client/server boundaries, state managers, data fetching, TypeScript configs, linters and formatters, and a dozen other tools I’ve never heard of. All before I even write a single line of markup. And then React’s hooks model — `useState`, `useEffect`, dependency arrays, rerenders — is a whole new mental maze.
+And that's before you get to the ecosystem, which is completely different from the web I remember. The number of decisions you have to make before writing any actual code is insane: bundler, framework, router, state management, TypeScript config, linting, formatting. Each has multiple "right" answers depending on who you ask.
 
-Coming from Flutter — which tends to have a recommended way and a coherent toolchain — all of that felt needlessly fragmented for a simple personal site.
+I spent weeks reading about the "correct" way to structure a React app instead of just building a website. Back when I did web dev, you just... made a website. Now there are meta-frameworks for frameworks and build tools for build tools.
 
-Look, I'm sure React is powerful. I'm sure once you know the ecosystem inside and out, it's great. But for someone just trying to rebuild their personal site? The learning curve felt unnecessarily steep.
+## Finding Astro
 
-## Enter Astro
+After giving up on React, I saw someone mention Astro in a random comment. The pitch was dead simple: write HTML and CSS, but with modern tooling. Ship HTML pages instead of JavaScript apps that render HTML.
 
-After getting frustrated with React's complexity, I stumbled across Astro through a random Reddit thread.
+I figured I'd give it a weekend.
 
-The pitch was simple: write HTML and CSS like it's 2010, but with modern tooling. Less JavaScript, faster sites. Ship actual HTML instead of a JavaScript app that renders HTML.
+Three days later, I had a working site with the blog section I never got around to building in Flutter.
 
-Astro promised simplicity, and it delivered exactly what I needed. Wanting to move away from Flutter web, I gave it a try—and within three days, I had a working site. Not a week spent figuring out the "right" way to structure a React app. Three actual days, start to finish.
+## What I ended up with
 
-## What I actually built
+The structure is straightforward:
 
-My setup ended up being stupidly simple:
+- **`src/pages/`** - Files become pages automatically. No routing config needed.
+- **`src/layouts/`** - Templates that wrap content  
+- **`src/components/`** - Reusable pieces when needed
+- **`public/`** - Static files
+- **`src/content/`** - Collections for blog posts with type safety
 
-- **`src/pages/`** - Every `.astro` or `.md` file becomes a page automatically. No routing configuration, no file-based routing setup, just files.
-- **`src/layouts/`** - Basic templates like `BlogLayout.astro` that wrap my content
-- **`src/components/`** - Small reusable pieces when I need them
-- **`public/`** - Static assets that get served directly
-
-The killer feature for me was being able to write blog posts in actual Markdown. No JSX, no components for every paragraph, just markdown with a bit of frontmatter at the top. The layout handles everything else automatically.
+The killer feature for me: blog posts are just markdown files with frontmatter. No JSX, no components for paragraphs, no complex setup.
 
 ```markdown
 ---
 title: "My Post"
 date: "2025-09-19"
+description: "Just a regular blog post"
+tags: ["web", "astro"]
 ---
 
 # This is just markdown
@@ -56,27 +57,22 @@ date: "2025-09-19"
 And it works exactly like you'd expect.
 ```
 
-That's it. No wrestling with MDX, no figuring out how to parse markdown in React, no complex build steps.
+Astro automatically generates pages from these, handles the frontmatter as metadata, and I can query collections with full TypeScript support. For someone who just wants to write blog posts without fighting a CMS or building a complex content pipeline, it's perfect.
 
-## Why Astro worked for me
+## Why it works for my specific needs
 
-The main thing is that Astro doesn't try to be everything. It's specifically designed for content sites, which is exactly what I needed.
+Astro happened to match exactly what I was trying to build: a simple personal site with a blog. Since I'm not building a complex app, the HTML-first approach made sense. Pages load as actual HTML and CSS, with JavaScript only where I explicitly add it.
 
-- **Starts with static HTML** - My pages load instantly because they're just HTML and CSS
-- **JavaScript only when needed** - I can add interactive components only where it makes sense
-- **Markdown just works** - No plugins, no configuration, just write markdown
-- **Fast development** - Hot reload actually works, builds are quick
+The content collections feature is designed specifically for sites like mine — blogs, portfolios, documentation. I can define a schema for my posts, get TypeScript autocompletion, and Astro handles all the page generation automatically.
 
-The "islands architecture" thing sounds fancy, but really it just means I can add a React component here and there if I need something interactive, without turning my entire site into a JavaScript app.
+For my particular situation — coming back to web dev after years in Flutter land and getting overwhelmed by React's ecosystem — having fewer decisions to make was exactly what I needed. I could focus on writing content and building pages instead of configuring build tools.
+
+The development experience is also smooth for content sites. Hot reload works properly, builds are fast, and I'm not fighting the framework to do basic things like adding a new blog post or tweaking a layout.
 
 ## Final thoughts
 
-Coming from Flutter and bouncing off React, Astro felt like someone finally built a web framework for people who just want to build websites, not JavaScript applications that happen to run in browsers.
+Astro worked for my specific use case: simple personal site with a blog that loads fast. It's not some revolutionary framework, just happened to fit exactly what I was trying to do.
 
-Is it great? Pretty great! Is it the right choice for every project? Definitely not. But for a personal site with some blog posts and maybe a few interactive elements? It's exactly what I needed.
+If you're building a complex interactive app, React or Vue or whatever probably makes more sense. If you're deep in the JavaScript ecosystem already, this might not be relevant. But if you're trying to build a content-focused site and getting overwhelmed by framework complexity, maybe worth a look.
 
-If you're also frustrated with Flutter web or getting overwhelmed by the React ecosystem, maybe give Astro a try. The worst that happens is you waste a weekend, but you might end up with a site that actually loads fast.
-
-The code for this site is on GitHub if you want to see how simple it really is: https://github.com/photosunthesis/sun-envidiado-website-astro
-
-Sometimes the best tool is the one that just gets out of your way.
+The code for this project is on GitHub if you're curious: https://github.com/photosunthesis/sun-envidiado-website-astro
