@@ -34,13 +34,24 @@ Three days later, I had a working site with the blog section I never got around 
 
 ## What I ended up with
 
-The structure is straightforward:
+The structure is straightforward — here's a compact directory example:
 
-- **`src/pages/`** - Files become pages automatically. No routing config needed.
-- **`src/layouts/`** - Templates that wrap content  
-- **`src/components/`** - Reusable pieces when needed
-- **`public/`** - Static files
-- **`src/content/`** - Collections for blog posts with type safety
+```text
+src/
+├─ pages/
+│   ├─ index.astro      # homepage
+│   └─ blog/            # individual posts
+│       └─ my-post.md   # example post
+│       ...             # other pages (about, contact, etc.)
+├─ layouts/             # layout templates
+│   └─ BlogLayout.astro # blog layout example
+│   ...                 # other layouts
+├─ components/          # reusable UI components
+│   └─ CommandBar.astro # example component
+│   ...                 # other components
+└─ styles/              # CSS styles
+	...
+```
 
 The killer feature for me: blog posts are just markdown files with frontmatter. No JSX, no components for paragraphs, no complex setup.
 
@@ -57,7 +68,9 @@ tags: ["web", "astro"]
 And it works exactly like you'd expect.
 ```
 
-Astro automatically generates pages from these, handles the frontmatter as metadata, and I can query collections with full TypeScript support. For someone who just wants to write blog posts without fighting a CMS or building a complex content pipeline, it's perfect.
+That top YAML block (the lines between the `---` markers) is called "frontmatter." It stores metadata — title, date, description, tags, and any other fields your templates or build tools might need. In the example above the frontmatter is the first section, and Astro reads those values automatically so your layout can display the title, sort posts by date, or filter by tags without extra code.
+
+Astro automatically generates pages from these Markdown files, treats the frontmatter as metadata, and can expose those fields to your layouts and collection queries. For someone who just wants to write posts without fighting a CMS or building a complex content pipeline, it’s perfect.
 
 ## Why it works for my specific needs
 
