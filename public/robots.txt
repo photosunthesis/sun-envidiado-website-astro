@@ -2,5 +2,4 @@
 # Allow all user agents full access to the site
 User-agent: *
 Allow: /
-
-# No sitemap listed to avoid exposing all URLs
+Sitemap: https://sun-envidiado.com/sitemap.xml
