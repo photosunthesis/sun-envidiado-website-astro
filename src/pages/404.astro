@@ -1,0 +1,83 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+const homeUrlLabel = ":home<Enter>";
+const kaomojis = [
+  "ヽ(ー_ー )ノ",
+  "ヽ(´ー` )┌",
+  "┐(‘～` )┌",
+  "ヽ(　￣д￣)ノ",
+  "┐(￣ヘ￣)┌",
+  "ヽ(￣～￣　)ノ",
+  "╮(￣_￣)╭",
+  "ヽ(ˇヘˇ)ノ",
+  "┐(￣～￣)┌",
+  "┐(︶▽︶)┌",
+  "╮(￣～￣)╭",
+  "¯\\_(ツ)_/¯",
+  "┐( ´ д ` )┌",
+  "╮(︶︿︶)╭",
+  "┐(￣∀￣)┌",
+  "┐( ˘ ､ ˘ )┌",
+  "╮(︶▽︶)╭",
+  "╮( ˘ ､ ˘ )╭",
+  "┐( ˘_˘ )┌",
+  "╮( ˘_˘ )╭",
+  "┐(￣ヮ￣)┌",
+  "ᕕ( ᐛ )ᕗ",
+  "┐(シ)┌",
+];
+---
+
+<BaseLayout
+  title="404 - Page Not Found"
+  description="The page you are looking for does not exist."
+>
+  <div class="not-found-container">
+    <h1 class="not-found-heading">
+      Error 404 <i class="not-found-kaomoji">
+        {kaomojis[Math.floor(Math.random() * kaomojis.length)]}
+      </i>
+    </h1>
+
+    <p class="not-found-message">
+      The page you're looking for doesn't exist. Double-check the URL — it may
+      be a typo, or the page could have been removed.
+    </p>
+    <p class="not-found-end">
+      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  h1 {
+    font-size: 2rem;
+    color: var(--purple);
+  }
+
+  .not-found-kaomoji {
+    color: var(--comment);
+    font-style: normal;
+    padding-left: 0.5rem;
+  }
+
+  .not-found-message {
+    margin-top: 1rem;
+    line-height: 1.4rem;
+  }
+
+  .not-found-container {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    text-align: left;
+    padding: 2rem;
+  }
+
+  .not-found-end {
+    color: var(--comment);
+    margin-bottom: 1rem;
+  }
+</style>
+}
+
