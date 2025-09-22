@@ -10,19 +10,49 @@ const {
   type = "website",
   noIndex = false,
   jsonLd = null,
+  pubDate = undefined,
+  tags = [],
+  ...rest
 } = Astro.props;
 
-// Normalize site string (Astro.site can be a URL object in some setups)
-const siteStr = String(Astro.site || "");
+// Normalize site origin (Astro.site can be a URL object in some setups)
+const siteOrigin = String(Astro.site || "https://sun-envidiado.com");
 
-// Allow pages to pass a pathname-only `url` (e.g. `/blog/my-post`) or a full URL
-const canonical = url.startsWith("http")
-  ? url
-  : siteStr.replace(/\/$/, "") + url;
+// Helper to detect file-like paths (have an extension) so we can
+// decide whether to force a trailing slash for directory pages.
+/**
+ * @param {any} pathname
+ */
+function looksLikeFilePath(pathname: any) {
+  return /\.[a-z0-9]+$/i.test(String(pathname));
+}
 
-const fullImage = image.startsWith("http")
-  ? image
-  : siteStr.replace(/\/$/, "") + image;
+// Resolve `url` into an absolute canonical URL. Accepts either a full
+// absolute URL or a pathname (e.g. "/blog/my-post"). We normalize
+// directory-like paths to include a trailing slash so the canonical
+// doesn't point to a URL that redirects (common on GitHub Pages).
+let canonical;
+try {
+  const resolved = new URL(String(url), siteOrigin);
+  if (
+    !looksLikeFilePath(resolved.pathname) &&
+    !resolved.pathname.endsWith("/")
+  ) {
+    resolved.pathname = resolved.pathname.replace(/\/?$/, "/");
+  }
+  canonical = resolved.toString();
+} catch (e) {
+  // Fallback: fall back to the original value as a string if URL fails
+  canonical = String(url);
+}
+
+// Resolve image URLs similarly so OG/twitter images are absolute.
+let fullImage;
+try {
+  fullImage = new URL(String(image), siteOrigin).toString();
+} catch (e) {
+  fullImage = String(image);
+}
 ---
 
 <html lang="en">
@@ -35,7 +65,15 @@ const fullImage = image.startsWith("http")
       name="robots"
       content={noIndex ? "noindex, nofollow" : "index, follow"}
     />
+
     <link rel="canonical" href={canonical} />
+
+    {pubDate && <meta property="article:published_time" content={pubDate} />}
+    {
+      Array.isArray(tags) &&
+        tags.length > 0 &&
+        tags.map((tag) => <meta property="article:tag" content={tag} />)
+    }
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content={type} />

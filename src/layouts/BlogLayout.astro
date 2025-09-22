@@ -4,15 +4,40 @@ import BaseLayout from "./BaseLayout.astro";
 const backUrlLabel = ":back<Enter>";
 const homeUrlLabel = ":home<Enter>";
 const { frontmatter = {}, ...restProps } = Astro.props || {};
-const { title = "Blog", description = "" } = frontmatter;
-const rest = { ...restProps };
 
+// Extract common SEO fields from frontmatter
+const {
+  title = "Blog",
+  description = "",
+  pubDate = undefined,
+  tags = [],
+  ...otherFrontmatter
+} = frontmatter;
+
+// Pass all remaining props except frontmatter fields
+const rest = { ...restProps };
 delete rest.title;
 delete rest.description;
+delete rest.pubDate;
+delete rest.tags;
 delete rest.frontmatter;
+
+// --- Canonical/OG URL logic ---
+const canonical = new URL(
+  (Astro.url?.pathname || "/").replace(/\/?$/, "/"),
+  Astro.site || "https://sun-envidiado.com",
+).toString();
 ---
 
-<BaseLayout title={title} description={description} {...rest}>
+<BaseLayout
+  title={title}
+  description={description}
+  url={canonical}
+  pubDate={pubDate}
+  tags={tags}
+  {...otherFrontmatter}
+  {...rest}
+>
   <div class="blog-layout">
     <slot />
     <footer class="blog-footer">
