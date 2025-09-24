@@ -15,8 +15,16 @@ const {
   ...rest
 } = Astro.props;
 
-// Normalize site origin (Astro.site can be a URL object in some setups)
-const siteOrigin = String(Astro.site || "https://sun-envidiado.com");
+// Preferred canonical origin for the site. Change this to the domain you
+// want search engines to index (include protocol, no trailing slash).
+// This takes precedence over `Astro.site` for canonical/tag/image URLs.
+const preferredOrigin = "https://sun-envidiado.com";
+
+// Normalize site origin (Astro.site can be a URL object in some setups).
+// Use `preferredOrigin` as the canonical base; fallback to `Astro.site` if
+// preferredOrigin is intentionally left blank.
+const siteOrigin =
+  preferredOrigin || String(Astro.site || "https://sun-envidiado.com");
 
 // Helper to detect file-like paths (have an extension) so we can
 // decide whether to force a trailing slash for directory pages.
@@ -33,6 +41,8 @@ function looksLikeFilePath(pathname: any) {
 // doesn't point to a URL that redirects (common on GitHub Pages).
 let canonical;
 try {
+  // Force canonical URLs to use the preferred origin. Accept either an
+  // absolute URL (overrides host) or a pathname (e.g. '/blog/my-post').
   const resolved = new URL(String(url), siteOrigin);
   if (
     !looksLikeFilePath(resolved.pathname) &&
@@ -40,7 +50,18 @@ try {
   ) {
     resolved.pathname = resolved.pathname.replace(/\/?$/, "/");
   }
-  canonical = resolved.toString();
+  // Ensure canonical uses the preferred origin exactly (protocol + host).
+  // If `url` itself included a different origin, prefer the configured
+  // `preferredOrigin` to avoid mixed host canonical values.
+  try {
+    const canonicalUrl = new URL(
+      resolved.pathname + resolved.search + resolved.hash,
+      preferredOrigin,
+    );
+    canonical = canonicalUrl.toString();
+  } catch (err) {
+    canonical = resolved.toString();
+  }
 } catch (e) {
   // Fallback: fall back to the original value as a string if URL fails
   canonical = String(url);
@@ -49,6 +70,8 @@ try {
 // Resolve image URLs similarly so OG/twitter images are absolute.
 let fullImage;
 try {
+  // Resolve images against the preferred origin so OG/twitter images always
+  // point to the canonical host (avoids cross-host image URLs).
   fullImage = new URL(String(image), siteOrigin).toString();
 } catch (e) {
   fullImage = String(image);
