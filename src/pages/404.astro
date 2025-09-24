@@ -1,6 +1,10 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 const homeUrlLabel = ":home<Enter>";
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const absoluteUrl = new URL("/404", siteBase).toString();
+const imagePath = "/android-chrome-512x512.png";
+const absoluteImage = new URL(imagePath, siteBase).toString();
 const kaomojis = [
   "ヽ(ー_ー )ノ",
   "ヽ(´ー` )┌",
@@ -29,8 +33,10 @@ const kaomojis = [
 ---
 
 <BaseLayout
-  title="404 - Page Not Found"
+  title="404 - Page Not Found — Sun Envidiado"
+  url={absoluteUrl}
   description="The page you are looking for does not exist."
+  image={absoluteImage}
   noIndex={true}
 >
   <div class="not-found-container">

@@ -11,7 +11,6 @@ const {
   description = "",
   pubDate = undefined,
   tags = [],
-  ...otherFrontmatter
 } = frontmatter;
 
 // Pass all remaining props except frontmatter fields
@@ -20,23 +19,55 @@ delete rest.title;
 delete rest.description;
 delete rest.pubDate;
 delete rest.tags;
-delete rest.frontmatter;
 
 // --- Canonical/OG URL logic ---
 const canonical = new URL(
   String(Astro.url?.pathname || "/").replace(/\/?$/, "/"),
   Astro.site || "https://sun-envidiado.com",
 ).toString();
+
+// Site-wide defaults and full URLs
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const fullImage = new URL("/android-chrome-512x512.png", siteBase).toString();
+
+// Title and type helpers
+const titleToUse = `${title}${title.includes("Sun") ? "" : " — Sun Envidiado"}`;
+const typeToUse = pubDate ? "article" : "collection";
+
+// JSON-LD for individual blog posts (when pubDate is present)
+let jsonLd = null;
+if (pubDate) {
+  jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: title,
+    description,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": canonical,
+    },
+    url: canonical,
+    image: fullImage,
+    author: {
+      "@type": "Person",
+      name: "Sun Envidiado",
+      url: siteBase,
+    },
+    datePublished: new Date(pubDate).toISOString(),
+    dateModified: new Date(pubDate).toISOString(),
+  };
+}
 ---
 
 <BaseLayout
-  title={title}
+  title={titleToUse}
   description={description}
   url={canonical}
+  image={fullImage}
+  type={typeToUse}
   pubDate={pubDate}
   tags={tags}
-  {...otherFrontmatter}
-  {...rest}
+  jsonLd={jsonLd}
 >
   <div class="blog-layout">
     {

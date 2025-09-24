@@ -37,9 +37,41 @@ for (const post of postList) {
 
 const homeUrlLabel = ":home<Enter>";
 const blogIndexLabel = ":blog[index]";
+
+// SEO / Structured Data
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const pagePath = "/blog";
+const absoluteUrl = new URL(pagePath, siteBase).toString();
+const imagePath = "/android-chrome-512x512.png";
+const absoluteImage = new URL(imagePath, siteBase).toString();
+
+// Minimal JSON-LD for a blog index / collection page
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Blog — Sun Envidiado",
+  description:
+    "A collection of blog posts about code, projects, gaming, and life.",
+  url: absoluteUrl,
+  image: absoluteImage,
+  hasPart: postList.slice(0, 10).map((p) => ({
+    "@type": "BlogPosting",
+    headline: p.title,
+    url: new URL(p.url, siteBase).toString(),
+    datePublished: p.pubDate.toISOString(),
+  })),
+};
 ---
 
-<BaseLayout title="Blog" description="List of all blog posts.">
+<BaseLayout
+  title="Blog — Sun Envidiado"
+  url={absoluteUrl}
+  description="Blog posts by Sun Envidiado about coding, projects, and life."
+  image={absoluteImage}
+  type="collection"
+  tags={["blog", "posts", "coding"]}
+  jsonLd={jsonLd}
+>
   <div class="blog-content">
     <header class="blog-header">
       <h1 id="blog-title" class="sr-only">Blog</h1>

@@ -26,12 +26,37 @@ const contactItems: ContactItem[] = [
 ];
 
 const homeUrlLabel = ":home<Enter>";
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const pagePath = "/contact";
+const absoluteUrl = new URL(pagePath, siteBase).toString();
+const imagePath = "/android-chrome-512x512.png";
+const absoluteImage = new URL(imagePath, siteBase).toString();
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  url: absoluteUrl,
+  headline: "Contact — Sun Envidiado",
+  description:
+    "Ways to contact Sun Envidiado, including email and social profiles.",
+  mainEntity: {
+    "@type": "Person",
+    name: "Sun Envidiado",
+    email: "mailto:sunadriann31@gmail.com",
+    url: siteBase,
+    image: absoluteImage,
+  },
+};
 ---
 
 <BaseLayout
-  title="Contact"
-  url="/contact"
-  description="Get in touch with Sun Envidiado."
+  title="Contact — Sun Envidiado"
+  url={absoluteUrl}
+  description="Get in touch with Sun Envidiado — email, LinkedIn, GitHub."
+  image={absoluteImage}
+  type="contact"
+  tags={["contact", "email", "connect"]}
+  jsonLd={jsonLd}
 >
   <div class="contact-content">
     <h1 class="sr-only">Contact</h1>

@@ -12,19 +12,47 @@ This site leans into a terminal/vim aesthetic because I've always loved that ret
 I built this site to share projects, ideas, and random thoughts about code, gaming, and life in general. It's a small corner of the internet about me.`;
 
 const homeUrlLabel = ":home<Enter>";
+
+// SEO / Structured Data
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const pagePath = "/about";
+const absoluteUrl = new URL(pagePath, siteBase).toString();
+const imagePath = "/android-chrome-512x512.png";
+const absoluteImage = new URL(imagePath, siteBase).toString();
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Sun Envidiado",
+  url: absoluteUrl,
+  image: absoluteImage,
+  sameAs: [
+    "https://github.com/photosunthesis",
+    "https://twitter.com/sun",
+    "https://www.linkedin.com/in/sun-envidiado",
+  ],
+  jobTitle: "Software Developer",
+  description:
+    "Software developer from Manila sharing projects, ideas, and thoughts about code, gaming, and life.",
+};
 ---
 
 <BaseLayout
-  title="About"
-  url="/about"
-  description="Learn more about Sun Envidiado."
+  title="About — Sun Envidiado"
+  url={absoluteUrl}
+  description="About Sun Envidiado — software developer from Manila sharing projects, code, gaming, and life."
+  image={absoluteImage}
+  type="profile"
+  tags={["about", "sun-envidiado", "software"]}
+  jsonLd={jsonLd}
 >
   <div class="about-content">
     <article class="about-article" aria-labelledby="about-title">
       <h1 id="about-title" class="about-title sr-only">About Me</h1>
       <p>{aboutMeText}</p>
       <p class="about-end">
-        Tap or type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a> to go back to the homepage.
+        Tap or type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a> to
+        go back to the homepage.
       </p>
     </article>
   </div>

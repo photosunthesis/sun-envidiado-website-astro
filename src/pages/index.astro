@@ -32,9 +32,47 @@ const commandHints: CommandHint[] = [
 		href: "/blog",
 	},
 ];
+
+const siteBase = Astro.site || "https://sun-envidiado.com";
+const pagePath = "/";
+const absoluteUrl = new URL(pagePath, siteBase).toString();
+const imagePath = "/android-chrome-512x512.png";
+const absoluteImage = new URL(imagePath, siteBase).toString();
+
+const jsonLd = {
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	url: siteBase,
+	name: "Sun Envidiado",
+	description:
+		"Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast.",
+	image: absoluteImage,
+	potentialAction: {
+		"@type": "SearchAction",
+		target: `${siteBase}/?s={search_term_string}`,
+		"query-input": "required name=search_term_string",
+	},
+};
+
+const personJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Person",
+	name: "Sun Envidiado",
+	url: siteBase,
+	image: absoluteImage,
+	jobTitle: "Software Developer",
+};
 ---
 
-<BaseLayout title="Sun Envidiado">
+<BaseLayout
+	title="Sun Envidiado"
+	url={absoluteUrl}
+	description="Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast."
+	image={absoluteImage}
+	type="website"
+	tags={["home", "sun-envidiado", "developer"]}
+	jsonLd={{ ...jsonLd, "@graph": [personJsonLd] }}
+>
 	<div class="index-main-content">
 		<SpinningSunAsciiArt />
 		<div class="intro-container">
