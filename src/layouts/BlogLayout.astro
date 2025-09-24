@@ -84,6 +84,17 @@ if (pubDate) {
       role="contentinfo"
       aria-label="Post navigation and actions"
     >
+      <p>
+        {
+          pubDate
+            ? `Published on ${new Date(pubDate).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}.`
+            : ""
+        }
+      </p>
       <p class="blog-footer-text">
         Type or click
         <a href="#" onclick="history.back(); return false;" aria-label="Go back"
