@@ -150,14 +150,19 @@
     function handleCommand(raw) {
       if (!raw) return;
       const val = raw.trim();
-      const token = val.startsWith(":") ? val.slice(1) : val;
-
-      if (!token) return;
-
+      if (!val.startsWith(":")) {
+        showVimError(val);
+        return;
+      }
+      const token = val.slice(1);
+      if (!token) {
+        showVimError(val);
+        return;
+      }
       const cmd = token.toLowerCase();
 
-      // Support explicit blog selection syntax like `blog[1]` or `b[1]` (case-insensitive)
-      const blogMatch = cmd.match(/^(?:blog|b)\[(\d+)\]$/i);
+      // Support explicit blog selection syntax like `:blog[1]` (case-insensitive)
+      const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
       if (blogMatch) {
         const idx = Number(blogMatch[1]);
         const el = document.querySelector(`[data-blog-index="${idx}"]`);
@@ -168,7 +173,7 @@
             return;
           }
         }
-        showVimError(cmd);
+        showVimError(val);
         return;
       }
 
@@ -187,7 +192,7 @@
             return;
           }
         }
-        showVimError(cmd);
+        showVimError(val);
         return;
       }
 
@@ -209,7 +214,7 @@
           break;
         default:
           // Unknown command -> show error inline by changing the bar background
-          showVimError(cmd || val);
+          showVimError(val);
       }
     }
 
