@@ -1,9 +1,12 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [react()]
+  // Preferred canonical site origin. Astro uses this when resolving absolute
+  // URLs for RSS, sitemap, and any APIs that need the site origin.
+  site: "https://sun-envidiado.com",
+  // No integrations required for this site; React integration removed.
+  integrations: []
 });
