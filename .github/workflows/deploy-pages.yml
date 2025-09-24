@@ -29,11 +29,16 @@ jobs:
       - name: Build
         run: pnpm build
 
+      - name: Show build output
+        run: |
+          echo "=== dist listing ==="
+          ls -la dist || true
+
       - name: Upload Pages artifact
-        id: deployment
+        id: upload-pages
         uses: actions/upload-pages-artifact@v3
         with:
-          path: dist
+          path: ./dist
 
   deploy:
     name: Deploy to GitHub Pages
