@@ -88,4 +88,4 @@ Astro worked for my specific use case: simple personal site with a blog that loa
 
 If you're building a complex interactive app, React or Vue or whatever probably makes more sense. If you're deep in the JavaScript ecosystem already, this might not be relevant. But if you're trying to build a content-focused site and getting overwhelmed by framework complexity, maybe worth a look.
 
-The code for this project is on GitHub if you're curious: https://github.com/photosunthesis/sun-envidiado-website-astro
+The code for this project is on <a href="https://github.com/photosunthesis/sun-envidiado-website-astro" target="_blank" rel="noopener noreferrer" title="View the sun-envidiado-website-astro project on GitHub">GitHub</a> if you're curious.
