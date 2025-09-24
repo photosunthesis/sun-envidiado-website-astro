@@ -69,7 +69,6 @@ const fullImage = new URL(
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={fullImage} />
 
-    <!-- Allow pages to inject/override head tags via a named slot -->
     <slot name="seo" />
 
     <!-- Site resources -->
@@ -122,13 +121,6 @@ const fullImage = new URL(
     >
 
     <div class="main-flex-container">
-      <aside
-        id="tilde-column"
-        class="tilde-column"
-        aria-hidden="true"
-        role="presentation"
-      >
-      </aside>
       <main id="main" class="vim-main-content" tabindex="-1">
         <div class="centered-vim">
           <slot />
@@ -136,30 +128,5 @@ const fullImage = new URL(
       </main>
     </div>
     <CommandBar />
-
-    <script type="module">
-      // Render tildes to fill the document height (covers overflow) and
-      // keep the tilde column purely visual (pointer-events: none)
-      function renderTildes() {
-        const tildeCol = document.getElementById("tilde-column");
-        if (!tildeCol) return;
-        const style = getComputedStyle(tildeCol);
-        const lineHeight = parseFloat(style.lineHeight) || 24;
-        // Column is fixed and floats over the page. Use the viewport height so
-        // the column always visually fills the screen. Reserve one line at the
-        // bottom for the floating command bar.
-        const height = window.innerHeight;
-        // Reserve 3 lines at the bottom to ensure the floating command bar is
-        // not accidentally covered by tilde characters on small viewports.
-        const reservedLines = 3;
-        const count = Math.max(
-          0,
-          Math.ceil(height / lineHeight) - reservedLines,
-        );
-        tildeCol.textContent = Array(count).fill("~").join("\n");
-      }
-      window.addEventListener("resize", renderTildes);
-      window.addEventListener("DOMContentLoaded", renderTildes);
-    </script>
   </body>
 </html>

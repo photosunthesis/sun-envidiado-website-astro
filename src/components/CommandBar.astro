@@ -1,29 +1,25 @@
----
-// Client-rendered component: simple command input at the bottom
----
-
 <div class="command-bar" role="region" aria-label="Command bar">
-  <!-- removed static colon so users must type ':' themselves -->
-  <span class="cmd-wrapper">
-    <input
-      id="site-command-input"
-      class="cmd-input"
-      type="text"
-      aria-label="Site command input"
-      autocomplete="off"
-      spellcheck="false"
-    />
-    <span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
-  </span>
+  <div class="command-bar-inner">
+    <div
+      id="vim-error"
+      class="vim-error-inline"
+      role="status"
+      aria-live="polite"
+    >
+    </div>
 
-  <!-- Vim-like error box (hidden by default). Shows messages like: "E492: Not an editor command: foo" -->
-  <div
-    id="vim-error"
-    class="vim-error"
-    role="alert"
-    aria-live="assertive"
-    style="display:none"
-  >
+    <span class="cmd-wrapper">
+      <input
+        id="site-command-input"
+        class="cmd-input"
+        type="text"
+        placeholder="Type a command (e.g. :home, :back)"
+        aria-label="Site command input"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
+    </span>
   </div>
 
   <script type="module">
@@ -32,15 +28,17 @@
     let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
 
     function showVimError(text) {
-      if (!vimError) return;
-      // Use the classic Vim code for unknown command
+      if (!vimError || !input) return;
+      const bar = input.closest(".command-bar");
+      if (bar) bar.classList.add("error");
+      // Show the error message inline using a short message
       vimError.textContent = `ERROR: "${text}" is not a valid command`;
-      vimError.style.display = "block";
     }
 
     function hideVimError() {
-      if (!vimError) return;
-      vimError.style.display = "none";
+      if (!vimError || !input) return;
+      const bar = input.closest(".command-bar");
+      if (bar) bar.classList.remove("error");
       vimError.textContent = "";
     }
 
@@ -48,10 +46,12 @@
     const cursor = document.getElementById("cmd-cursor");
     // hidden native caret
     const hideNativeCaret = () => {
+      if (!input) return;
       input.style.caretColor = "transparent";
     };
 
     function measureTextWidth(text) {
+      if (!input) return 0;
       // create a temporary span to measure text width with same font
       const span = document.createElement("span");
       span.style.visibility = "hidden";
@@ -66,7 +66,7 @@
     }
 
     function positionCursor() {
-      if (!cursor) return;
+      if (!cursor || !input) return;
       const wrapper = cursor.parentElement;
       if (!wrapper) return;
       // measure the input's value width
@@ -96,48 +96,55 @@
     }
 
     // reposition cursor on input, focus, and window resize
-    input.addEventListener("input", () => {
-      hideVimError();
-      positionCursor();
-    });
-    input.addEventListener("focus", () => {
-      hideVimError();
-      hideNativeCaret();
-      positionCursor();
-      cursor.classList.add("visible");
-      // ensure the input is visible on mobile when focused but don't cover too much
-      try {
-        input.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      } catch (e) {
-        /* ignore on older browsers */
-      }
-    });
-    input.addEventListener("blur", () => {
-      cursor.classList.remove("visible");
-      cursor.style.display = "none";
-    });
+    if (input) {
+      input.addEventListener("input", () => {
+        hideVimError();
+        positionCursor();
+      });
+      input.addEventListener("focus", () => {
+        hideVimError();
+        hideNativeCaret();
+        positionCursor();
+        cursor && cursor.classList.add("visible");
+        // ensure the input is visible on mobile when focused but don't cover too much
+        try {
+          input.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        } catch (e) {
+          /* ignore on older browsers */
+        }
+      });
+      input.addEventListener("blur", () => {
+        cursor && cursor.classList.remove("visible");
+        cursor && (cursor.style.display = "none");
+      });
+    }
+
     window.addEventListener("resize", positionCursor);
+
     // Make the entire command bar clickable — focus input when the bar is clicked.
     // Use `click` instead of pointer events so we don't interfere with scrolling on mobile.
-    const bar = input.closest(".command-bar");
-    if (bar) {
-      bar.addEventListener("click", (ev) => {
-        // If user clicked directly on the input, let the default happen
-        if (ev.target === input) return;
-        // If the input is currently focused, clicking the bar will unfocus it
-        if (document.activeElement === input) {
-          input.blur();
-          hideVimError();
-          return;
-        }
-        // Focus the input (do not preventDefault so scrolling isn't blocked)
-        input.focus();
-        // put caret at end
-        setTimeout(
-          () => input.setSelectionRange(input.value.length, input.value.length),
-          0,
-        );
-      });
+    if (input) {
+      const bar = input.closest(".command-bar");
+      if (bar) {
+        bar.addEventListener("click", (ev) => {
+          // If user clicked directly on the input, let the default happen
+          if (ev.target === input) return;
+          // If the input is currently focused, clicking the bar will unfocus it
+          if (document.activeElement === input) {
+            input.blur();
+            hideVimError();
+            return;
+          }
+          // Focus the input (do not preventDefault so scrolling isn't blocked)
+          input.focus();
+          // put caret at end
+          setTimeout(
+            () =>
+              input.setSelectionRange(input.value.length, input.value.length),
+            0,
+          );
+        });
+      }
     }
 
     function handleCommand(raw) {
@@ -201,58 +208,46 @@
           window.history.back();
           break;
         default:
-          // Unknown command -> show Vim-like error
+          // Unknown command -> show error inline by changing the bar background
           showVimError(cmd || val);
       }
     }
 
     // Enter to execute, Escape to clear and hide error
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        // Execute command
-        handleCommand(input.value);
-        // Clear input on Enter as requested, but avoid hiding the error immediately
-        suppressInputHide = true;
-        input.value = "";
-        // reposition cursor after clearing
-        positionCursor();
-        input.blur();
-      } else if (e.key === "Escape") {
-        input.value = "";
-        input.blur();
-        hideVimError();
-      }
-    });
+    if (input) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          // Execute command
+          handleCommand(input.value);
+          // Clear input on Enter as requested, but avoid hiding the error immediately
+          suppressInputHide = true;
+          input.value = "";
+          // reposition cursor after clearing
+          positionCursor();
+          input.blur();
+        } else if (e.key === "Escape") {
+          input.value = "";
+          input.blur();
+          hideVimError();
+        }
+      });
 
-    // When user types again, hide the Vim error box (unless suppressed by programmatic clear)
-    input.addEventListener("input", () => {
-      if (suppressInputHide) {
-        // reset the flag and don't hide the error this round
-        suppressInputHide = false;
-        return;
-      }
-      hideVimError();
-    });
-
-    // If the vim-error element is clicked/tapped, focus input and hide the error
-    if (vimError) {
-      // Use `click` so tapping the error message doesn't interfere with scroll
-      vimError.addEventListener("click", (ev) => {
+      // When user types again, hide the error state (unless suppressed by programmatic clear)
+      input.addEventListener("input", () => {
+        if (suppressInputHide) {
+          // reset the flag and don't hide the error this round
+          suppressInputHide = false;
+          return;
+        }
         hideVimError();
-        input.focus();
-        setTimeout(
-          () => input.setSelectionRange(input.value.length, input.value.length),
-          0,
-        );
       });
     }
 
-    // While the vim error is visible, pressing any normal key should clear it and focus the input
+    // While the error is visible, pressing any normal key should clear it and focus the input
     window.addEventListener("keydown", (ev) => {
-      if (!vimError) return;
-      if (vimError.style.display === "block") {
-        // If it's a character key or Backspace/Escape, hide and focus.
-        // NOTE: don't treat Enter as a dismiss key — Enter should trigger/show the error.
+      if (!vimError || !input) return;
+      const bar = input.closest(".command-bar");
+      if (bar && bar.classList.contains("error")) {
         if (ev.key.length === 1 || ["Backspace", "Escape"].includes(ev.key)) {
           hideVimError();
           input.focus();
@@ -268,20 +263,24 @@
         document.activeElement.tagName !== "TEXTAREA"
       ) {
         e.preventDefault();
-        input.focus();
+        input && input.focus();
         setTimeout(
-          () => input.setSelectionRange(input.value.length, input.value.length),
+          () =>
+            input &&
+            input.setSelectionRange(input.value.length, input.value.length),
           0,
         );
       }
     });
 
     // Prevent the command bar input from stealing scroll when focused on mobile
-    input.addEventListener("focus", () => {
-      document.body.classList.add("command-bar-focused");
-    });
-    input.addEventListener("blur", () => {
-      document.body.classList.remove("command-bar-focused");
-    });
+    if (input) {
+      input.addEventListener("focus", () => {
+        document.body.classList.add("command-bar-focused");
+      });
+      input.addEventListener("blur", () => {
+        document.body.classList.remove("command-bar-focused");
+      });
+    }
   </script>
 </div>

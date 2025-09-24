@@ -161,44 +161,25 @@ li {
   color: $orange;
 }
 
-.tilde-column {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 2.5rem;
-  height: 100vh;
-  background: none;
-  color: $comment;
-  user-select: none;
-  text-align: left;
-  font-size: 1rem;
-  font-weight: 900;
-  line-height: 1;
-  font-family: inherit;
-  white-space: pre;
-  padding-left: 5px;
-  margin: 0;
-  display: block;
-  z-index: 9999;
-  pointer-events: none;
-  overflow: hidden;
-}
+
 
 .cmd-input {
   outline: none;
   min-width: 2ch;
   background: transparent;
   border: none;
-  color: $foreground;
+  /* Let inputs inherit color so inside .command-bar they use the dark page background color */
+  color: inherit;
   font-family: inherit;
   font-size: 1rem;
-  caret-color: $cyan;
+  /* hide native caret so the custom rectangular cursor is used */
+  caret-color: transparent;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   padding: 0.1rem 0.25rem;
-  width: min(60ch, calc(100% - 4rem));
-  max-width: 90vw;
+  width: 100%;
+  max-width: min(60ch, 90vw);
 }
 
 .cmd-feedback {
@@ -208,8 +189,14 @@ li {
 }
 
 .cmd-input::placeholder {
-  color: $comment;
-  opacity: 1
+  color: rgba($comment, 0.65);
+  opacity: 1;
+}
+
+/* Hide the placeholder while in error state so it doesn't overlap the error message */
+.command-bar.error .cmd-input::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
 }
 
 .vim-error {
@@ -231,18 +218,46 @@ li {
 
 .cmd-wrapper {
   position: relative;
-  display: inline-block;
-  margin-left: -8px
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  margin-left: -8px;
 }
 
 .command-bar {
-  margin-left: 0.5rem
+  /* Make the command bar full-width and stick to the bottom while
+     respecting device safe-area insets (iOS notch / bottom UI). */
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: block;
+  width: 100vw;
+  /* full-bleed background; inner wrapper provides padding */
+  padding: 0;
+  /* inner handles padding including safe-area */
+  background: $foreground;
+  /* foreground becomes background */
+  color: $background;
+  /* text uses page background color */
+  backdrop-filter: none;
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+  /* Ensure it sits above other content without overlapping interactive elements */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.command-bar-inner {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.75rem calc(env(safe-area-inset-bottom, 0) + 0.35rem);
 }
 
 .cmd-cursor {
   position: absolute;
   top: 0;
   left: 0;
+  /* default background; overridden in context-sensitive places */
   background: $foreground;
   opacity: 0.95;
   display: none;
@@ -251,6 +266,24 @@ li {
   pointer-events: none;
   z-index: 10001;
   animation: cmd-cursor-blink 1s steps(1) infinite
+}
+
+/* Ensure the block cursor inside the command bar uses the text color (currentColor)
+   so it contrasts against the bar background */
+.command-bar .cmd-cursor {
+  background: currentColor;
+}
+
+/* Ensure inputs inside the command bar inherit the visible color, and the block cursor sits above the input text */
+.command-bar .cmd-input {
+  color: currentColor;
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+.command-bar .cmd-cursor {
+  z-index: 10002;
 }
 
 .command-bar-focused {
@@ -262,8 +295,60 @@ li {
   height: 1em
 }
 
+/* Error state for command bar: use red background and show error text inline */
+.command-bar.error {
+  background: $red;
+  color: $background;
+  /* keep text readable */
+}
+
+.command-bar .vim-error-inline {
+  display: inline-block;
+  font-size: 0.95rem;
+  color: inherit;
+  margin-left: 0.5rem;
+}
+
 @keyframes cmd-cursor-blink {
   50% {
     opacity: 0
   }
+}
+
+.sun-spin-wrap {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  margin: 1rem 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  overflow-x: auto;
+}
+
+.sun-pre {
+  margin: 0;
+  color: $orange;
+  font-family: inherit;
+  white-space: pre;
+  line-height: 0.95;
+  font-size: 0.4rem;
+  display: block;
+  text-align: center;
+  max-width: 100%;
+  overflow-wrap: normal;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

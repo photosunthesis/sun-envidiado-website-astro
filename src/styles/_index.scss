@@ -55,7 +55,7 @@
   display: grid;
   grid-template-columns: minmax(10ch, max-content) minmax(10ch, max-content) 1fr;
   align-items: center;
-  gap: 1.5ch;
+  gap: 0.5ch;
   white-space: nowrap;
   margin: 0 auto
 }
@@ -129,5 +129,11 @@
 
   .command-hint-description {
     color: $foreground
+  }
+}
+
+@media (max-width: 400px) {
+  .index-main-content {
+    margin-top: -6rem
   }
 }
