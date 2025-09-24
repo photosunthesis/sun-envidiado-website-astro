@@ -1,6 +1,6 @@
 ---
 import CommandBar from "../components/CommandBar.astro";
-import "../styles/global.css"; // import global styles
+import "../styles/global.css";
 
 const {
   title = "Sun Envidiado",
@@ -15,67 +15,16 @@ const {
   ...rest
 } = Astro.props;
 
-// Preferred canonical origin for the site. Change this to the domain you
-// want search engines to index (include protocol, no trailing slash).
-// This takes precedence over `Astro.site` for canonical/tag/image URLs.
-const preferredOrigin = "https://sun-envidiado.com";
+// --- Canonical/OG URL logic ---
+const canonical = new URL(
+  String(url || "/").replace(/\/?$/, "/"),
+  Astro.site || "https://sun-envidiado.com",
+).toString();
 
-// Normalize site origin (Astro.site can be a URL object in some setups).
-// Use `preferredOrigin` as the canonical base; fallback to `Astro.site` if
-// preferredOrigin is intentionally left blank.
-const siteOrigin =
-  preferredOrigin || String(Astro.site || "https://sun-envidiado.com");
-
-// Helper to detect file-like paths (have an extension) so we can
-// decide whether to force a trailing slash for directory pages.
-/**
- * @param {any} pathname
- */
-function looksLikeFilePath(pathname: any) {
-  return /\.[a-z0-9]+$/i.test(String(pathname));
-}
-
-// Resolve `url` into an absolute canonical URL. Accepts either a full
-// absolute URL or a pathname (e.g. "/blog/my-post"). We normalize
-// directory-like paths to include a trailing slash so the canonical
-// doesn't point to a URL that redirects (common on GitHub Pages).
-let canonical;
-try {
-  // Force canonical URLs to use the preferred origin. Accept either an
-  // absolute URL (overrides host) or a pathname (e.g. '/blog/my-post').
-  const resolved = new URL(String(url), siteOrigin);
-  if (
-    !looksLikeFilePath(resolved.pathname) &&
-    !resolved.pathname.endsWith("/")
-  ) {
-    resolved.pathname = resolved.pathname.replace(/\/?$/, "/");
-  }
-  // Ensure canonical uses the preferred origin exactly (protocol + host).
-  // If `url` itself included a different origin, prefer the configured
-  // `preferredOrigin` to avoid mixed host canonical values.
-  try {
-    const canonicalUrl = new URL(
-      resolved.pathname + resolved.search + resolved.hash,
-      preferredOrigin,
-    );
-    canonical = canonicalUrl.toString();
-  } catch (err) {
-    canonical = resolved.toString();
-  }
-} catch (e) {
-  // Fallback: fall back to the original value as a string if URL fails
-  canonical = String(url);
-}
-
-// Resolve image URLs similarly so OG/twitter images are absolute.
-let fullImage;
-try {
-  // Resolve images against the preferred origin so OG/twitter images always
-  // point to the canonical host (avoids cross-host image URLs).
-  fullImage = new URL(String(image), siteOrigin).toString();
-} catch (e) {
-  fullImage = String(image);
-}
+const fullImage = new URL(
+  String(image),
+  Astro.site || "https://sun-envidiado.com",
+).toString();
 ---
 
 <html lang="en">
@@ -88,8 +37,6 @@ try {
       name="robots"
       content={noIndex ? "noindex, nofollow" : "index, follow"}
     />
-
-    <link rel="canonical" href={canonical} />
 
     {pubDate && <meta property="article:published_time" content={pubDate} />}
     {

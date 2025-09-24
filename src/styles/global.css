@@ -19,6 +19,9 @@
   --yellow: #e5c07b;
   --blue: #61afef;
   --cmdbar-height: 30px;
+  --code-bg: #1f2328;
+  --code-fg: #dcdfe4;
+  --code-inline-color: #b16286;
 }
 
 html,
@@ -46,6 +49,10 @@ button {
   cursor: pointer;
   font-size: 1em;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Links & basic interactive elements                                            */
+/* -------------------------------------------------------------------------- */
 
 a:hover,
 a:focus {
@@ -175,6 +182,380 @@ a:focus {
   margin-left: 0.5rem;
 }
 
+.cmd-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--foreground);
+  opacity: 0.95;
+  display: none;
+  transform: translateY(0.1em);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 10001;
+  animation: cmd-cursor-blink 1s steps(1) infinite;
+}
+
+
+.command-bar-focused {
+  overscroll-behavior: contain;
+}
+
+.cmd-cursor {
+  /* Default block caret sizing; width/height set dynamically by script */
+  display: inline-block;
+  height: 1em;
+}
+
+/* ----------------------------- Blog layout -------------------------------- */
+.blog-layout {
+  margin: 1.5rem;
+  max-width: 600px;
+}
+
+.blog-layout h1,
+.blog-layout h2,
+.blog-layout h3,
+.blog-layout h4,
+.blog-layout h5,
+.blog-layout h6 {
+  line-height: 1.4;
+  text-align: left;
+  padding-bottom: 0.5rem;
+  color: var(--purple);
+}
+
+.blog-layout h1 {
+  font-size: 1.4rem;
+}
+
+.blog-layout h3,
+.blog-layout h4 {
+  font-size: 1.2rem;
+}
+
+.blog-layout h5 {
+  font-size: 0.9rem;
+}
+
+.blog-layout h6 {
+  font-size: 0.8rem;
+}
+
+.blog-layout p {
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+/* Keep blog content left-aligned */
+.blog-layout,
+.blog-layout * {
+  text-align: left !important;
+}
+
+.blog-layout pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  padding: 1rem;
+  border-radius: 8px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "DejaVu Sans Mono", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.blog-layout pre code {
+  color: var(--code-fg);
+}
+
+.blog-layout code {
+  background: transparent;
+  padding: 0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.98em;
+  color: var(--code-inline-color);
+}
+
+.blog-layout ul,
+.blog-layout ol {
+  margin-left: 1.1rem;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.blog-layout li {
+  margin: 0.45rem 0;
+  line-height: 1.5;
+}
+
+.blog-footer {
+  margin-top: 2rem;
+  color: var(--comment);
+}
+
+.blog-footer-text {
+  margin: 0;
+}
+
+/* ----------------------------- Index page --------------------------------- */
+.index-main-content {
+  margin-top: -3rem;
+}
+
+.intro-container {
+  max-width: 450px;
+  margin: 0 auto;
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: pre-line;
+}
+
+.intro-heading {
+  display: block;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 1em;
+}
+
+.intro-body {
+  display: block;
+  text-align: justify;
+}
+
+.command-hints-container {
+  width: 100%;
+  max-width: 450px;
+  margin: 1rem auto 0 auto;
+  color: var(--comment);
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.command-hint-row {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 1.5em;
+  display: grid;
+  grid-template-columns: minmax(10ch, max-content) minmax(10ch, max-content) 1fr;
+  align-items: center;
+  gap: 1.5ch;
+  white-space: nowrap;
+  margin: 0 auto;
+}
+
+.command-hint-type {
+  color: var(--foreground);
+  font-family: inherit;
+  text-align: left;
+  padding-right: 0.6ch;
+}
+
+.command-hint-command {
+  color: var(--cyan);
+  font-family: inherit;
+  text-align: center;
+  font-weight: 600;
+  justify-self: left;
+}
+
+.command-hint-description {
+  color: var(--foreground);
+  font-family: inherit;
+  text-align: right;
+  white-space: pre;
+  min-width: 0;
+  justify-self: end;
+}
+
+@media (max-width: 600px) {
+
+  .intro-heading,
+  .intro-body {
+    text-align: left;
+  }
+
+  .index-main-content {
+    padding: 0 2rem;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .command-hint-row {
+    display: block;
+    gap: 0;
+    grid-template-columns: none;
+    white-space: normal;
+    padding: 0.35rem 0;
+  }
+
+  .command-hint-type,
+  .command-hint-command,
+  .command-hint-description {
+    display: inline;
+    vertical-align: baseline;
+    text-align: left;
+    white-space: normal;
+    padding: 0;
+  }
+
+  .command-hint-type::after {
+    content: " ";
+  }
+
+  .command-hint-command::before {
+    content: " ";
+  }
+
+  .command-hint-command::after {
+    content: " ";
+    color: var(--comment);
+  }
+
+  .command-hint-description {
+    color: var(--foreground);
+  }
+}
+
+/* ----------------------------- About page --------------------------------- */
+.about-content {
+  max-width: 600px;
+  margin: 1.5rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  line-height: 1.2;
+  text-align: left;
+  white-space: pre-line;
+  padding: 0 1rem;
+}
+
+.about-end {
+  color: var(--comment);
+}
+
+/* ----------------------------- Blog index page ---------------------------- */
+.blog-content-start {
+  color: var(--comment);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.blog-content {
+  max-width: 600px;
+  margin: 1.5rem;
+  color: var(--foreground);
+}
+
+.year-heading {
+  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: left;
+  color: var(--yellow);
+}
+
+.year-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.3rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.post-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-bottom: 0.8rem;
+}
+
+.post-index {
+  color: var(--foreground);
+  font-weight: 700;
+  min-width: 2.4ch;
+  text-align: left;
+  display: inline-block;
+}
+
+.post-link {
+  color: var(--cyan);
+  font-weight: 600;
+  text-decoration: none;
+  text-align: left;
+  line-height: 1.2rem;
+}
+
+.post-date {
+  color: var(--foreground);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+/* ----------------------------- Contact page ------------------------------- */
+.contact-content {
+  max-width: 600px;
+  margin: 1.5rem;
+  color: var(--foreground);
+  font-size: 1rem;
+  text-align: left;
+  padding: 0 1rem;
+}
+
+.contact-row {
+  margin-bottom: 0.8rem;
+}
+
+.contact-end {
+  color: var(--comment);
+}
+
+/* ----------------------------- 404 page ----------------------------------- */
+.not-found-heading {
+  font-size: 2rem;
+  color: var(--purple);
+}
+
+.not-found-kaomoji {
+  color: var(--comment);
+  font-style: normal;
+  padding-left: 0.5rem;
+}
+
+.not-found-message {
+  margin-top: 1rem;
+  line-height: 1.4rem;
+}
+
+.not-found-container {
+  max-width: 600px;
+  margin: 1.5rem;
+  color: var(--foreground);
+  text-align: left;
+  padding: 2rem;
+}
+
+.not-found-end {
+  color: var(--comment);
+  margin-bottom: 1rem;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Interactions & animations                                                  */
+/* Grouped interactive states (:hover, :focus, :focus-within, :active) and
+   keyframes/animations so they're easy to find and maintain. */
+
 .command-bar:focus-within {
   outline: none;
 }
@@ -194,18 +575,14 @@ a:focus {
   z-index: 9997;
 }
 
-.cmd-cursor {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: var(--foreground);
-  opacity: 0.95;
-  display: none;
-  transform: translateY(0.1em);
-  border-radius: 2px;
-  pointer-events: none;
-  z-index: 10001;
-  animation: cmd-cursor-blink 1s steps(1) infinite;
+.command-hint-command[href]:hover,
+.command-hint-command[href]:focus {
+  text-decoration: underline;
+}
+
+.post-link:hover,
+.post-link:focus {
+  text-decoration: underline;
 }
 
 @keyframes cmd-cursor-blink {
@@ -214,12 +591,4 @@ a:focus {
   }
 }
 
-.command-bar-focused {
-  overscroll-behavior: contain;
-}
-
-.cmd-cursor {
-  /* Default block caret sizing; width/height set dynamically by script */
-  display: inline-block;
-  height: 1em;
-}
+/* ========================================================================== */
