@@ -41,19 +41,28 @@ const blogIndexLabel = ":blog[index]";
 
 <BaseLayout title="Blog" description="List of all blog posts.">
   <div class="blog-content">
-    <p class="blog-content-start">
-      Select a blog post by tapping its title or typing <a href="/"
-        >{blogIndexLabel}</a
-      >. To return to the homepage, tap or type <a href="/">{homeUrlLabel}</a>.
-    </p>
+    <header class="blog-header">
+      <h1 id="blog-title" class="sr-only">Blog</h1>
+      <p class="blog-content-start">
+        Select a blog post by tapping its title or typing <a
+          href="/"
+          aria-label="Open blog index">{blogIndexLabel}</a
+        >. To return to the homepage, tap or type <a
+          href="/"
+          aria-label="Go to homepage">{homeUrlLabel}</a
+        >.
+      </p>
+    </header>
     <div class="posts-wrapper">
       {
         Object.keys(grouped)
           .sort((a, b) => Number(b) - Number(a))
           .map((year) => (
             <section class="year-group">
-              <h2 class="year-heading">{year}</h2>
-              <ul class="year-list">
+              <h2 class="year-heading" id={`year-${year}`}>
+                {year}
+              </h2>
+              <ul class="year-list" aria-labelledby={`year-${year}`}>
                 {grouped[Number(year)].map((post) => (
                   <li
                     class="post-row"
@@ -61,10 +70,13 @@ const blogIndexLabel = ":blog[index]";
                     data-blog-url={post.url}
                   >
                     <span class="post-index">{post.index}</span>
-                    <a class="post-link" href={post.url}>
+                    <a class="post-link" href={post.url} rel="bookmark">
                       {post.title}
                     </a>
-                    <time class="post-date">
+                    <time
+                      class="post-date"
+                      datetime={post.pubDate.toISOString()}
+                    >
                       {post.pubDate.toLocaleDateString("en-US", {
                         month: "short",
                         day: "numeric",

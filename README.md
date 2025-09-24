@@ -10,7 +10,7 @@ A simple website I built with Astro, inspired by vim and terminal interfaces. He
 
 - Astro — static site generator
 - `pnpm` — package management
-- Plain CSS — small, focused styles (see `src/styles/global.css`)
+- SCSS — small, focused styles (see `src/styles/main.scss`)
 
 ### Quick start ⚡️
 
@@ -47,8 +47,8 @@ pnpm preview
 │  ├─ layouts/        # layout components
 │  ├─ pages/          # top-level pages
 │  └─ styles/
-│     └─ global.css   # global styles including the retro font
-└─ ...
+│     └─ main.scss    # main SCSS entry importing modular partials
+└─ ...                # other project config files
 ```
 
 ## Deployment 🚀

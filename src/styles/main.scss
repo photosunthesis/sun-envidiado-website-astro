@@ -1,0 +1,8 @@
+// Main SCSS entry — use module system to load partials. Each partial uses `@use 'variables' as *;`.
+@use 'variables' as *;
+@use 'base';
+@use 'blog';
+@use 'index';
+@use 'pages';
+
+// Keep this file as the single stylesheet import point for the project.

@@ -38,25 +38,28 @@ const commandHints: CommandHint[] = [
 	<div class="index-main-content">
 		<SpinningSunAsciiArt />
 		<div class="intro-container">
+			<h1 class="sr-only">Sun Envidiado</h1>
 			<span class="intro-heading">{introHeading}</span>
 			<span class="intro-body">{introBody}</span>
 		</div>
-		<div class="command-hints-container">
-			{
-				commandHints.map((hint) => (
-					<div class="command-hint-row">
-						<span class="command-hint-type">{hint.type}</span>
-						<a
-							class="command-hint-command"
-							href={hint.href}
-							aria-label={"Go to " + hint.href}
-						>
-							{hint.command}
-						</a>
-						<span class="command-hint-description">{hint.description}</span>
-					</div>
-				))
-			}
-		</div>
+		<nav class="command-hints-container" aria-label="Quick commands">
+			<ul class="command-hints-list">
+				{
+					commandHints.map((hint) => (
+						<li class="command-hint-row">
+							<span class="command-hint-type">{hint.type}</span>
+							<a
+								class="command-hint-command"
+								href={hint.href}
+								aria-label={`Go to ${hint.href}`}
+							>
+								{hint.command}
+							</a>
+							<span class="command-hint-description">{hint.description}</span>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
 	</div>
 </BaseLayout>

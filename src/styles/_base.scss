@@ -1,0 +1,270 @@
+@use 'variables' as *;
+
+@font-face {
+  font-family: "ToshibaSat8x14";
+  src: url("/fonts/Web437_ToshibaSat_8x14.woff2") format("woff2"),
+    url("/fonts/Web437_ToshibaSat_8x14.woff") format("woff");
+  font-display: swap;
+  font-weight: normal;
+  font-style: normal;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: $background;
+  color: $foreground;
+  font-family: "ToshibaSat8x14", "Menlo", "Monaco", "Consolas", "Courier New",
+    monospace;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a,
+button {
+  color: $cyan;
+  font-family: inherit;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+a:hover,
+a:focus {
+  text-decoration: underline;
+}
+
+.vim-root {
+  display: block;
+  min-height: calc(100vh - #{$cmdbar-height});
+  font-family: inherit;
+}
+
+/* Global typography defaults (moved from _blog.scss) */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.4;
+  text-align: left;
+  padding-bottom: 0.5rem;
+  color: $purple;
+}
+
+h1 {
+  font-size: 1.4rem;
+}
+
+h3,
+h4 {
+  font-size: 1.2rem;
+}
+
+h5 {
+  font-size: 0.9rem;
+}
+
+h6 {
+  font-size: 0.8rem;
+}
+
+p {
+  line-height: 1.4;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+pre {
+  color: $code-fg;
+  padding: 1rem;
+  border-radius: 8px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "DejaVu Sans Mono", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 1rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+code {
+  background: transparent;
+  padding: 0;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.98em;
+  color: $code-inline-color;
+}
+
+ul,
+ol {
+  margin-left: 1.1rem;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+li {
+  margin: 0.45rem 0;
+  line-height: 1.5;
+}
+
+/* Accessible utility: visually-hidden but available to screen readers */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.vim-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - #{$cmdbar-height});
+}
+
+.main-flex-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.centered-vim {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - #{$cmdbar-height});
+  text-align: center;
+}
+
+.vim-menu {
+  display: flex;
+  gap: 2rem;
+  margin-top: 2rem;
+  font-size: 1.2rem
+}
+
+.vim-menu span {
+  color: $orange;
+  font-weight: bold
+}
+
+.tilde-column {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 2.5rem;
+  height: 100vh;
+  background: none;
+  color: $comment;
+  user-select: none;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1;
+  font-family: inherit;
+  white-space: pre;
+  padding-left: 5px;
+  margin: 0;
+  display: block;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cmd-input {
+  outline: none;
+  min-width: 2ch;
+  background: transparent;
+  border: none;
+  color: $foreground;
+  font-family: inherit;
+  font-size: 1rem;
+  caret-color: $cyan;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0.1rem 0.25rem;
+  width: min(60ch, calc(100% - 4rem));
+  max-width: 90vw;
+}
+
+.cmd-feedback {
+  margin-left: 1rem;
+  color: $comment;
+  font-size: 0.95rem
+}
+
+.cmd-input::placeholder {
+  color: $comment;
+  opacity: 1
+}
+
+.vim-error {
+  position: fixed;
+  left: 0.5rem;
+  bottom: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.4rem;
+  background: #8b0000;
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  z-index: 10000;
+  border-radius: 0;
+  box-shadow: none;
+  max-width: calc(100vw - 5rem);
+}
+
+.cmd-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-left: -8px
+}
+
+.command-bar {
+  margin-left: 0.5rem
+}
+
+.cmd-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: $foreground;
+  opacity: 0.95;
+  display: none;
+  transform: translateY(0.1em);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 10001;
+  animation: cmd-cursor-blink 1s steps(1) infinite
+}
+
+.command-bar-focused {
+  overscroll-behavior: contain
+}
+
+.cmd-cursor {
+  display: inline-block;
+  height: 1em
+}
+
+@keyframes cmd-cursor-blink {
+  50% {
+    opacity: 0
+  }
+}

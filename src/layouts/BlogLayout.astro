@@ -39,13 +39,27 @@ const canonical = new URL(
   {...rest}
 >
   <div class="blog-layout">
-    <slot />
-    <footer class="blog-footer">
+    {
+      pubDate ? (
+        <article class="blog-article" aria-labelledby="post-title">
+          <slot />
+        </article>
+      ) : (
+        <slot />
+      )
+    }
+    <footer
+      class="blog-footer"
+      role="contentinfo"
+      aria-label="Post navigation and actions"
+    >
       <p class="blog-footer-text">
         Tap or type
-        <a href="#" onclick="history.back(); return false;">{backUrlLabel}</a>
+        <a href="#" onclick="history.back(); return false;" aria-label="Go back"
+          >{backUrlLabel}</a
+        >
         or
-        <a href="/">{homeUrlLabel}</a>
+        <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a>
         to go back or return to the homepage.
       </p>
     </footer>

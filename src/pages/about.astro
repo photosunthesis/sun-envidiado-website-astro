@@ -20,11 +20,12 @@ const homeUrlLabel = ":home<Enter>";
   description="Learn more about Sun Envidiado."
 >
   <div class="about-content">
-    <p>
-      {aboutMeText}
-    </p>
-    <p class="about-end">
-      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
-    </p>
+    <article class="about-article" aria-labelledby="about-title">
+      <h1 id="about-title" class="about-title sr-only">About Me</h1>
+      <p>{aboutMeText}</p>
+      <p class="about-end">
+        Tap or type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a> to go back to the homepage.
+      </p>
+    </article>
   </div>
 </BaseLayout>

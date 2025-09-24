@@ -1,6 +1,6 @@
 ---
 import CommandBar from "../components/CommandBar.astro";
-import "../styles/global.css";
+import "../styles/main.scss";
 
 const {
   title = "Sun Envidiado",
@@ -37,6 +37,10 @@ const fullImage = new URL(
       name="robots"
       content={noIndex ? "noindex, nofollow" : "index, follow"}
     />
+    <link rel="canonical" href={canonical} />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="author" content={title} />
 
     {pubDate && <meta property="article:published_time" content={pubDate} />}
     {
@@ -46,6 +50,7 @@ const fullImage = new URL(
     }
 
     <!-- Open Graph / Facebook -->
+    <meta property="og:site_name" content={title} />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -56,6 +61,10 @@ const fullImage = new URL(
     <meta
       name="twitter:card"
       content={image ? "summary_large_image" : "summary"}
+    />
+    <meta
+      name="twitter:site"
+      content={`@${title.replace(/\s+/g, "").toLowerCase()}`}
     />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
@@ -77,6 +86,30 @@ const fullImage = new URL(
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
+    <!-- Minimal skip-link styles (hidden visually, visible on keyboard focus) -->
+    <style>
+      .skip-link {
+        position: absolute;
+        left: -999px;
+        top: auto;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        z-index: -999;
+      }
+      .skip-link:focus {
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        width: auto;
+        height: auto;
+        padding: 0.5rem 1rem;
+        background: #111;
+        color: #fff;
+        z-index: 1000;
+      }
+    </style>
+
     {
       jsonLd && (
         <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
@@ -84,35 +117,50 @@ const fullImage = new URL(
     }
   </head>
   <body class="vim-root">
+    <!-- Skip link for keyboard users -->
+    <a class="skip-link" href="#main" aria-label="Skip to main content"
+      >Skip to content</a
+    >
+
     <div class="main-flex-container">
-      <aside id="tilde-column" class="tilde-column" aria-hidden="true"></aside>
-      <main class="vim-main-content">
+      <aside
+        id="tilde-column"
+        class="tilde-column"
+        aria-hidden="true"
+        role="presentation"
+      >
+      </aside>
+      <main id="main" class="vim-main-content" tabindex="-1">
         <div class="centered-vim">
           <slot />
         </div>
       </main>
     </div>
     <CommandBar />
+
+    <script type="module">
+      // Render tildes to fill the document height (covers overflow) and
+      // keep the tilde column purely visual (pointer-events: none)
+      function renderTildes() {
+        const tildeCol = document.getElementById("tilde-column");
+        if (!tildeCol) return;
+        const style = getComputedStyle(tildeCol);
+        const lineHeight = parseFloat(style.lineHeight) || 24;
+        // Column is fixed and floats over the page. Use the viewport height so
+        // the column always visually fills the screen. Reserve one line at the
+        // bottom for the floating command bar.
+        const height = window.innerHeight;
+        // Reserve 3 lines at the bottom to ensure the floating command bar is
+        // not accidentally covered by tilde characters on small viewports.
+        const reservedLines = 3;
+        const count = Math.max(
+          0,
+          Math.ceil(height / lineHeight) - reservedLines,
+        );
+        tildeCol.textContent = Array(count).fill("~").join("\n");
+      }
+      window.addEventListener("resize", renderTildes);
+      window.addEventListener("DOMContentLoaded", renderTildes);
+    </script>
   </body>
-  <script type="module">
-    // Render tildes to fill the document height (covers overflow) and
-    // keep the tilde column purely visual (pointer-events: none)
-    function renderTildes() {
-      const tildeCol = document.getElementById("tilde-column");
-      if (!tildeCol) return;
-      const style = getComputedStyle(tildeCol);
-      const lineHeight = parseFloat(style.lineHeight) || 24;
-      // Column is fixed and floats over the page. Use the viewport height so
-      // the column always visually fills the screen. Reserve one line at the
-      // bottom for the floating command bar.
-      const height = window.innerHeight;
-      // Reserve 3 lines at the bottom to ensure the floating command bar is
-      // not accidentally covered by tilde characters on small viewports.
-      const reservedLines = 3;
-      const count = Math.max(0, Math.ceil(height / lineHeight) - reservedLines);
-      tildeCol.textContent = Array(count).fill("~").join("\n");
-    }
-    window.addEventListener("resize", renderTildes);
-    window.addEventListener("DOMContentLoaded", renderTildes);
-  </script>
 </html>

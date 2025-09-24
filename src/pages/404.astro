@@ -31,20 +31,27 @@ const kaomojis = [
 <BaseLayout
   title="404 - Page Not Found"
   description="The page you are looking for does not exist."
+  noIndex={true}
 >
   <div class="not-found-container">
-    <h1 class="not-found-heading">
+    <h1 id="404-heading" class="not-found-heading">
       Error 404 <i class="not-found-kaomoji">
         {kaomojis[Math.floor(Math.random() * kaomojis.length)]}
       </i>
     </h1>
 
-    <p class="not-found-message">
+    <p
+      class="not-found-message"
+      role="status"
+      aria-live="polite"
+      aria-labelledby="404-heading"
+    >
       The page you're looking for doesn't exist. Double-check the URL — it may
       be a typo, or the page could have been removed.
     </p>
     <p class="not-found-end">
-      Tap or type <a href="/">{homeUrlLabel}</a> to go back to the homepage.
+      Tap or type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a> to go
+      back to the homepage.
     </p>
   </div>
 </BaseLayout>
