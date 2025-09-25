@@ -1,4 +1,4 @@
-name: Build and Deploy Astro Site to GitHub Pages
+name: Build and Deploy
 
 on:
   workflow_dispatch:
