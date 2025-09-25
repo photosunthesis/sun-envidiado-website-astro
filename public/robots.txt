@@ -1,5 +1,0 @@
-# robots.txt for personal website
-# Allow all user agents full access to the site
-User-agent: *
-Allow: /
-Sitemap: https://sun-envidiado.com/sitemap.xml
