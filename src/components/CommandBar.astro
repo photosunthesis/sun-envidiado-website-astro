@@ -21,287 +21,286 @@
       <span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
     </span>
   </div>
+</div>
 
-  <script type="module">
-    const input = document.getElementById("site-command-input");
-    const vimError = document.getElementById("vim-error");
-    let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
+<script>
+  const input = document.getElementById(
+    "site-command-input",
+  ) as HTMLInputElement | null;
+  const vimError = document.getElementById("vim-error") as HTMLElement | null;
+  let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
 
-    function showVimError(text) {
-      if (!vimError || !input) return;
-      const bar = input.closest(".command-bar");
-      if (bar) bar.classList.add("error");
-      // Show the error message inline using a short message
-      vimError.textContent = `ERROR: "${text}" is not a valid command`;
-    }
+  function showVimError(text: string) {
+    if (!vimError || !input) return;
+    const bar = input.closest(".command-bar");
+    if (bar) bar.classList.add("error");
+    // Show the error message inline using a short message
+    vimError.textContent = `ERROR: "${text}" is not a valid command`;
+  }
 
-    function hideVimError() {
-      if (!vimError || !input) return;
-      const bar = input.closest(".command-bar");
-      if (bar) bar.classList.remove("error");
-      vimError.textContent = "";
-    }
+  function hideVimError() {
+    if (!vimError || !input) return;
+    const bar = input.closest(".command-bar");
+    if (bar) bar.classList.remove("error");
+    vimError.textContent = "";
+  }
 
-    // Custom rectangular block cursor (like Vim)
-    const cursor = document.getElementById("cmd-cursor");
-    // hidden native caret
-    const hideNativeCaret = () => {
-      if (!input) return;
-      input.style.caretColor = "transparent";
-    };
+  // Custom rectangular block cursor (like Vim)
+  const cursor = document.getElementById("cmd-cursor") as HTMLElement | null;
+  // hidden native caret
+  const hideNativeCaret = () => {
+    if (!input) return;
+    input.style.caretColor = "transparent";
+  };
 
-    function measureTextWidth(text) {
-      if (!input) return 0;
-      // create a temporary span to measure text width with same font
-      const span = document.createElement("span");
-      span.style.visibility = "hidden";
-      span.style.position = "absolute";
-      span.style.whiteSpace = "pre";
-      span.style.font = getComputedStyle(input).font;
-      span.textContent = text || "";
-      document.body.appendChild(span);
-      const w = span.getBoundingClientRect().width;
-      document.body.removeChild(span);
-      return w;
-    }
+  function measureTextWidth(text: string) {
+    if (!input) return 0;
+    // create a temporary span to measure text width with same font
+    const span = document.createElement("span");
+    span.style.visibility = "hidden";
+    span.style.position = "absolute";
+    span.style.whiteSpace = "pre";
+    span.style.font = getComputedStyle(input).font;
+    span.textContent = text || "";
+    document.body.appendChild(span);
+    const w = span.getBoundingClientRect().width;
+    document.body.removeChild(span);
+    return w;
+  }
 
-    function positionCursor() {
-      if (!cursor || !input) return;
-      const wrapper = cursor.parentElement;
-      if (!wrapper) return;
-      // measure the input's value width
-      const value = input.value || "";
-      const textForMeasure = value;
-      const textWidth = measureTextWidth(textForMeasure);
-      const style = getComputedStyle(input);
-      const paddingLeft = parseFloat(style.paddingLeft) || 0;
-      const scrollLeft = input.scrollLeft || 0;
-      // input offset relative to wrapper
-      const inputOffsetLeft = input.offsetLeft || 0;
-      // left position relative to wrapper
-      const left = inputOffsetLeft + paddingLeft + textWidth - scrollLeft;
-      cursor.style.left = `${left}px`;
+  function positionCursor() {
+    if (!cursor || !input) return;
+    const wrapper = cursor.parentElement;
+    if (!wrapper) return;
+    // measure the input's value width
+    const value = input.value || "";
+    const textForMeasure = value;
+    const textWidth = measureTextWidth(textForMeasure);
+    const style = getComputedStyle(input);
+    const paddingLeft = parseFloat(style.paddingLeft) || 0;
+    const scrollLeft = input.scrollLeft || 0;
+    // input offset relative to wrapper
+    const inputOffsetLeft = input.offsetLeft || 0;
+    // left position relative to wrapper
+    const left = inputOffsetLeft + paddingLeft + textWidth - scrollLeft;
+    cursor.style.left = `${left}px`;
 
-      // caret width: measure last character if present, otherwise 0.8ch
-      const lastChar = value.slice(-1) || " ";
-      const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
-      // fallback to 0.6em if measurement fails
-      const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
-      const caretWidth = Math.max(charWidth, fallbackWidth);
-      cursor.style.width = `${caretWidth}px`;
+    // caret width: measure last character if present, otherwise 0.8ch
+    const lastChar = value.slice(-1) || " ";
+    const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
+    // fallback to 0.6em if measurement fails
+    const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
+    const caretWidth = Math.max(charWidth, fallbackWidth);
+    cursor.style.width = `${caretWidth}px`;
 
-      cursor.style.height = `${input.clientHeight}px`;
-      cursor.style.display =
-        document.activeElement === input ? "block" : "none";
-    }
+    cursor.style.height = `${input.clientHeight}px`;
+    cursor.style.display = document.activeElement === input ? "block" : "none";
+  }
 
-    // reposition cursor on input, focus, and window resize
-    if (input) {
-      input.addEventListener("input", () => {
-        hideVimError();
-        positionCursor();
-      });
-      input.addEventListener("focus", () => {
-        hideVimError();
-        hideNativeCaret();
-        positionCursor();
-        cursor && cursor.classList.add("visible");
-        // ensure the input is visible on mobile when focused but don't cover too much
-        try {
-          input.scrollIntoView({ behavior: "smooth", block: "nearest" });
-        } catch (e) {
-          /* ignore on older browsers */
-        }
-      });
-      input.addEventListener("blur", () => {
-        cursor && cursor.classList.remove("visible");
-        cursor && (cursor.style.display = "none");
-      });
-    }
-
-    window.addEventListener("resize", positionCursor);
-
-    // Make the entire command bar clickable — focus input when the bar is clicked.
-    // Use `click` instead of pointer events so we don't interfere with scrolling on mobile.
-    if (input) {
-      const bar = input.closest(".command-bar");
-      if (bar) {
-        bar.addEventListener("click", (ev) => {
-          // If user clicked directly on the input, let the default happen
-          if (ev.target === input) return;
-          // If the input is currently focused, clicking the bar will unfocus it
-          if (document.activeElement === input) {
-            input.blur();
-            hideVimError();
-            return;
-          }
-          // Focus the input (do not preventDefault so scrolling isn't blocked)
-          input.focus();
-          // put caret at end
-          setTimeout(
-            () =>
-              input.setSelectionRange(input.value.length, input.value.length),
-            0,
-          );
-        });
+  // reposition cursor on input, focus, and window resize
+  if (input) {
+    input.addEventListener("input", () => {
+      hideVimError();
+      positionCursor();
+    });
+    input.addEventListener("focus", () => {
+      hideVimError();
+      hideNativeCaret();
+      positionCursor();
+      cursor && cursor.classList.add("visible");
+      // ensure the input is visible on mobile when focused but don't cover too much
+      try {
+        input.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      } catch (e) {
+        /* ignore on older browsers */
       }
-    }
+    });
+    input.addEventListener("blur", () => {
+      cursor && cursor.classList.remove("visible");
+      cursor && (cursor.style.display = "none");
+    });
+  }
 
-    function handleCommand(raw) {
-      if (!raw) return;
-      const val = raw.trim();
-      if (!val.startsWith(":")) {
-        showVimError(val);
-        return;
-      }
-      const token = val.slice(1);
-      if (!token) {
-        showVimError(val);
-        return;
-      }
-      const cmd = token.toLowerCase();
+  window.addEventListener("resize", positionCursor);
 
-      // Support explicit blog selection syntax like `:blog[1]` (case-insensitive)
-      const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
-      if (blogMatch) {
-        const idx = Number(blogMatch[1]);
-        const el = document.querySelector(`[data-blog-index="${idx}"]`);
-        if (el && el instanceof HTMLElement) {
-          const url = el.getAttribute("data-blog-url");
-          if (url) {
-            window.location.href = url;
-            return;
-          }
-        }
-        showVimError(val);
-        return;
-      }
-
-      // If we're on the blog index and the command is just a number, treat it as selecting that indexed post
-      const numeric = Number(cmd);
-      if (
-        !Number.isNaN(numeric) &&
-        typeof window !== "undefined" &&
-        window.location.pathname.startsWith("/blog")
-      ) {
-        const el = document.querySelector(`[data-blog-index="${numeric}"]`);
-        if (el && el instanceof HTMLElement) {
-          const url = el.getAttribute("data-blog-url");
-          if (url) {
-            window.location.href = url;
-            return;
-          }
-        }
-        showVimError(val);
-        return;
-      }
-
-      switch (cmd) {
-        case "home":
-          window.location.href = "/";
-          break;
-        case "about":
-          window.location.href = "/about";
-          break;
-        case "contact":
-          window.location.href = "/contact";
-          break;
-        case "blog":
-          window.location.href = "/blog";
-          break;
-        case "back":
-          window.history.back();
-          break;
-        case "crt":
-          {
-            const container = document.getElementById("crt-overlay-container");
-            if (container) container.classList.add("crt-enabled");
-            // also enable text chromatic aberration styles
-            document.body && document.body.classList.add("crt-text-ca");
-          }
-          break;
-        case "no-crt":
-          {
-            const container = document.getElementById("crt-overlay-container");
-            if (container) container.classList.remove("crt-enabled");
-            // also disable text chromatic aberration styles
-            document.body && document.body.classList.remove("crt-text-ca");
-          }
-          break;
-        default:
-          // Unknown command -> show error inline by changing the bar background
-          showVimError(val);
-      }
-    }
-
-    // Enter to execute, Escape to clear and hide error
-    if (input) {
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          // Execute command
-          handleCommand(input.value);
-          // Clear input on Enter as requested, but avoid hiding the error immediately
-          suppressInputHide = true;
-          input.value = "";
-          // reposition cursor after clearing
-          positionCursor();
-          input.blur();
-        } else if (e.key === "Escape") {
-          input.value = "";
+  // Make the entire command bar clickable — focus input when the bar is clicked.
+  // Use `click` instead of pointer events so we don't interfere with scrolling on mobile.
+  if (input) {
+    const bar = input.closest(".command-bar");
+    if (bar) {
+      bar.addEventListener("click", (ev) => {
+        // If user clicked directly on the input, let the default happen
+        if (ev.target === input) return;
+        // If the input is currently focused, clicking the bar will unfocus it
+        if (document.activeElement === input) {
           input.blur();
           hideVimError();
-        }
-      });
-
-      // When user types again, hide the error state (unless suppressed by programmatic clear)
-      input.addEventListener("input", () => {
-        if (suppressInputHide) {
-          // reset the flag and don't hide the error this round
-          suppressInputHide = false;
           return;
         }
-        hideVimError();
-      });
-    }
-
-    // While the error is visible, pressing any normal key should clear it and focus the input
-    window.addEventListener("keydown", (ev) => {
-      if (!vimError || !input) return;
-      const bar = input.closest(".command-bar");
-      if (bar && bar.classList.contains("error")) {
-        if (ev.key.length === 1 || ["Backspace", "Escape"].includes(ev.key)) {
-          hideVimError();
-          input.focus();
-        }
-      }
-    });
-
-    // Global shortcut: press ':' to focus the input (unless typing in another field)
-    window.addEventListener("keydown", (e) => {
-      if (
-        e.key === ":" &&
-        document.activeElement.tagName !== "INPUT" &&
-        document.activeElement.tagName !== "TEXTAREA"
-      ) {
-        e.preventDefault();
-        input && input.focus();
+        // Focus the input (do not preventDefault so scrolling isn't blocked)
+        input.focus();
+        // put caret at end
         setTimeout(
-          () =>
-            input &&
-            input.setSelectionRange(input.value.length, input.value.length),
+          () => input.setSelectionRange(input.value.length, input.value.length),
           0,
         );
+      });
+    }
+  }
+
+  function handleCommand(raw: string) {
+    if (!raw) return;
+    const val = raw.trim();
+    if (!val.startsWith(":")) {
+      showVimError(val);
+      return;
+    }
+    const token = val.slice(1);
+    if (!token) {
+      showVimError(val);
+      return;
+    }
+    const cmd = token.toLowerCase();
+
+    // Support explicit blog selection syntax like `:blog[1]` (case-insensitive)
+    const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
+    if (blogMatch) {
+      const idx = Number(blogMatch[1]);
+      const el = document.querySelector(`[data-blog-index="${idx}"]`);
+      if (el && el instanceof HTMLElement) {
+        const url = el.getAttribute("data-blog-url");
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+      showVimError(val);
+      return;
+    }
+
+    // If we're on the blog index and the command is just a number, treat it as selecting that indexed post
+    const numeric = Number(cmd);
+    if (
+      !Number.isNaN(numeric) &&
+      typeof window !== "undefined" &&
+      window.location.pathname.startsWith("/blog")
+    ) {
+      const el = document.querySelector(`[data-blog-index="${numeric}"]`);
+      if (el && el instanceof HTMLElement) {
+        const url = el.getAttribute("data-blog-url");
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+      showVimError(val);
+      return;
+    }
+
+    switch (cmd) {
+      case "home":
+        window.location.href = "/";
+        break;
+      case "about":
+        window.location.href = "/about";
+        break;
+      case "contact":
+        window.location.href = "/contact";
+        break;
+      case "blog":
+        window.location.href = "/blog";
+        break;
+      case "back":
+        window.history.back();
+        break;
+      case "crt":
+        {
+          const container = document.getElementById("crt-overlay-container");
+          if (container) container.classList.add("crt-enabled");
+          // also enable text chromatic aberration styles
+          document.body && document.body.classList.add("crt-text-ca");
+        }
+        break;
+      case "no-crt":
+        {
+          const container = document.getElementById("crt-overlay-container");
+          if (container) container.classList.remove("crt-enabled");
+          // also disable text chromatic aberration styles
+          document.body && document.body.classList.remove("crt-text-ca");
+        }
+        break;
+      default:
+        // Unknown command -> show error inline by changing the bar background
+        showVimError(val);
+    }
+  }
+
+  // Enter to execute, Escape to clear and hide error
+  if (input) {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        // Execute command
+        handleCommand(input.value);
+        // Clear input on Enter as requested, but avoid hiding the error immediately
+        suppressInputHide = true;
+        input.value = "";
+        // reposition cursor after clearing
+        positionCursor();
+        input.blur();
+      } else if (e.key === "Escape") {
+        input.value = "";
+        input.blur();
+        hideVimError();
       }
     });
 
-    // Prevent the command bar input from stealing scroll when focused on mobile
-    if (input) {
-      input.addEventListener("focus", () => {
-        document.body.classList.add("command-bar-focused");
-      });
-      input.addEventListener("blur", () => {
-        document.body.classList.remove("command-bar-focused");
-      });
+    // When user types again, hide the error state (unless suppressed by programmatic clear)
+    input.addEventListener("input", () => {
+      if (suppressInputHide) {
+        // reset the flag and don't hide the error this round
+        suppressInputHide = false;
+        return;
+      }
+      hideVimError();
+    });
+  }
+
+  // While the error is visible, pressing any normal key should clear it and focus the input
+  window.addEventListener("keydown", (ev) => {
+    if (!vimError || !input) return;
+    const bar = input.closest(".command-bar");
+    if (bar && bar.classList.contains("error")) {
+      if (ev.key.length === 1 || ["Backspace", "Escape"].includes(ev.key)) {
+        hideVimError();
+        input.focus();
+      }
     }
-  </script>
-</div>
+  });
+
+  // Global shortcut: press ':' to focus the input (unless typing in another field)
+  window.addEventListener("keydown", (e) => {
+    if (e.key !== ":") return;
+    const active = document.activeElement;
+    const activeTag = active ? active.tagName || "" : "";
+    if (activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
+      e.preventDefault();
+      input && input.focus();
+      setTimeout(
+        () =>
+          input &&
+          input.setSelectionRange(input.value.length, input.value.length),
+        0,
+      );
+    }
+  });
+
+  // Prevent the command bar input from stealing scroll when focused on mobile
+  if (input) {
+    input.addEventListener("focus", () => {
+      document.body.classList.add("command-bar-focused");
+    });
+    input.addEventListener("blur", () => {
+      document.body.classList.remove("command-bar-focused");
+    });
+  }
+</script>
