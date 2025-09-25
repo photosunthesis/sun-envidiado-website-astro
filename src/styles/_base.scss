@@ -1,10 +1,6 @@
 @use "sass:color" as color;
 
-// SCSS fallback variables that mirror the runtime CSS variables defined in
-// `main.scss`. These exist so we can still perform compile-time color
-// operations (e.g. color.adjust) where needed.
-$background: #000;
-$cmdbar-height: 30px;
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
 
 @font-face {
   font-family: "ToshibaSat8x14";
@@ -29,7 +25,6 @@ body {
 * {
   box-sizing: border-box;
   font-size: 1.069rem;
-  line-height: 1.45;
 }
 
 a,
@@ -89,14 +84,13 @@ h6 {
 
 p {
   text-align: left;
+  line-height: 1.6;
 }
 
 pre {
   color: var(--code-fg);
   border-radius: 8px;
   overflow: auto;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "DejaVu Sans Mono", monospace;
-  font-size: 0.9rem;
   line-height: 1.5;
   margin: 1rem 0;
   white-space: pre-wrap;
@@ -122,13 +116,18 @@ li {
 }
 
 pre[class*="astro-code"] {
-  background-color: rgba(var(--foreground-rgb), 0.08) !important;
+  background-color: rgba(var(--foreground-rgb), 0.069) !important;
   color: inherit !important;
   overflow-x: visible !important;
-  padding: 1.2rem;
-  font-size: 0.8rem;
-  font-family: inherit;
+  padding: 0.8rem;
+  line-height: 0.9;
+  font-family: "JetBrains Mono", "Menlo", "Monaco", "Consolas", "Courier New",
+    monospace !important;
   border-radius: 0;
+
+  span {
+    font-size: 0.8rem !important;
+  }
 }
 
 /* Accessible utility: visually-hidden but available to screen readers */
@@ -155,6 +154,8 @@ pre[class*="astro-code"] {
   display: flex;
   align-items: stretch;
 }
+
+$cmdbar-height: 30px;
 
 .centered-vim {
   display: flex;
@@ -459,7 +460,7 @@ $crt-ca-blur: 0.35px;
       /* Slightly stronger overlay to make vignette obvious. Blend overall overlay opacity with the vignette variable
       so changes to $crt-vignette-opacity are visible even when box-shadow alpha alone was not obvious. */
       opacity: #{0.6 + ($crt-vignette-opacity * 0.4)};
-      $vignette-color: color.adjust($background, $lightness: -18%);
+      $vignette-color: color.adjust(#000, $lightness: -18%);
       /* Increase inset shadow spread and blur for a stronger falloff; use $crt-vignette-opacity for alpha. */
       box-shadow: inset 0 0 360px rgba(color.channel($vignette-color, "red", $space: rgb),
           color.channel($vignette-color, "green", $space: rgb),
