@@ -37,15 +37,13 @@ The structure is straightforward — here's a compact directory example:
 src/
 ├─ pages/
 │   ├─ index.astro      # homepage
-│   └─ blog/            # individual posts
-│       └─ my-post.md   # example post
+│   └─ blog/            # blog posts
+│       └─ my-post.md 
 │       ...             # other pages (about, contact, etc.)
-├─ layouts/             # layout templates
-│   └─ BlogLayout.astro # blog layout example
-│   ...                 # other layouts
+├─ layouts/
+│   └─ BaseLayout.astro # project-wide layout (all pages use this)
 ├─ components/          # reusable UI components
-│   └─ CommandBar.astro # example component
-│   ...                 # other components
+│   └─ CommandBar.astro
 └─ styles/              # SCSS styles
 ```
 
@@ -64,9 +62,11 @@ tags: ["web", "astro"]
 And it works exactly like you'd expect.
 ```
 
-That top YAML block (the lines between the `---` markers) is called "frontmatter." It stores metadata — title, date, description, tags, and any other fields your templates or build tools might need. In the example above the frontmatter is the first section, and Astro reads those values automatically so your layout can display the title, sort posts by date, or filter by tags without extra code.
+That top YAML block (the lines between the `---` markers) is called "frontmatter." It stores metadata — title, date, description, tags, and any other fields your templates or build tools might need. Astro reads those values automatically so your layout can display the title, sort posts by date, or filter by tags without extra code.
 
-Astro automatically generates pages from these Markdown files, treats the frontmatter as metadata, and can expose those fields to your layouts and collection queries. For someone who just wants to write posts without fighting a CMS or building a complex content pipeline, it’s perfect.
+In this project, all pages use the same layout: `layouts/BaseLayout.astro`. Styles live under `src/styles/` — the repo includes `_base.scss` for global variables and resets, `main.scss` which imports the partials, and page-focused partials like `_index.scss` and `_blog.scss` for home and blog-specific styles. If a page needs more CSS (a long, complex article or a special layout), we add a page-specific SCSS file and import it where needed; for short or simple pages we rely on the shared partials so the CSS stays small and easy to maintain.
+
+Astro automatically generates pages from these Markdown files, treats the frontmatter as metadata, and exposes those fields to layouts and collection queries — which makes writing and publishing posts fast and low-friction.
 
 ## Why it works for my specific needs
 
