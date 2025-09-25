@@ -56,3 +56,28 @@ const jsonLd = {
     </article>
   </div>
 </BaseLayout>
+
+<style lang="scss">
+  .about-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    text-align: left;
+    white-space: pre-line;
+    padding: 0 1rem;
+  }
+
+  .about-footer {
+    color: var(--comment);
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+    padding-bottom: 3rem;
+    padding-top: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    .about-footer {
+      white-space: normal;
+    }
+  }
+</style>

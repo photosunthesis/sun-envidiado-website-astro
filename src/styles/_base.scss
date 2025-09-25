@@ -1,4 +1,23 @@
-@use 'colors' as *;
+@use "sass:color" as color;
+
+// SCSS fallback variables that mirror the runtime CSS variables defined in
+// `main.scss`. These exist so we can still perform compile-time color
+// operations (e.g. color.adjust) where needed.
+$background: #000;
+$foreground: #abb2bf;
+$comment: rgba($foreground, 0.5);
+$cyan: #56b6c2;
+$green: #98c379;
+$orange: #d19a66;
+$pink: #c678dd;
+$purple: #a9a1e1;
+$red: #e06c75;
+$yellow: #e5c07b;
+$blue: #61afef;
+$cmdbar-height: 30px;
+$code-bg: rgba(31, 35, 40, 0.3);
+$code-fg: #dcdfe4;
+$code-inline-color: #b16286;
 
 @font-face {
   font-family: "ToshibaSat8x14";
@@ -13,8 +32,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: $background;
-  color: $foreground;
+  background: var(--background);
+  color: var(--foreground);
   font-family: "ToshibaSat8x14", "Menlo", "Monaco", "Consolas", "Courier New",
     monospace;
   min-height: 100vh;
@@ -28,7 +47,7 @@ body {
 
 a,
 button {
-  color: $cyan;
+  color: var(--cyan);
   font-family: inherit;
   text-decoration: none;
   background: none;
@@ -43,9 +62,9 @@ a:focus {
 
 .vim-root {
   display: block;
-  min-height: calc(100vh - #{$cmdbar-height});
+  min-height: calc(100vh - var(--cmdbar-height));
   font-family: inherit;
-  background-color: $background;
+  background-color: var(--background);
 }
 
 /* Global typography defaults (moved from _blog.scss) */
@@ -57,7 +76,7 @@ h5,
 h6 {
   line-height: 1.6;
   text-align: left;
-  color: $purple;
+  color: var(--purple);
 }
 
 h1 {
@@ -86,7 +105,7 @@ p {
 }
 
 pre {
-  color: $code-fg;
+  color: var(--code-fg);
   border-radius: 8px;
   overflow: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "DejaVu Sans Mono", monospace;
@@ -101,7 +120,7 @@ code {
   padding: 0;
   border-radius: 4px;
   font-family: inherit;
-  color: $code-inline-color;
+  color: var(--code-inline-color);
 }
 
 ul,
@@ -116,7 +135,7 @@ li {
 }
 
 pre[class*="astro-code"] {
-  background-color: $code-bg !important;
+  background-color: var(--code-bg) !important;
   color: inherit !important;
   overflow-x: visible !important;
   padding: 1.2rem;
@@ -141,7 +160,7 @@ pre[class*="astro-code"] {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - #{$cmdbar-height});
+  min-height: calc(100vh - var(--cmdbar-height));
 }
 
 .main-flex-container {
@@ -166,7 +185,7 @@ pre[class*="astro-code"] {
 }
 
 .vim-menu span {
-  color: $orange;
+  color: var(--orange);
 }
 
 
@@ -192,12 +211,12 @@ pre[class*="astro-code"] {
 
 .cmd-feedback {
   margin-left: 1rem;
-  color: $comment;
+  color: var(--comment);
   font-size: 0.95rem
 }
 
 .cmd-input::placeholder {
-  color: rgba($background, 0.3);
+  color: rgba(var(--background-rgb), 0.3);
   opacity: 1;
 }
 
@@ -245,9 +264,9 @@ pre[class*="astro-code"] {
   /* full-bleed background; inner wrapper provides padding */
   padding: 0;
   /* inner handles padding including safe-area */
-  background: $foreground;
+  background: var(--foreground);
   /* foreground becomes background */
-  color: $background;
+  color: var(--background);
   /* text uses page background color */
   backdrop-filter: none;
   box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
@@ -266,7 +285,7 @@ pre[class*="astro-code"] {
   top: 0;
   left: 0;
   /* default background; overridden in context-sensitive places */
-  background: $foreground;
+  background: var(--foreground);
   opacity: 0.95;
   display: none;
   transform: translateY(0.1em);
@@ -305,8 +324,8 @@ pre[class*="astro-code"] {
 
 /* Error state for command bar: use red background and show error text inline */
 .command-bar.error {
-  background: $red;
-  color: $background;
+  background: var(--red);
+  color: var(--background);
   /* keep text readable */
 }
 
@@ -338,7 +357,7 @@ pre[class*="astro-code"] {
 
 .sun-pre {
   margin: 0;
-  color: $orange;
+  color: var(--orange);
   font-family: inherit;
   white-space: pre;
   line-height: 0.95;
@@ -445,8 +464,11 @@ $crt-ca-blur: 0.35px;
           transparent 3px);
       mix-blend-mode: multiply;
       opacity: 0.6;
-      $vignette-color: darken($background, 12%);
-      box-shadow: inset 0 0 200px rgba(red($vignette-color), green($vignette-color), blue($vignette-color), $crt-vignette-opacity);
+      $vignette-color: color.adjust($background, $lightness: -12%);
+      box-shadow: inset 0 0 200px rgba(color.channel($vignette-color, "red", $space: rgb),
+          color.channel($vignette-color, "green", $space: rgb),
+          color.channel($vignette-color, "blue", $space: rgb),
+          $crt-vignette-opacity );
       transform: translate3d(-2px, 0, 0);
       filter: blur($crt-ca-blur);
     }

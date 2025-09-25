@@ -1,29 +1,47 @@
 ---
 import CommandBar from "../components/CommandBar.astro";
 import "../styles/main.scss";
-
+// Allow pages to pass either top-level props or a `frontmatter` object (markdown pages)
 const {
-  title = "Sun Envidiado",
-  description = "Personal website where I share my thoughts about anything and everything.",
+  // explicit props (for .astro pages or manual usage)
+  title: propTitle,
+  description: propDescription,
   image = "/android-chrome-512x512.png",
   url = Astro.site || "https://sun-envidiado.com",
   type = "website",
   noIndex = false,
   jsonLd = null,
-  pubDate = undefined,
-  tags = [],
-} = Astro.props;
+  pubDate: propPubDate = undefined,
+  tags: propTags = [],
+  // frontmatter supplied by Markdown pages when they set `layout:`
+  frontmatter = {},
+} = Astro.props || {};
+
+// Prefer values from frontmatter when available to support markdown layouts
+const title = frontmatter.title || propTitle || "Sun Envidiado";
+const description =
+  frontmatter.description ||
+  propDescription ||
+  "Personal website where I share my thoughts about anything and everything.";
+const pubDate = frontmatter.pubDate || propPubDate;
+const tags =
+  Array.isArray(frontmatter.tags) && frontmatter.tags.length
+    ? frontmatter.tags
+    : propTags;
+const imageToUse = frontmatter.image || image;
 
 // --- Canonical/OG URL logic ---
 const canonical = new URL(
   String(url || "/").replace(/\/?$/, "/"),
   Astro.site || "https://sun-envidiado.com",
 ).toString();
-
 const fullImage = new URL(
-  String(image),
+  String(imageToUse),
   Astro.site || "https://sun-envidiado.com",
 ).toString();
+// Short labels used by blog footer (kept for parity with previous BlogLayout)
+const backUrlLabel = ":back<Enter>";
+const homeUrlLabel = ":home<Enter>";
 ---
 
 <html lang="en">
@@ -128,7 +146,51 @@ const fullImage = new URL(
     <div class="main-flex-container">
       <main id="main" class="vim-main-content" tabindex="-1">
         <div class="centered-vim">
-          <slot />
+          {
+            // If this page has a pubDate it is treated as a blog post — render blog markup
+            pubDate ? (
+              <div class="blog-layout">
+                <h1 id="post-title" class="blog-title">
+                  {title}
+                </h1>
+                <p class="post-pub-date">
+                  {new Date(pubDate).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+
+                <article class="blog-article" aria-labelledby="post-title">
+                  <slot />
+                </article>
+
+                <footer
+                  class="blog-footer"
+                  role="contentinfo"
+                  aria-label="Post navigation and actions"
+                >
+                  <p class="blog-footer-text">
+                    Type
+                    <a
+                      href="#"
+                      onclick="history.back(); return false;"
+                      aria-label="Go back"
+                    >
+                      {backUrlLabel}
+                    </a>
+                    to return to the previous page, or
+                    <a href="/" aria-label="Go to homepage">
+                      {homeUrlLabel}
+                    </a>
+                    to go to the homepage.
+                  </p>
+                </footer>
+              </div>
+            ) : (
+              <slot />
+            )
+          }
         </div>
       </main>
     </div>

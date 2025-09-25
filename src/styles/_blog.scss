@@ -1,6 +1,3 @@
-@use 'colors' as *;
-
-// Blog layout and related components
 .blog-layout {
   margin: 1.5rem;
   max-width: 600px;
@@ -8,22 +5,22 @@
 
 .blog-layout,
 .blog-layout * {
-  text-align: left !important
+  text-align: left !important;
 }
 
 .blog-footer {
   margin-top: 2rem;
-  color: $comment
+  color: var(--comment);
 }
 
 .blog-footer-text {
-  margin-bottom: 3rem
+  margin-bottom: 3rem;
 }
 
 .year-heading {
   margin: 1.5rem 0 1rem;
   text-align: left;
-  color: $yellow
+  color: var(--yellow);
 }
 
 .year-list {
@@ -32,7 +29,7 @@
   margin: 0 0 1.3rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem
+  gap: 0.5rem;
 }
 
 .post-row {
@@ -40,29 +37,42 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 0.5rem;
-  padding-bottom: 0.8rem
+  padding-bottom: 0.8rem;
 }
 
 .post-index {
-  color: $foreground;
+  color: var(--foreground);
   min-width: 2.4ch;
   text-align: left;
-  display: inline-block
+  display: inline-block;
 }
 
 .post-link {
-  color: $purple;
+  color: var(--purple);
   text-decoration: none;
   text-align: left;
 }
 
 .post-date {
-  color: $foreground;
+  color: var(--foreground);
   white-space: nowrap;
-  margin-left: 0.3rem
+  margin-left: 0.3rem;
 }
 
 .post-pub-date {
-  color: $comment;
+  color: var(--comment);
   margin-top: -0.4rem;
+}
+
+/* Blog-specific content classes previously in _pages.scss */
+.blog-content-start {
+  color: var(--comment);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.blog-content {
+  max-width: 600px;
+  margin: 1.5rem;
+  color: var(--foreground);
 }

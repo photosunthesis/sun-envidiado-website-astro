@@ -1,5 +1,5 @@
 ---
-layout: ../../layouts/BlogLayout.astro
+layout: ../../layouts/BaseLayout.astro
 title: "How I rebuilt my personal site with Astro"
 pubDate: "2025-09-19"
 description: "A Flutter developer's journey through React's complexity to building a fast, content-focused personal site with Astro."

@@ -1,39 +1,38 @@
-@use 'colors' as *;
-
+/* Index page styles (converted to use CSS custom properties) */
 $max-content-width: 500px;
 
 .index-main-content {
-  margin-top: -3rem
+  margin-top: -3rem;
 }
 
 .intro-container {
   max-width: $max-content-width;
   margin: 0 auto;
-  color: $foreground;
+  color: var(--foreground);
   text-align: center;
-  white-space: pre-line
+  white-space: pre-line;
 }
 
 .intro-heading {
   display: block;
   text-align: center;
-  margin-bottom: 1em
+  margin-bottom: 1em;
 }
 
 .intro-body {
   display: block;
-  text-align: justify
+  text-align: justify;
 }
 
 .command-hints-container {
   width: 100%;
   max-width: $max-content-width;
   margin: 1rem auto 0;
-  color: $comment;
+  color: var(--comment);
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
-  align-items: center
+  align-items: center;
 }
 
 .command-hints-list {
@@ -58,7 +57,7 @@ $max-content-width: 500px;
 }
 
 .command-hint-type {
-  color: $foreground;
+  color: var(--foreground);
   font-family: inherit;
   text-align: left;
   padding-right: 0.6ch;
@@ -66,7 +65,7 @@ $max-content-width: 500px;
 }
 
 .command-hint-command {
-  color: $cyan;
+  color: var(--cyan);
   font-family: inherit;
   text-align: left;
   margin-left: 0.5ch;
@@ -74,7 +73,7 @@ $max-content-width: 500px;
 }
 
 .command-hint-description {
-  color: $foreground;
+  color: var(--foreground);
   font-family: inherit;
   text-align: right;
   white-space: pre;
@@ -87,13 +86,13 @@ $max-content-width: 500px;
 
   .intro-heading,
   .intro-body {
-    text-align: left
+    text-align: left;
   }
 
   .index-main-content {
     padding: 0 2rem;
     align-items: flex-start;
-    text-align: left
+    text-align: left;
   }
 
   .command-hint-row {
@@ -111,23 +110,23 @@ $max-content-width: 500px;
     vertical-align: baseline;
     text-align: left;
     white-space: normal;
-    padding: 0
+    padding: 0;
   }
 
   .command-hint-type::after {
-    content: " "
+    content: " ";
   }
 
   .command-hint-command::before {
-    content: " "
+    content: " ";
   }
 
   .command-hint-command::after {
     content: " ";
-    color: $comment
+    color: var(--comment);
   }
 
   .command-hint-description {
-    color: $foreground
+    color: var(--foreground);
   }
 }
