@@ -64,7 +64,7 @@ And it works exactly like you'd expect.
 
 That top YAML block (the lines between the `---` markers) is called "frontmatter." It stores metadata — title, date, description, tags, and any other fields your templates or build tools might need. Astro reads those values automatically so your layout can display the title, sort posts by date, or filter by tags without extra code.
 
-In this project, all pages use the same layout: `layouts/BaseLayout.astro`. Styles live under `src/styles/` — the repo includes `_base.scss` for global variables and resets, `main.scss` which imports the partials, and page-focused partials like `_index.scss` and `_blog.scss` for home and blog-specific styles. If a page needs more CSS (a long, complex article or a special layout), we add a page-specific SCSS file and import it where needed; for short or simple pages we rely on the shared partials so the CSS stays small and easy to maintain.
+Pages use `layouts/BaseLayout.astro`. Styles are in styles — `_base.scss` for core rules, `main.scss` for imports and color variables, and page partials such as `_index.scss` and `_blog.scss`. Complex pages get their own SCSS files; simple pages reuse shared partials to keep CSS small.
 
 Astro automatically generates pages from these Markdown files, treats the frontmatter as metadata, and exposes those fields to layouts and collection queries — which makes writing and publishing posts fast and low-friction.
 
