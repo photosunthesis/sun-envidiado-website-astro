@@ -114,7 +114,7 @@ const fullImage = new URL(
       )
     }
   </head>
-  <body class="vim-root">
+  <body class="vim-root crt-text-ca">
     <!-- Skip link for keyboard users -->
     <a class="skip-link" href="#main" aria-label="Skip to main content"
       >Skip to content</a
@@ -128,5 +128,7 @@ const fullImage = new URL(
       </main>
     </div>
     <CommandBar />
+    <!-- CSS-only CRT Overlay Container (enabled by default) -->
+    <div id="crt-overlay-container" class="crt-enabled"></div>
   </body>
 </html>

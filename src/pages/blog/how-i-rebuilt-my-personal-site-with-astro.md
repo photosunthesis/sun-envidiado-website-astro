@@ -5,9 +5,6 @@ pubDate: "2025-09-19"
 description: "A Flutter developer's journey through React's complexity to building a fast, content-focused personal site with Astro."
 tags: ["astro", "webdev", "content-site", "flutter-to-web", "personal-site"]
 ---
-
-# How I rebuilt my personal site with Astro
-
 I originally built my website with Flutter. Just a simple home page, about, and contact — nothing fancy. I had plans to add a blog section but never got around to it.
 
 Flutter's great for mobile apps, but on the web it has some rough edges: packages that don't support web, `dart:io` compatibility issues, weird image rendering quirks, and SEO that's more trouble than it's worth. For a simple content site, these friction points added up. Time to go back to actual web development.
@@ -49,8 +46,7 @@ src/
 ├─ components/          # reusable UI components
 │   └─ CommandBar.astro # example component
 │   ...                 # other components
-└─ styles/              # CSS styles
-	...
+└─ styles/              # SCSS styles
 ```
 
 The killer feature for me: blog posts are just markdown files with frontmatter. No JSX, no components for paragraphs, no complex setup.

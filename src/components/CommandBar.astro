@@ -212,6 +212,22 @@
         case "back":
           window.history.back();
           break;
+        case "crt":
+          {
+            const container = document.getElementById("crt-overlay-container");
+            if (container) container.classList.add("crt-enabled");
+            // also enable text chromatic aberration styles
+            document.body && document.body.classList.add("crt-text-ca");
+          }
+          break;
+        case "no-crt":
+          {
+            const container = document.getElementById("crt-overlay-container");
+            if (container) container.classList.remove("crt-enabled");
+            // also disable text chromatic aberration styles
+            document.body && document.body.classList.remove("crt-text-ca");
+          }
+          break;
         default:
           // Unknown command -> show error inline by changing the bar background
           showVimError(val);

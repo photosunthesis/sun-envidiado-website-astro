@@ -1,7 +1,7 @@
 // Color and layout variables converted from CSS custom properties to SCSS
 $background: #282c34;
 $foreground: #abb2bf;
-$comment: #5c6370;
+$comment: rgba($foreground, 0.5);
 $cyan: #56b6c2;
 $green: #98c379;
 $orange: #d19a66;
@@ -11,6 +11,6 @@ $red: #e06c75;
 $yellow: #e5c07b;
 $blue: #61afef;
 $cmdbar-height: 30px;
-$code-bg: #1f2328;
+$code-bg: rgba(31, 35, 40, 0.3);
 $code-fg: #dcdfe4;
 $code-inline-color: #b16286;

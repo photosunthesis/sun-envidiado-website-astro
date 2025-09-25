@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use 'colors' as *;
 
 @font-face {
   font-family: "ToshibaSat8x14";
@@ -22,6 +22,8 @@ body {
 
 * {
   box-sizing: border-box;
+  font-size: 1.069rem;
+  line-height: 1.2;
 }
 
 a,
@@ -32,7 +34,6 @@ button {
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1em;
 }
 
 a:hover,
@@ -53,41 +54,39 @@ h3,
 h4,
 h5,
 h6 {
-  line-height: 1.4;
+  line-height: 1.6;
   text-align: left;
   color: $purple;
 }
 
 h1 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 h2,
 h3 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 h4 {
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 
 h5 {
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 
 h6 {
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 p {
-  line-height: 1.4;
-  margin-bottom: 1rem;
+  line-height: 1.6;
   text-align: left;
 }
 
 pre {
   color: $code-fg;
-  padding: 1rem;
   border-radius: 8px;
   overflow: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "DejaVu Sans Mono", monospace;
@@ -99,11 +98,9 @@ pre {
 }
 
 code {
-  background: transparent;
   padding: 0;
   border-radius: 4px;
   font-family: inherit;
-  font-size: 0.98em;
   color: $code-inline-color;
 }
 
@@ -116,7 +113,15 @@ ol {
 
 li {
   margin: 0.45rem 0;
-  line-height: 1.5;
+}
+
+pre[class*="astro-code"] {
+  background-color: $code-bg !important;
+  color: inherit !important;
+  overflow-x: visible !important;
+  padding: 1.2rem;
+  font-size: 0.8rem;
+  font-family: inherit;
 }
 
 /* Accessible utility: visually-hidden but available to screen readers */
@@ -192,7 +197,7 @@ li {
 }
 
 .cmd-input::placeholder {
-  color: rgba($comment, 0.65);
+  color: rgba($background, 0.3);
   opacity: 1;
 }
 
@@ -354,4 +359,117 @@ li {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* CRT tunable variables (use SCSS variables) */
+$crt-red-color: rgb(218, 49, 49);
+$crt-green-color: rgb(112, 159, 115);
+$crt-blue-color: rgb(40, 129, 206);
+$crt-stripe-width: 4px; // width of a single color stripe (larger = fewer stripes)
+$crt-stripe-opacity: 0.09; // opacity for the colored stripes (higher -> more visible)
+$crt-scan-opacity: 0.6; // scanline darkness (slightly stronger)
+$crt-vignette-opacity: 0.5; // vignette darkness
+$crt-flicker-duration: 1.8s; // flicker animation duration
+$crt-contrast: 1;
+$crt-saturate: 2;
+$crt-ca-blur: 0.35px;
+
+
+#crt-overlay-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  /* Place behind the main content so chromatic text shadows remain visible */
+  z-index: 0;
+  /* CSS-only CRT overlay inspired by https://codepen.io/thisanimus/pen/OJpaqWz */
+
+  /* Keep base invisible unless enabled */
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 99999;
+    display: none;
+  }
+
+  /* When enabled, show tint & scanlines + RGB stripes */
+  &.crt-enabled {
+    &::before {
+      /* Stronger chromatic stripes: horizontal RGB stripes layered with a subtle tint */
+      display: block;
+      background-image: linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
+      repeating-linear-gradient(to right,
+        rgba($crt-red-color, $crt-stripe-opacity) 0px,
+        rgba($crt-green-color, $crt-stripe-opacity) #{$crt-stripe-width},
+        rgba($crt-blue-color, $crt-stripe-opacity) #{($crt-stripe-width * 2)});
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      transform: translate3d(2px, 0, 0);
+      filter: blur($crt-ca-blur);
+    }
+
+    &::after {
+      /* Vertical colored stripes and scanlines layered to enhance CA */
+      display: block;
+      background-image:
+        repeating-linear-gradient(90deg,
+          rgba($crt-red-color, $crt-stripe-opacity) 1px,
+          rgba($crt-green-color, $crt-stripe-opacity) 2px,
+          rgba($crt-blue-color, $crt-stripe-opacity) 3px),
+        repeating-linear-gradient(to bottom,
+          rgba(0, 0, 0, $crt-scan-opacity) 0px,
+          rgba(0, 0, 0, $crt-scan-opacity) 1px,
+          transparent 1px,
+          transparent 3px);
+      mix-blend-mode: multiply;
+      opacity: 0.6;
+      /* vignette overlay */
+      box-shadow: inset 0 0 120px rgba(0, 0, 0, $crt-vignette-opacity);
+      transform: translate3d(-2px, 0, 0);
+      filter: blur($crt-ca-blur);
+    }
+
+    /* subtle animated flicker */
+    animation: crt-flicker #{$crt-flicker-duration} infinite alternate;
+    /* Use interpolation to ensure Sass doesn't try to call built-in color functions */
+    filter: #{'contrast('}#{$crt-contrast}#{')'} #{'saturate('}#{$crt-saturate}#{')'} hue-rotate(6deg);
+  }
+}
+
+/* Ensure main content sits above the overlay so text-shadow/CA is visible */
+.vim-main-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Root selector: when CRT is enabled on the body, apply chromatic fringe site-wide */
+/* Apply chromatic fringe to main content and to text inside the command bar only.
+  Avoid styling the `.command-bar` container itself to prevent layout/height changes
+  (fixes the accidental gap under the fixed command bar). */
+body.crt-text-ca .vim-main-content,
+body.crt-text-ca .vim-main-content *,
+body.crt-text-ca .command-bar * {
+  -webkit-font-smoothing: antialiased;
+  /* Unified, balanced chromatic fringe (hard-coded offsets as requested) */
+  text-shadow: 2px 0 #{$crt-ca-blur} rgba($crt-red-color, 0.14),
+  -2px 0 #{$crt-ca-blur} rgba($crt-green-color, 0.26),
+  0 2px #{$crt-ca-blur} rgba($crt-blue-color, 0.26),
+  0 0 0.35px rgba(0, 0, 0, 0.10);
+  filter: contrast(1.02);
+}
+
+@keyframes crt-flicker {
+  from {
+    opacity: 0.9;
+    filter: brightness(0.95);
+  }
+
+  to {
+    opacity: 1;
+    filter: brightness(1.05);
+  }
 }

@@ -1,5 +1,5 @@
-// Main SCSS entry — use module system to load partials. Each partial uses `@use 'variables' as *;`.
-@use 'variables' as *;
+// Main SCSS entry — use module system to load partials. Each partial uses `@use 'colors' as *;`.
+@use 'colors' as *;
 @use 'base';
 @use 'blog';
 @use 'index';

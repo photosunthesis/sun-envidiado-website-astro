@@ -1,27 +1,26 @@
-@use 'variables' as *;
+@use 'colors' as *;
 
 /* About, Contact and 404 styles grouped to keep small footprint */
 .about-content {
   max-width: 600px;
   margin: 1.5rem;
   color: $foreground;
-  font-size: 1rem;
-  line-height: 1.2;
   text-align: left;
   white-space: pre-line;
   padding: 0 1rem
 }
 
-.about-end {
+.about-footer {
   color: $comment;
   white-space: nowrap;
   overflow-wrap: anywhere;
+  padding-bottom: 3rem;
+  padding-top: 1rem;
 }
 
 @media (max-width: 480px) {
-  .about-end {
+  .about-footer {
     white-space: normal;
-    padding-bottom: 3rem;
   }
 }
 
@@ -41,7 +40,6 @@
   max-width: 600px;
   margin: 1.5rem;
   color: $foreground;
-  font-size: 1rem;
   text-align: left;
   padding: 0 1rem
 }
@@ -56,7 +54,7 @@
   margin-bottom: 0.8rem
 }
 
-.contact-end {
+.contact-footer {
   color: $comment
 }
 
@@ -73,7 +71,6 @@
 
 .not-found-message {
   margin-top: 1rem;
-  line-height: 1.4rem
 }
 
 .not-found-container {

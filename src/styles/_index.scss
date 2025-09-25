@@ -1,15 +1,15 @@
-@use 'variables' as *;
+@use 'colors' as *;
+
+$max-content-width: 500px;
 
 .index-main-content {
   margin-top: -3rem
 }
 
 .intro-container {
-  max-width: 450px;
+  max-width: $max-content-width;
   margin: 0 auto;
   color: $foreground;
-  font-size: 1rem;
-  line-height: 1.2;
   text-align: center;
   white-space: pre-line
 }
@@ -27,10 +27,9 @@
 
 .command-hints-container {
   width: 100%;
-  max-width: 450px;
+  max-width: $max-content-width;
   margin: 1rem auto 0;
   color: $comment;
-  font-size: 0.95rem;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
@@ -52,26 +51,27 @@
   width: 100%;
   box-sizing: border-box;
   min-height: 1.5em;
-  display: grid;
-  grid-template-columns: minmax(10ch, max-content) minmax(10ch, max-content) 1fr;
+  display: flex;
   align-items: center;
-  gap: 0.5ch;
+  gap: 0.8ch;
   white-space: nowrap;
-  margin: 0 auto
+  margin: 0 auto;
 }
 
 .command-hint-type {
   color: $foreground;
   font-family: inherit;
   text-align: left;
-  padding-right: 0.6ch
+  padding-right: 0.6ch;
+  flex: 0 0 auto;
 }
 
 .command-hint-command {
   color: $cyan;
   font-family: inherit;
-  text-align: center;
-  justify-self: left
+  text-align: left;
+  margin-left: 0.5ch;
+  flex: 0 0 auto;
 }
 
 .command-hint-description {
@@ -80,7 +80,8 @@
   text-align: right;
   white-space: pre;
   min-width: 0;
-  justify-self: end
+  margin-left: auto;
+  flex: 0 1 auto;
 }
 
 @media (max-width: 600px) {
@@ -101,7 +102,7 @@
     gap: 0;
     grid-template-columns: none;
     white-space: normal;
-    padding: 0.35rem 0
+    padding: 0.35rem 0;
   }
 
   .command-hint-type,

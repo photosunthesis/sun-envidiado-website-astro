@@ -50,10 +50,11 @@ const jsonLd = {
     <article class="about-article" aria-labelledby="about-title">
       <h1 id="about-title" class="about-title sr-only">About Me</h1>
       <p>{aboutMeText}</p>
-      <p class="about-end">
-        Type or click <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a>
-        to go back to the homepage.
-      </p>
+      <footer class="about-footer">
+        To go back to the homepage, type <a href="/" aria-label="Go to homepage"
+          >{homeUrlLabel}</a
+        >.
+      </footer>
     </article>
   </div>
 </BaseLayout>

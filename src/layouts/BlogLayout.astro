@@ -70,6 +70,18 @@ if (pubDate) {
   jsonLd={jsonLd}
 >
   <div class="blog-layout">
+    <h1 id="post-title" class="blog-title">{title}</h1>
+    <p class="post-pub-date">
+      {
+        pubDate
+          ? new Date(pubDate).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })
+          : ""
+      }
+    </p>
     {
       pubDate ? (
         <article class="blog-article" aria-labelledby="post-title">
@@ -84,25 +96,18 @@ if (pubDate) {
       role="contentinfo"
       aria-label="Post navigation and actions"
     >
-      <p>
-        {
-          pubDate
-            ? `Published on ${new Date(pubDate).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}.`
-            : ""
-        }
-      </p>
       <p class="blog-footer-text">
-        Type or click
-        <a href="#" onclick="history.back(); return false;" aria-label="Go back"
-          >{backUrlLabel}</a
+        Type
+        <a
+          href="#"
+          onclick="history.back(); return false;"
+          aria-label="Go back"
         >
-        or
+          {backUrlLabel}
+        </a>
+        to return to the previous page, or
         <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a>
-        to go back or return to the homepage.
+        to go to the homepage.
       </p>
     </footer>
   </div>

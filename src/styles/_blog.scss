@@ -1,4 +1,4 @@
-@use 'variables' as *;
+@use 'colors' as *;
 
 // Blog layout and related components
 .blog-layout {
@@ -21,7 +21,6 @@
 }
 
 .year-heading {
-  font-size: 1.2rem;
   margin: 1.5rem 0 1rem;
   text-align: left;
   color: $yellow
@@ -55,12 +54,15 @@
   color: $purple;
   text-decoration: none;
   text-align: left;
-  line-height: 1.2rem
 }
 
 .post-date {
   color: $foreground;
-  font-size: 0.9rem;
   white-space: nowrap;
-  margin-left: auto
+  margin-left: 0.3rem
+}
+
+.post-pub-date {
+  color: $comment;
+  margin-top: -0.4rem;
 }
