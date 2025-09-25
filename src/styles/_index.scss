@@ -43,7 +43,6 @@ $max-content-width: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
   align-items: center;
 }
 
@@ -130,11 +129,5 @@ $max-content-width: 500px;
 
   .command-hint-description {
     color: $foreground
-  }
-}
-
-@media (max-width: 400px) {
-  .index-main-content {
-    margin-top: -6rem
   }
 }
