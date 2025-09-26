@@ -24,102 +24,85 @@
 </div>
 
 <script>
-  const input = document.getElementById(
-    "site-command-input",
+  const input = document.querySelector(
+    "#site-command-input",
   ) as HTMLInputElement | null;
-  const vimError = document.getElementById("vim-error") as HTMLElement | null;
+  const vimError = document.querySelector("#vim-error") as HTMLElement | null;
   let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
 
-  function showVimError(text: string) {
+  const showVimError = (text: string) => {
     if (!vimError || !input) return;
-    const bar = input.closest(".command-bar");
-    if (bar) bar.classList.add("error");
-    // Show the error message inline using a short message
+    input.closest(".command-bar")?.classList.add("error");
     vimError.textContent = `ERROR: "${text}" is not a valid command`;
-  }
-
-  function hideVimError() {
-    if (!vimError || !input) return;
-    const bar = input.closest(".command-bar");
-    if (bar) bar.classList.remove("error");
-    vimError.textContent = "";
-  }
-
-  // Custom rectangular block cursor (like Vim)
-  const cursor = document.getElementById("cmd-cursor") as HTMLElement | null;
-  // hidden native caret
-  const hideNativeCaret = () => {
-    if (!input) return;
-    input.style.caretColor = "transparent";
   };
 
-  function measureTextWidth(text: string) {
+  const hideVimError = () => {
+    if (!vimError || !input) return;
+    input.closest(".command-bar")?.classList.remove("error");
+    vimError.textContent = "";
+  };
+
+  // Custom rectangular block cursor (like Vim)
+  const cursor = document.querySelector("#cmd-cursor") as HTMLElement | null;
+  // hide native caret — prefer custom block cursor
+  const hideNativeCaret = () =>
+    input && (input.style.caretColor = "transparent");
+
+  const measureTextWidth = (text: string) => {
     if (!input) return 0;
-    // create a temporary span to measure text width with same font
     const span = document.createElement("span");
-    span.style.visibility = "hidden";
-    span.style.position = "absolute";
-    span.style.whiteSpace = "pre";
-    span.style.font = getComputedStyle(input).font;
+    span.style.cssText = `visibility:hidden;position:absolute;white-space:pre;font:${getComputedStyle(input).font}`;
     span.textContent = text || "";
     document.body.appendChild(span);
     const w = span.getBoundingClientRect().width;
     document.body.removeChild(span);
     return w;
-  }
+  };
 
-  function positionCursor() {
+  const positionCursor = () => {
     if (!cursor || !input) return;
-    const wrapper = cursor.parentElement;
-    if (!wrapper) return;
-    // measure the input's value width
     const value = input.value || "";
-    const textForMeasure = value;
-    const textWidth = measureTextWidth(textForMeasure);
+    const textWidth = measureTextWidth(value);
     const style = getComputedStyle(input);
     const paddingLeft = parseFloat(style.paddingLeft) || 0;
-    const scrollLeft = input.scrollLeft || 0;
-    // input offset relative to wrapper
-    const inputOffsetLeft = input.offsetLeft || 0;
-    // left position relative to wrapper
-    const left = inputOffsetLeft + paddingLeft + textWidth - scrollLeft;
+    const left =
+      (input.offsetLeft || 0) +
+      paddingLeft +
+      textWidth -
+      (input.scrollLeft || 0);
     cursor.style.left = `${left}px`;
 
-    // caret width: measure last character if present, otherwise 0.8ch
     const lastChar = value.slice(-1) || " ";
     const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
-    // fallback to 0.6em if measurement fails
     const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
     const caretWidth = Math.max(charWidth, fallbackWidth);
     cursor.style.width = `${caretWidth}px`;
-
     cursor.style.height = `${input.clientHeight}px`;
     cursor.style.display = document.activeElement === input ? "block" : "none";
-  }
+  };
 
   // reposition cursor on input, focus, and window resize
-  if (input) {
-    input.addEventListener("input", () => {
-      hideVimError();
-      positionCursor();
-    });
-    input.addEventListener("focus", () => {
-      hideVimError();
-      hideNativeCaret();
-      positionCursor();
-      cursor && cursor.classList.add("visible");
-      // ensure the input is visible on mobile when focused but don't cover too much
-      try {
-        input.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      } catch (e) {
-        /* ignore on older browsers */
-      }
-    });
-    input.addEventListener("blur", () => {
-      cursor && cursor.classList.remove("visible");
-      cursor && (cursor.style.display = "none");
-    });
-  }
+  input?.addEventListener("input", () => {
+    hideVimError();
+    positionCursor();
+  });
+
+  input?.addEventListener("focus", () => {
+    hideVimError();
+    hideNativeCaret();
+    positionCursor();
+    cursor?.classList.add("visible");
+    try {
+      input.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    } catch {
+      /* ignore */
+    }
+  });
+
+  input?.addEventListener("blur", () => {
+    cursor?.classList.remove("visible");
+    if (cursor) cursor.style.display = "none";
+  });
 
   window.addEventListener("resize", positionCursor);
 
@@ -197,6 +180,42 @@
       return;
     }
 
+    // helpers to enable/disable CRT and persist preference
+    function setCrtEnabled(enabled: boolean) {
+      try {
+        const api: any = globalThis;
+        if (typeof api.__setCrtPreference === "function") {
+          api.__setCrtPreference(enabled);
+          return;
+        }
+      } catch {
+        // ignore and fall back
+      }
+
+      try {
+        const container = document.querySelector("#crt-overlay-container");
+        if (enabled) {
+          container?.classList.add("crt-enabled");
+          document.body?.classList.add("crt-text-ca");
+          localStorage.setItem("crt-enabled", "1");
+        } else {
+          container?.classList.remove("crt-enabled");
+          document.body?.classList.remove("crt-text-ca");
+          localStorage.setItem("crt-enabled", "0");
+        }
+      } catch {
+        // storage blocked — still toggle classes for UI
+        const container = document.querySelector("#crt-overlay-container");
+        if (enabled) {
+          container?.classList.add("crt-enabled");
+          document.body?.classList.add("crt-text-ca");
+        } else {
+          container?.classList.remove("crt-enabled");
+          document.body?.classList.remove("crt-text-ca");
+        }
+      }
+    }
+
     switch (cmd) {
       case "home":
         window.location.href = "/";
@@ -214,20 +233,10 @@
         window.history.back();
         break;
       case "crt":
-        {
-          const container = document.getElementById("crt-overlay-container");
-          if (container) container.classList.add("crt-enabled");
-          // also enable text chromatic aberration styles
-          document.body && document.body.classList.add("crt-text-ca");
-        }
+        setCrtEnabled(true);
         break;
       case "no-crt":
-        {
-          const container = document.getElementById("crt-overlay-container");
-          if (container) container.classList.remove("crt-enabled");
-          // also disable text chromatic aberration styles
-          document.body && document.body.classList.remove("crt-text-ca");
-        }
+        setCrtEnabled(false);
         break;
       default:
         // Unknown command -> show error inline by changing the bar background
