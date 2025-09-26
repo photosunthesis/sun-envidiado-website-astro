@@ -373,11 +373,11 @@ $cmdbar-height: 30px;
 $crt-red-color: rgb(218, 49, 49);
 $crt-green-color: rgb(112, 159, 115);
 $crt-blue-color: rgb(40, 129, 206);
-$crt-stripe-width: 12px; // width of a single color stripe (larger = fewer stripes)
-$crt-stripe-opacity: 0.15; // opacity for the colored stripes (higher -> more visible)
+$crt-stripe-width: 3px; // width of a single color stripe (larger = fewer stripes)
+$crt-stripe-opacity: 0.12; // opacity for the colored stripes (higher -> more visible)
 $crt-scan-opacity: 0.7; // scanline darkness (slightly stronger)
 $crt-vignette-opacity: 0.6; // vignette darkness (0..1)
-$crt-flicker-duration: 8s; // flicker animation duration (very slow, extremely subtle)
+$crt-flicker-duration: 2s; // flicker animation duration (very slow, extremely subtle)
 $crt-contrast: 1;
 $crt-saturate: 2;
 $crt-ca-blur: 0.35px;
@@ -483,6 +483,8 @@ $crt-ca-blur: 0.35px;
   z-index: 1;
 }
 
+$rgb-offset: 2px;
+
 /* Root selector: when CRT is enabled on the body, apply chromatic fringe site-wide */
 /* Apply chromatic fringe to main content and to text inside the command bar only.
   Avoid styling the `.command-bar` container itself to prevent layout/height changes
@@ -492,9 +494,9 @@ body.crt-text-ca .vim-main-content *,
 body.crt-text-ca .command-bar * {
   -webkit-font-smoothing: antialiased;
   /* Unified, balanced chromatic fringe (hard-coded offsets as requested) */
-  text-shadow: 2px 0 #{$crt-ca-blur} rgba($crt-red-color, 0.14),
-  -2px 0 #{$crt-ca-blur} rgba($crt-green-color, 0.26),
-  0 2px #{$crt-ca-blur} rgba($crt-blue-color, 0.26),
+  text-shadow: $rgb-offset 0 #{$crt-ca-blur} rgba($crt-red-color, 0.14),
+  -$rgb-offset 0 #{$crt-ca-blur} rgba($crt-green-color, 0.26),
+  0 $rgb-offset #{$crt-ca-blur} rgba($crt-blue-color, 0.26),
   0 0 0.35px rgba(0, 0, 0, 0.10);
   filter: contrast(1.02);
 }
