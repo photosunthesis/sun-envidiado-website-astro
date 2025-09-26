@@ -1,4 +1,4 @@
-$max-content-width: 580px;
+$max-content-width: 500px;
 
 .index-main-content {
   margin-top: -3rem;
@@ -30,95 +30,63 @@ $max-content-width: 580px;
   max-width: $max-content-width;
   margin: 1rem auto 0;
   color: var(--comment);
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-  align-items: flex-start;
 }
 
-.command-hints-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+// CSS Grid approach for perfect column alignment
+.command-hints-grid {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.25rem 1ch;
+  align-items: baseline;
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.command-hints-list>li {
-  margin: 0.28rem 0;
 }
 
 .command-hint-row {
-  width: 100%;
-  box-sizing: border-box;
-  min-height: 1.1em;
-  display: grid;
-  grid-template-columns: auto max-content 1fr;
-  align-items: center;
-  gap: 0.4ch;
-  white-space: nowrap;
-  margin: 0;
-}
-
-@media (max-width: 480px) {
-  .command-hint-row {
-    min-height: 1.6em;
-    padding: 0.45rem 0;
-  }
-
-  .command-hints-list>li {
-    margin: 0;
-  }
-
-  .command-hint-type, .command-hint-command, .command-hint-description {
-    line-height: 1.5;
-  }
-}
-
-.command-hint-row {
-  text-decoration: none;
-  color: inherit;
-  display: grid;
-}
-
-.command-hint-row:focus,
-.command-hint-row:hover {
-  color: var(--foreground);
-  outline: none;
-}
-
-.command-hint-row:focus-visible {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 20%, transparent);
+  display: contents; // Makes the row wrapper disappear so children become direct grid items
 }
 
 .command-hint-type {
-  color: var(--foreground);
+  color: var(--comment);
   font-family: inherit;
-  text-align: left;
+  justify-self: end;
+  white-space: nowrap;
+  margin-right: 0.5ch;
 }
 
 .command-hint-command {
   color: var(--foreground);
   font-family: inherit;
-  text-align: left;
-  margin-left: 0.4ch;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25ch;
+  justify-self: start;
+}
+
+.command-action-group {
   display: inline-flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 0.25ch;
+}
+
+.command-separator {
+  color: var(--comment);
+  white-space: nowrap;
 }
 
 .command-hint-description {
-  color: var(--foreground);
+  color: var(--comment);
   font-family: inherit;
-  text-align: left;
+  justify-self: start;
+  margin-left: 0.5ch;
   white-space: nowrap;
-  min-width: 0;
-  margin-left: 0.4ch;
+
+  // Prevent text from being cut off
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .command-hint-action {
-  margin-left: 0.15ch;
   color: var(--cyan);
   text-decoration: none;
   background: transparent;
@@ -127,58 +95,91 @@ $max-content-width: 580px;
   border: none;
   font-family: inherit;
   white-space: nowrap;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    color: var(--foreground);
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--cyan) 30%, transparent);
+  }
 }
 
-.command-hint-action:hover,
-.command-hint-action:focus {
-  text-decoration: underline;
-  color: var(--foreground);
+// Medium screens - allow wider container for better alignment
+@media (min-width: 600px) {
+  .command-hints-container {
+    max-width: calc(100vw - 4rem);
+  }
+
+  .command-hints-grid {
+    gap: 0.5rem 1.5ch;
+  }
+
+  .command-hint-type {
+    margin-right: 1ch;
+  }
+
+  .command-hint-description {
+    margin-left: 1ch;
+  }
 }
 
-.command-hint-command>a+a,
-.command-hint-description>a+a {
-  margin-left: 0.4ch;
-}
-
+// Mobile responsive - stack vertically 
 @media (max-width: 600px) {
   .index-main-content {
     padding: 0 2rem;
-    align-items: flex-start;
-    text-align: left;
+  }
+
+  .command-hints-grid {
+    display: block; // Switch back to block layout
   }
 
   .command-hint-row {
     display: block;
-    gap: 0;
-    grid-template-columns: none;
-    white-space: normal;
+    margin-bottom: 0.75rem;
+    text-align: left;
+    line-height: 1.5;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .command-hint-type,
   .command-hint-command,
-  .command-hint-type,
   .command-hint-description {
     display: inline;
-    vertical-align: baseline;
-    text-align: left;
     white-space: normal;
-    padding: 0;
   }
 
-  .command-hint-type::after {
-    content: " ";
+  .command-hint-type {
+    margin-right: 0;
+
+    &::after {
+      content: " ";
+    }
   }
 
-  .command-hint-command::before {
-    content: " ";
-  }
+  .command-hint-command {
+    &::before {
+      content: " ";
+    }
 
-  .command-hint-command::after {
-    content: " ";
-    color: var(--comment);
+    &::after {
+      content: " ";
+    }
   }
 
   .command-hint-description {
+    margin-left: 0;
     color: var(--foreground);
+  }
+
+  .command-action-group {
+    display: inline;
   }
 }
