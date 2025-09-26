@@ -312,4 +312,26 @@
       document.body.classList.remove("command-bar-focused");
     });
   }
+
+  // Expose a small API so other parts of the page can programmatically insert or
+  // execute commands. Usage:
+  //   window.__runSiteCommand(':about')         -> inserts and focuses input
+  //   window.__runSiteCommand(':about', true)   -> executes immediately
+  // This uses the same `handleCommand` logic so behavior is consistent.
+  try {
+    (globalThis as any).__runSiteCommand = (raw: string, execute = false) => {
+      if (!raw || !input) return;
+      const val = raw.trim();
+      if (execute) {
+        handleCommand(val);
+        return;
+      }
+      // insert into input and focus
+      input.value = val;
+      positionCursor();
+      input.focus();
+    };
+  } catch {
+    // ignore if environment prevents assignment
+  }
 </script>

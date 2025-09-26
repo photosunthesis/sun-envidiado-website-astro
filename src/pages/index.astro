@@ -2,34 +2,45 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
 
-const introHeading = `Hi, I'm Sun, a programmer from the Philippines. Welcome to my little corner on the internet.`;
-const introBody = `I like to code, play games (hooked on Helldivers 2 atm), and belt out tunes at karaoke. Here, you'll find my thoughts on coding, gaming, and life.`;
+const introHeading = `Hi! I'm Sun. 
+Welcome to my little corner on the internet.`;
+
+const introBody = `I like building software, playing games (hooked on Helldivers 2 atm), and belting out tunes at karaoke. Here, you'll find my thoughts on coding, gaming, and life.`;
+
+type CommandAction = {
+	label: string;
+	command: string;
+};
 
 type CommandHint = {
 	type: string;
-	command: string;
+	actions: CommandAction[];
 	description: string;
-	href: string;
 };
 
 const commandHints: CommandHint[] = [
 	{
 		type: "type",
-		command: ":about<Enter>",
+		actions: [{ label: ":about<Enter>", command: ":about" }],
 		description: "to learn more about me.",
-		href: "/about",
 	},
 	{
 		type: "type",
-		command: ":contact<Enter>",
+		actions: [{ label: ":contact<Enter>", command: ":contact" }],
 		description: "to get in touch.",
-		href: "/contact",
 	},
 	{
 		type: "type",
-		command: ":blog<Enter>",
+		actions: [{ label: ":blog<Enter>", command: ":blog" }],
 		description: "to read my latest blogs.",
-		href: "/blog",
+	},
+	{
+		type: "type",
+		actions: [
+			{ label: ":crt<Enter>", command: ":crt" },
+			{ label: ":no-crt<Enter>", command: ":no-crt" },
+		],
+		description: "to toggle CRT effects.",
 	},
 ];
 
@@ -84,16 +95,26 @@ const personJsonLd = {
 			<ul class="command-hints-list">
 				{
 					commandHints.map((hint) => (
-						<li class="command-hint-row">
-							<span class="command-hint-type">{hint.type}</span>
-							<a
-								class="command-hint-command"
-								href={hint.href}
-								aria-label={`Go to ${hint.href}`}
-							>
-								{hint.command}
-							</a>
-							<span class="command-hint-description">{hint.description}</span>
+						<li>
+							<div class="command-hint-row">
+								<span class="command-hint-type">{hint.type}</span>
+								<span class="command-hint-command">
+									{hint.actions.map((a, i) => (
+										<span>
+											<a
+												class="command-hint-action"
+												href="#"
+												data-command={a.command}
+												aria-label={`Run ${a.command}`}
+											>
+												{a.label}
+											</a>
+											{i < hint.actions.length - 1 ? " or " : ""}
+										</span>
+									))}
+								</span>
+								<span class="command-hint-description">{hint.description}</span>
+							</div>
 						</li>
 					))
 				}
@@ -101,3 +122,79 @@ const personJsonLd = {
 		</nav>
 	</div>
 </BaseLayout>
+
+<script>
+	// Click delegation for the command hint actions.
+	// Behavior:
+	// 1) Find the closest `.command-hint-action` anchor from the click target.
+	// 2) Prevent default link navigation.
+	// 3) Blur the clicked element so it doesn't remain visually focused.
+	// 4) If `window.__runSiteCommand` exists, call it to execute the command.
+	// 5) Otherwise, fall back to simple navigation or CRT toggles.
+	document.addEventListener("click", function (ev) {
+		const target = ev.target;
+		if (!(target instanceof Element)) return;
+
+		const action = target.closest(".command-hint-action");
+		if (!action) return;
+
+		ev.preventDefault();
+
+		// Read the command token from data attribute (preferred) or text content.
+		const cmd =
+			action.getAttribute("data-command") || (action.textContent || "").trim();
+
+		// Remove focus from the clicked element so it doesn't stay styled as focused.
+		const el = action as HTMLElement;
+		try {
+			el.blur();
+		} catch (e) {
+			/* ignore */
+		}
+
+		// Try to execute using the site's command API if available.
+		try {
+			const win: any = window as any;
+			if (typeof win.__runSiteCommand === "function") {
+				win.__runSiteCommand(cmd, true);
+				return;
+			}
+		} catch (e) {
+			// ignore and fall back
+		}
+
+		// Fallback: handle a few known commands directly (no-op for unknowns).
+		switch (cmd) {
+			case ":about":
+				window.location.href = "/about";
+				break;
+			case ":contact":
+				window.location.href = "/contact";
+				break;
+			case ":blog":
+				window.location.href = "/blog";
+				break;
+			case ":crt":
+				try {
+					localStorage.setItem("crt-enabled", "1");
+				} catch (_) {}
+				document
+					.querySelector("#crt-overlay-container")
+					?.classList.add("crt-enabled");
+				document.body?.classList.add("crt-text-ca");
+				break;
+			case ":no-crt":
+				try {
+					localStorage.setItem("crt-enabled", "0");
+				} catch (_) {}
+				document
+					.querySelector("#crt-overlay-container")
+					?.classList.remove("crt-enabled");
+				document.body?.classList.remove("crt-text-ca");
+				break;
+			default:
+				// Unknown command: do nothing (the command bar handles errors when executed there).
+				break;
+		}
+	});
+</script>

@@ -1,5 +1,4 @@
-/* Index page styles (converted to use CSS custom properties) */
-$max-content-width: 500px;
+$max-content-width: 580px;
 
 .index-main-content {
   margin-top: -3rem;
@@ -9,7 +8,7 @@ $max-content-width: 500px;
   max-width: $max-content-width;
   margin: 0 auto;
   color: var(--foreground);
-  text-align: center;
+  text-align: left;
   white-space: pre-line;
 }
 
@@ -17,11 +16,13 @@ $max-content-width: 500px;
   display: block;
   text-align: center;
   margin-bottom: 1em;
+  line-height: 1.5;
 }
 
 .intro-body {
   display: block;
   text-align: justify;
+  line-height: 1.5;
 }
 
 .command-hints-container {
@@ -31,8 +32,8 @@ $max-content-width: 500px;
   color: var(--comment);
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
-  align-items: center;
+  gap: 0.1rem;
+  align-items: flex-start;
 }
 
 .command-hints-list {
@@ -42,53 +43,104 @@ $max-content-width: 500px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+}
+
+.command-hints-list>li {
+  margin: 0.28rem 0;
 }
 
 .command-hint-row {
   width: 100%;
   box-sizing: border-box;
-  min-height: 1.5em;
-  display: flex;
+  min-height: 1.1em;
+  display: grid;
+  grid-template-columns: auto max-content 1fr;
   align-items: center;
-  gap: 0.8ch;
+  gap: 0.4ch;
   white-space: nowrap;
-  margin: 0 auto;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .command-hint-row {
+    min-height: 1.6em;
+    padding: 0.45rem 0;
+  }
+
+  .command-hints-list>li {
+    margin: 0;
+  }
+
+  .command-hint-type, .command-hint-command, .command-hint-description {
+    line-height: 1.5;
+  }
+}
+
+.command-hint-row {
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.command-hint-row:focus,
+.command-hint-row:hover {
+  color: var(--foreground);
+  outline: none;
+}
+
+.command-hint-row:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--cyan) 20%, transparent);
 }
 
 .command-hint-type {
   color: var(--foreground);
   font-family: inherit;
   text-align: left;
-  padding-right: 0.6ch;
-  flex: 0 0 auto;
 }
 
 .command-hint-command {
-  color: var(--cyan);
+  color: var(--foreground);
   font-family: inherit;
   text-align: left;
-  margin-left: 0.5ch;
-  flex: 0 0 auto;
+  margin-left: 0.4ch;
+  display: inline-flex;
+  align-items: center;
 }
 
 .command-hint-description {
   color: var(--foreground);
   font-family: inherit;
-  text-align: right;
-  white-space: pre;
+  text-align: left;
+  white-space: nowrap;
   min-width: 0;
-  margin-left: auto;
-  flex: 0 1 auto;
+  margin-left: 0.4ch;
+}
+
+.command-hint-action {
+  margin-left: 0.15ch;
+  color: var(--cyan);
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.command-hint-action:hover,
+.command-hint-action:focus {
+  text-decoration: underline;
+  color: var(--foreground);
+}
+
+.command-hint-command>a+a,
+.command-hint-description>a+a {
+  margin-left: 0.4ch;
 }
 
 @media (max-width: 600px) {
-
-  .intro-heading,
-  .intro-body {
-    text-align: left;
-  }
-
   .index-main-content {
     padding: 0 2rem;
     align-items: flex-start;
@@ -100,11 +152,11 @@ $max-content-width: 500px;
     gap: 0;
     grid-template-columns: none;
     white-space: normal;
-    padding: 0.35rem 0;
   }
 
   .command-hint-type,
   .command-hint-command,
+  .command-hint-type,
   .command-hint-description {
     display: inline;
     vertical-align: baseline;
