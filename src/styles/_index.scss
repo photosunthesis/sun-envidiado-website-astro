@@ -131,7 +131,8 @@ $max-content-width: 500px;
 // Mobile responsive - stack vertically 
 @media (max-width: 600px) {
   .index-main-content {
-    padding: 0 2rem;
+    padding: 0 1.2rem;
+    margin-top: -4rem
   }
 
   .command-hints-grid {
