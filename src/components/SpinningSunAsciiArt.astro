@@ -1,18 +1,18 @@
 <!-- Styles for this component are in `src/styles/_base.scss` -->
 <div class="sun-spin-wrap" aria-hidden="false">
-  <span class="sr-only">Spinning sun ASCII art</span>
-  <pre
-    id="spinning-sun-pre"
-    class="sun-pre"
-    role="img"
-    aria-label="Spinning sun ASCII art"
-    data-animated="true">
-  </pre>
+	<span class="sr-only">Spinning sun ASCII art</span>
+	<pre
+		id="spinning-sun-pre"
+		class="sun-pre"
+		role="img"
+		aria-label="Spinning sun ASCII art"
+		data-animated="true">
+	</pre>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const spinningSunAsciiText = `                         ##                       
+	document.addEventListener("DOMContentLoaded", () => {
+		const spinningSunAsciiText = `                         ##                       
                        #####                      
                        #####                      
                        #####                      
@@ -1054,45 +1054,44 @@
                          ###                      
 `;
 
-    const FRAME_LINES = 26;
-    const FRAMES = (() => {
-      const lines = spinningSunAsciiText.split("\n");
-      const frames = [];
-      for (let i = 0; i < lines.length; i += FRAME_LINES) {
-        const frame = lines.slice(i, i + FRAME_LINES).join("\n");
-        if (frame.trim()) frames.push(frame); // only keep non-empty
-      }
-      return frames;
-    })();
+		const FRAME_LINES = 26;
+		const FRAMES = (() => {
+			const lines = spinningSunAsciiText.split("\n");
+			const frames = [];
+			for (let i = 0; i < lines.length; i += FRAME_LINES) {
+				const frame = lines.slice(i, i + FRAME_LINES).join("\n");
+				if (frame.trim()) frames.push(frame); // only keep non-empty
+			}
+			return frames;
+		})();
 
-    const INTERVAL_MS = 600;
-    const pre = document.getElementById("spinning-sun-pre");
-    if (!pre) return;
+		const INTERVAL_MS = 600;
+		const pre = document.getElementById("spinning-sun-pre");
+		if (!pre) return;
 
-    const prefersReduced =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+		const prefersReduced =
+			window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (prefersReduced) {
-      pre.textContent = FRAMES[0] || "";
-      pre.setAttribute("data-animated", "false");
-    } else {
-      let idx = 0;
-      pre.textContent = FRAMES[idx] || "";
-      pre.setAttribute("data-animated", "true");
+		if (prefersReduced) {
+			pre.textContent = FRAMES[0] || "";
+			pre.setAttribute("data-animated", "false");
+		} else {
+			let idx = 0;
+			pre.textContent = FRAMES[idx] || "";
+			pre.setAttribute("data-animated", "true");
 
-      const timer = setInterval(() => {
-        idx = (idx + 1) % FRAMES.length;
-        pre.textContent = FRAMES[idx];
-      }, INTERVAL_MS);
+			const timer = setInterval(() => {
+				idx = (idx + 1) % FRAMES.length;
+				pre.textContent = FRAMES[idx];
+			}, INTERVAL_MS);
 
-      const obs = new MutationObserver(() => {
-        if (!document.body.contains(pre)) {
-          clearInterval(timer);
-          obs.disconnect();
-        }
-      });
-      obs.observe(document.body, { childList: true, subtree: true });
-    }
-  });
+			const obs = new MutationObserver(() => {
+				if (!document.body.contains(pre)) {
+					clearInterval(timer);
+					obs.disconnect();
+				}
+			});
+			obs.observe(document.body, { childList: true, subtree: true });
+		}
+	});
 </script>

@@ -2,62 +2,58 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
 
-const introHeading = `Hi! I'm Sun Envidiado. 
-Welcome to my little corner on the internet.`;
+// Content shown on the page
+const headingText = `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`;
+const introText = `I like building software, playing games (hooked on Helldivers 2 atm), and karaoke. Here you'll find my thoughts on coding, gaming, and life.`;
 
-const introBody = `I like building software, playing games (hooked on Helldivers 2 atm), and karaoke. Here you'll find my thoughts on coding, gaming, and life.`;
-
-type CommandAction = {
+// Command definitions for the quick-command UI. Each command can optionally map to a navigation href.
+type SiteCommand = {
 	label: string;
-	command: string;
+	token: string;
+	href: string;
+	leadingText: string;
+	trailingText: string;
 };
 
-type CommandHint = {
-	type: string;
-	actions: CommandAction[];
-	description: string;
-};
-
-const commandHints: CommandHint[] = [
+const commands: SiteCommand[] = [
 	{
-		type: "type",
-		actions: [{ label: ":about<Enter>", command: ":about" }],
-		description: "to learn more about me.",
+		label: ":about<Enter>",
+		token: ":about",
+		href: "/about",
+		leadingText: "type",
+		trailingText: "to learn more about me.",
 	},
 	{
-		type: "type",
-		actions: [{ label: ":contact<Enter>", command: ":contact" }],
-		description: "to get in touch.",
+		label: ":contact<Enter>",
+		token: ":contact",
+		href: "/contact",
+		leadingText: "type",
+		trailingText: "to get in touch.",
 	},
 	{
-		type: "type",
-		actions: [{ label: ":blog<Enter>", command: ":blog" }],
-		description: "to read my latest blogs.",
+		label: ":blog<Enter>",
+		token: ":blog",
+		href: "/blog",
+		leadingText: "type",
+		trailingText: "to read my latest blogs.",
 	},
-	// {
-	// 	type: "type",
-	// 	actions: [
-	// 		{ label: ":crt<Enter>", command: ":crt" },
-	// 		{ label: ":no-crt<Enter>", command: ":no-crt" },
-	// 	],
-	// 	description: "to toggle CRT effects.",
-	// },
+	// TODO Specify CRT toggle commands
 ];
 
-const siteBase = Astro.site || "https://sun-envidiado.com";
+const siteBase = Astro.site ?? "https://sun-envidiado.com";
 const pagePath = "/";
-const absoluteUrl = new URL(pagePath, siteBase).toString();
+const pageUrl = new URL(pagePath, siteBase).toString();
 const imagePath = "/android-chrome-512x512.png";
-const absoluteImage = new URL(imagePath, siteBase).toString();
+const imageUrl = new URL(imagePath, siteBase).toString();
 
-const jsonLd = {
+const websiteJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "WebSite",
 	url: siteBase,
 	name: "Sun Envidiado",
-	description:
+	trailingText:
 		"Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast.",
-	image: absoluteImage,
+	image: imageUrl,
 	potentialAction: {
 		"@type": "SearchAction",
 		target: `${siteBase}/?s={search_term_string}`,
@@ -70,51 +66,57 @@ const personJsonLd = {
 	"@type": "Person",
 	name: "Sun Envidiado",
 	url: siteBase,
-	image: absoluteImage,
+	image: imageUrl,
 	jobTitle: "Software Developer",
 };
 ---
 
 <BaseLayout
 	title="Sun Envidiado"
-	url={absoluteUrl}
-	description="Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast."
-	image={absoluteImage}
+	url={pageUrl}
+	trailingText="Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast."
+	image={imageUrl}
 	type="website"
 	tags={["home", "sun-envidiado", "developer"]}
-	jsonLd={{ ...jsonLd, "@graph": [personJsonLd] }}
+	jsonLd={{ ...websiteJsonLd, "@graph": [personJsonLd] }}
 >
 	<div class="index-main-content">
 		<SpinningSunAsciiArt />
 		<div class="intro-container">
 			<h1 class="sr-only">Sun Envidiado</h1>
-			<span class="intro-heading">{introHeading}</span>
-			<span class="intro-body">{introBody}</span>
+			<span class="intro-heading">{headingText}</span>
+			<span class="intro-body">{introText}</span>
 		</div>
 		<nav class="command-hints-container" aria-label="Quick commands">
 			<div class="command-hints-grid">
 				{
-					commandHints.map((hint) => (
+					commands.map((cmd) => (
 						<div class="command-hint-row">
-							<span class="command-hint-type">{hint.type}</span>
+							<span class="command-hint-type">{cmd.leadingText}</span>
 							<span class="command-hint-command">
-								{hint.actions.map((action, i) => (
-									<span class="command-action-group">
+								<span class="command-action-group">
+									{cmd.href ? (
 										<a
-											class="command-hint-action"
-											href="#"
-											data-command={action.command}
-											aria-label={`Run ${action.command}`}
+											class="command-action command-hint-action"
+											href={cmd.href}
+											data-command={cmd.token}
+											aria-label={`Go to ${cmd.token}`}
 										>
-											{action.label}
+											{cmd.label}
 										</a>
-										{i < hint.actions.length - 1 ? (
-											<span class="command-separator"> or </span>
-										) : null}
-									</span>
-								))}
+									) : (
+										<button
+											class="command-hint-action"
+											type="button"
+											data-command={cmd.token}
+											aria-label={`Run ${cmd.token}`}
+										>
+											{cmd.label}
+										</button>
+									)}
+								</span>
 							</span>
-							<span class="command-hint-description">{hint.description}</span>
+							<span class="command-hint-description">{cmd.trailingText}</span>
 						</div>
 					))
 				}
@@ -124,75 +126,72 @@ const personJsonLd = {
 </BaseLayout>
 
 <script>
-	// Click delegation for the command hint actions.
-	// Behavior:
-	// 1) Find the closest `.command-hint-action` anchor from the click target.
-	// 2) Prevent default link navigation.
-	// 3) Blur the clicked element so it doesn't remain visually focused.
-	// 4) If `window.__runSiteCommand` exists, call it to execute the command.
-	// 5) Otherwise, fall back to simple navigation or CRT toggles.
-	document.addEventListener("click", function (ev) {
+	// Command click handler: uses event delegation and prefers a site-level command API
+	// if available (window.__runSiteCommand). Otherwise it falls back to navigation or
+	// toggling CRT state.
+	const onDocumentClick = (ev: MouseEvent) => {
 		const target = ev.target;
 		if (!(target instanceof Element)) return;
 
-		const action = target.closest(".command-hint-action");
-		if (!action) return;
+		// Narrowed to HTMLElement so TypeScript recognizes `blur`
+		const actionEl = target.closest(".command-hint-action") as HTMLElement | null;
+		if (!actionEl) return;
 
 		ev.preventDefault();
 
-		// Read the command token from data attribute (preferred) or text content.
-		const cmd =
-			action.getAttribute("data-command") || (action.textContent || "").trim();
+		const token = (actionEl.getAttribute("data-command") || actionEl.textContent || "").trim();
 
-		// Remove focus from the clicked element so it doesn't stay styled as focused.
-		const el = action as HTMLElement;
-		try {
-			el.blur();
-		} catch (e) {
-			/* ignore */
-		}
+		// Blur so focus styles don't persist on click
+		if (typeof actionEl.blur === "function") actionEl.blur();
 
-		// Try to execute using the site's command API if available.
-		try {
-			const win: any = window as any;
-			if (typeof win.__runSiteCommand === "function") {
-				win.__runSiteCommand(cmd, true);
+		// Prefer site-level command runner when available
+		const runner = window.__runSiteCommand;
+		if (typeof runner === "function") {
+			try {
+				runner(token, true);
 				return;
+			} catch {
+				// TODO Implement
 			}
-		} catch (e) {
-			// ignore and fall back
 		}
 
-		switch (cmd) {
+		// Built-in fallbacks
+		switch (token) {
 			case ":about":
-				window.location.href = "/about";
+				location.pathname = "/about";
 				break;
 			case ":contact":
-				window.location.href = "/contact";
+				location.pathname = "/contact";
 				break;
 			case ":blog":
-				window.location.href = "/blog";
+				location.pathname = "/blog";
 				break;
 			case ":crt":
 				try {
 					localStorage.setItem("crt-enabled", "1");
-				} catch (_) {}
-				document
-					.querySelector("#crt-overlay-container")
-					?.classList.add("crt-enabled");
+				} catch (err) {
+					console.debug("localStorage set failed", err);
+				}
+				document.querySelector("#crt-overlay-container")?.classList.add("crt-enabled");
 				document.body?.classList.add("crt-text-ca");
 				break;
 			case ":no-crt":
 				try {
 					localStorage.setItem("crt-enabled", "0");
-				} catch (_) {}
-				document
-					.querySelector("#crt-overlay-container")
-					?.classList.remove("crt-enabled");
+				} catch (err) {
+					console.debug("localStorage set failed", err);
+				}
+				document.querySelector("#crt-overlay-container")?.classList.remove("crt-enabled");
 				document.body?.classList.remove("crt-text-ca");
 				break;
 			default:
 				break;
 		}
-	});
+	};
+
+	document.addEventListener("click", onDocumentClick);
+	// Cleanup if the page uses client-side navigation/hMR during development
+	if (import.meta.hot) {
+		import.meta.hot.dispose(() => document.removeEventListener("click", onDocumentClick));
+	}
 </script>

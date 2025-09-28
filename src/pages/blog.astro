@@ -2,38 +2,57 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Import all Markdown blog posts in this folder (eager so frontmatter is available)
-const modules = import.meta.glob("./blog/*.md", { eager: true });
+const postModules = import.meta.glob<{ frontmatter?: { title?: string; pubDate?: string } }>(
+	"./blog/*.md",
+	{ eager: true }
+) as Record<string, { frontmatter?: { title?: string; pubDate?: string } }>;
 
-// Build an array of posts with frontmatter and url
-type Post = { title: string; pubDate: Date; url: string; index?: number };
-const postList = Object.entries(modules)
-  .map(([path, mod]) => {
-    const parts = path.split("/");
-    const last = parts.pop() || "";
-    const slug = last.replace(/\.md$/, "");
-    const fm = (mod as any).frontmatter || {};
-    const pubDate = fm.pubDate ? new Date(fm.pubDate) : null;
-    return {
-      title: fm.title || slug,
-      pubDate,
-      url: `/blog/${slug}`,
-    } as Post;
-  })
-  .filter((p) => p.pubDate) as Post[];
+// Types for clarity
+type Frontmatter = { title?: string; pubDate?: string };
+type CandidatePost = { title: string; pubDate?: Date; url: string };
+type PublishedPost = { title: string; pubDate: Date; url: string; index: number };
 
-// Sort by date desc
-postList.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf());
+// Helpers
+const slugFromPath = (path: string) => path.split("/").pop()?.replace(/\.md$/, "") ?? "";
+const parsePubDate = (value?: unknown): Date | undefined => {
+	if (!value) return undefined;
+	const d = new Date(String(value));
+	return Number.isFinite(d.valueOf()) ? d : undefined;
+};
 
-// Add stable numeric index (1-based) for command selection and index listing
-postList.forEach((p, i) => (p.index = i));
+const makeCandidate = (path: string, mod: { frontmatter?: Frontmatter }): CandidatePost => {
+	const slug = slugFromPath(path);
+	const fm = mod.frontmatter ?? {};
+	return {
+		title: String(fm.title ?? slug),
+		pubDate: parsePubDate(fm.pubDate),
+		url: `/blog/${slug}`,
+	};
+};
 
-// Group by year
-const grouped: Record<number, Post[]> = {};
-for (const post of postList) {
-  const year = post.pubDate.getFullYear();
-  if (!grouped[year]) grouped[year] = [];
-  grouped[year].push(post);
-}
+// Build, filter, sort and index posts in a clear pipeline
+const candidatePosts: CandidatePost[] = Object.entries(postModules).map(([p, m]) =>
+	makeCandidate(p, m)
+);
+
+const posts: PublishedPost[] = candidatePosts
+	.filter((c): c is CandidatePost & { pubDate: Date } => Boolean(c.pubDate))
+	.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
+	.map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i + 1 }));
+
+// Group posts by year using reduce for clarity
+const postsByYear: Record<number, PublishedPost[]> = posts.reduce(
+	(acc, p) => {
+		const year = p.pubDate.getFullYear();
+		(acc[year] ||= []).push(p);
+		return acc;
+	},
+	{} as Record<number, PublishedPost[]>
+);
+
+// Keep older variable names compatible with templates below
+const postList = posts;
+const grouped = postsByYear;
 
 const homeUrlLabel = ":home<Enter>";
 const blogIndexLabel = ":blog[index]";
@@ -47,79 +66,67 @@ const absoluteImage = new URL(imagePath, siteBase).toString();
 
 // Minimal JSON-LD for a blog index / collection page
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: "Blog — Sun Envidiado",
-  description:
-    "A collection of blog posts about code, projects, gaming, and life.",
-  url: absoluteUrl,
-  image: absoluteImage,
-  hasPart: postList.slice(0, 10).map((p) => ({
-    "@type": "BlogPosting",
-    headline: p.title,
-    url: new URL(p.url, siteBase).toString(),
-    datePublished: p.pubDate.toISOString(),
-  })),
+	"@context": "https://schema.org",
+	"@type": "CollectionPage",
+	name: "Blog — Sun Envidiado",
+	description: "A collection of blog posts about code, projects, gaming, and life.",
+	url: absoluteUrl,
+	image: absoluteImage,
+	hasPart: postList.slice(0, 10).map((p) => ({
+		"@type": "BlogPosting",
+		headline: p.title,
+		url: new URL(p.url, siteBase).toString(),
+		datePublished: p.pubDate.toISOString(),
+	})),
 };
 ---
 
 <BaseLayout
-  title="Blog — Sun Envidiado"
-  url={absoluteUrl}
-  description="Blog posts by Sun Envidiado about coding, projects, and life."
-  image={absoluteImage}
-  type="collection"
-  tags={["blog", "posts", "coding"]}
-  jsonLd={jsonLd}
+	title="Blog — Sun Envidiado"
+	url={absoluteUrl}
+	description="Blog posts by Sun Envidiado about coding, projects, and life."
+	image={absoluteImage}
+	type="collection"
+	tags={["blog", "posts", "coding"]}
+	jsonLd={jsonLd}
 >
-  <div class="blog-content">
-    <header class="blog-header">
-      <h1 id="blog-title" class="sr-only">Blog</h1>
-      <p class="blog-content-start">
-        Select a blog post by typing <a href="/" aria-label="Open blog index"
-          >{blogIndexLabel}</a
-        >. To return to the homepage, type <a
-          href="/"
-          aria-label="Go to homepage">{homeUrlLabel}</a
-        >.
-      </p>
-    </header>
-    <div class="posts-wrapper">
-      {
-        Object.keys(grouped)
-          .sort((a, b) => Number(b) - Number(a))
-          .map((year) => (
-            <section class="year-group">
-              <h2 class="year-heading" id={`year-${year}`}>
-                {year}
-              </h2>
-              <ul class="year-list" aria-labelledby={`year-${year}`}>
-                {grouped[Number(year)].map((post) => (
-                  <li
-                    class="post-row"
-                    data-blog-index={post.index}
-                    data-blog-url={post.url}
-                  >
-                    <span class="post-index">{post.index}</span>
-                    <a class="post-link" href={post.url} rel="bookmark">
-                      {post.title}
-                    </a>
-                    <time
-                      class="post-date hide-on-mobile"
-                      datetime={post.pubDate.toISOString()}
-                    >
-                      {post.pubDate.toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </time>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))
-      }
-    </div>
-  </div>
+	<div class="blog-content">
+		<header class="blog-header">
+			<h1 id="blog-title" class="sr-only">Blog</h1>
+			<p class="blog-content-start">
+				Select a blog post by typing <a href="/" aria-label="Open blog index">{blogIndexLabel}</a>.
+				To return to the homepage, type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a>.
+			</p>
+		</header>
+		<div class="posts-wrapper">
+			{
+				Object.keys(grouped)
+					.sort((a, b) => Number(b) - Number(a))
+					.map((year) => (
+						<section class="year-group">
+							<h2 class="year-heading" id={`year-${year}`}>
+								{year}
+							</h2>
+							<ul class="year-list" aria-labelledby={`year-${year}`}>
+								{grouped[Number(year)].map((post) => (
+									<li class="post-row" data-blog-index={post.index} data-blog-url={post.url}>
+										<span class="post-index">{post.index}</span>
+										<a class="post-link" href={post.url} rel="bookmark">
+											{post.title}
+										</a>
+										<time class="post-date hide-on-mobile" datetime={post.pubDate.toISOString()}>
+											{post.pubDate.toLocaleDateString("en-US", {
+												month: "short",
+												day: "numeric",
+												year: "numeric",
+											})}
+										</time>
+									</li>
+								))}
+							</ul>
+						</section>
+					))
+			}
+		</div>
+	</div>
 </BaseLayout>
