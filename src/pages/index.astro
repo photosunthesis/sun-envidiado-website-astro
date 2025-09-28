@@ -126,6 +126,8 @@ const personJsonLd = {
 </BaseLayout>
 
 <script>
+	import { navigate } from "astro:transitions/client";
+
 	// Command click handler: uses event delegation and prefers a site-level command API
 	// if available (window.__runSiteCommand). Otherwise it falls back to navigation or
 	// toggling CRT state.
@@ -158,13 +160,13 @@ const personJsonLd = {
 		// Built-in fallbacks
 		switch (token) {
 			case ":about":
-				location.pathname = "/about";
+				navigate("/about");
 				break;
 			case ":contact":
-				location.pathname = "/contact";
+				navigate("/contact");
 				break;
 			case ":blog":
-				location.pathname = "/blog";
+				navigate("/blog");
 				break;
 			case ":crt":
 				try {

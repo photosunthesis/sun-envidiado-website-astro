@@ -1,4 +1,3 @@
-<!-- Styles for this component are in `src/styles/_base.scss` -->
 <div class="sun-spin-wrap" aria-hidden="false">
 	<span class="sr-only">Spinning sun ASCII art</span>
 	<pre
@@ -11,7 +10,8 @@
 </div>
 
 <script>
-	document.addEventListener("DOMContentLoaded", () => {
+	type PreWithCleanup = HTMLPreElement & { __cleanup?: () => void };
+	function initializeSpinningSun(): void {
 		const spinningSunAsciiText = `                         ##                       
                        #####                      
                        #####                      
@@ -1054,29 +1054,29 @@
                          ###                      
 `;
 
-		const FRAME_LINES = 26;
-		const FRAMES = (() => {
-			const lines = spinningSunAsciiText.split("\n");
-			const frames = [];
+		const FRAME_LINES: number = 26;
+		const FRAMES: string[] = (() => {
+			const lines: string[] = spinningSunAsciiText.split("\n");
+			const frames: string[] = [];
 			for (let i = 0; i < lines.length; i += FRAME_LINES) {
-				const frame = lines.slice(i, i + FRAME_LINES).join("\n");
+				const frame: string = lines.slice(i, i + FRAME_LINES).join("\n");
 				if (frame.trim()) frames.push(frame); // only keep non-empty
 			}
 			return frames;
 		})();
 
-		const INTERVAL_MS = 600;
-		const pre = document.getElementById("spinning-sun-pre");
+		const INTERVAL_MS: number = 600;
+		const pre = document.getElementById("spinning-sun-pre") as PreWithCleanup | null;
 		if (!pre) return;
 
-		const prefersReduced =
+		const prefersReduced: boolean =
 			window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 		if (prefersReduced) {
 			pre.textContent = FRAMES[0] || "";
 			pre.setAttribute("data-animated", "false");
 		} else {
-			let idx = 0;
+			let idx: number = 0;
 			pre.textContent = FRAMES[idx] || "";
 			pre.setAttribute("data-animated", "true");
 
@@ -1084,6 +1084,11 @@
 				idx = (idx + 1) % FRAMES.length;
 				pre.textContent = FRAMES[idx];
 			}, INTERVAL_MS);
+
+			// Store cleanup function on the element for later use
+			pre.__cleanup = () => {
+				clearInterval(timer);
+			};
 
 			const obs = new MutationObserver(() => {
 				if (!document.body.contains(pre)) {
@@ -1093,5 +1098,20 @@
 			});
 			obs.observe(document.body, { childList: true, subtree: true });
 		}
-	});
+	}
+
+	// Function to cleanup any existing animations
+	function cleanupSpinningSun(): void {
+		const pre = document.getElementById("spinning-sun-pre") as PreWithCleanup | null;
+		if (pre && pre.__cleanup) {
+			pre.__cleanup();
+		}
+	}
+
+	// Initialize on page load
+	initializeSpinningSun();
+
+	// Listen for Astro's view transition events
+	document.addEventListener("astro:page-load", initializeSpinningSun);
+	document.addEventListener("astro:before-preparation", cleanupSpinningSun);
 </script>
