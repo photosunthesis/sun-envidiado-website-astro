@@ -32,7 +32,7 @@ const imageToUse = frontmatter.image || image;
 // --- Canonical/OG URL logic ---
 const canonical = new URL(
 	String(url || "/").replace(/\/?$/, "/"),
-	Astro.site || "https://sun-envidiado.com"
+	Astro.site || "https://sun-envidiado.com",
 ).toString();
 const fullImage = new URL(String(imageToUse), Astro.site || "https://sun-envidiado.com").toString();
 // Short labels used by blog footer (kept for parity with previous BlogLayout)
@@ -42,9 +42,17 @@ const homeUrlLabel = ":home<Enter>";
 
 <html lang="en">
 	<head>
-		<title>{title}</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>{title}</title>
+
+		<!-- Cloudflare Web Analytics -->
+		<script
+			defer
+			src="https://static.cloudflareinsights.com/beacon.min.js"
+			data-cf-beacon='{"token": "d9d31592b1ef4f86a7bf89125c54227e"}'></script>
+
+		<!-- Primary Meta Tags -->
 		<meta name="theme-color" content="#09090b" />
 		<meta name="msapplication-navbutton-color" content="#09090b" />
 		<meta name="mobile-web-app-capable" content="yes" />
@@ -117,7 +125,6 @@ const homeUrlLabel = ":home<Enter>";
 				z-index: 1000;
 			}
 		</style>
-
 		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 	</head>
 	<body class="vim-root crt-text-ca">
