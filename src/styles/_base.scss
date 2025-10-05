@@ -269,6 +269,22 @@ $cmdbar-height: 30px;
   padding: 0.35rem 0.75rem calc(env(safe-area-inset-bottom, 0) + 0.35rem);
 }
 
+/* Left area inside the command bar for small persistent info (copyright etc) */
+.command-bar .cmd-right {
+  margin-left: 1rem;
+  color: rgba(var(--background-rgb), 0.3);
+  /* match the input placeholder color */
+  font-size: 0.95rem;
+  white-space: nowrap;
+  opacity: 1;
+  flex: 0 0 auto;
+}
+
+/* Hide the right copyright when the command bar is in error state so it doesn't overlap the error text */
+.command-bar.error .cmd-right {
+  display: none;
+}
+
 .cmd-cursor {
   position: absolute;
   top: 0;

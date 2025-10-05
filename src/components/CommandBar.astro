@@ -1,3 +1,13 @@
+---
+const baseYear = 2025;
+const now = new Date();
+const currentYear = now.getFullYear();
+const copyright =
+	currentYear <= baseYear
+		? `© ${baseYear} Sun Adriann B. Envidiado`
+		: `© ${baseYear} - ${currentYear} Sun Adriann B. Envidiado`;
+---
+
 <div class="command-bar" role="region" aria-label="Command bar">
 	<div class="command-bar-inner">
 		<div id="vim-error" class="vim-error-inline" role="status" aria-live="polite"></div>
@@ -14,11 +24,12 @@
 			/>
 			<span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
 		</span>
+
+		<div id="cmd-right" class="cmd-right hide-on-mobile" aria-hidden="true">{copyright}</div>
 	</div>
 </div>
 
 <script>
-	// Client-side module script with proper TypeScript DOM typings.
 	const input = document.querySelector<HTMLInputElement>("#site-command-input");
 	const vimError = document.querySelector<HTMLElement>("#vim-error");
 	const cursor = document.querySelector<HTMLElement>("#cmd-cursor");
