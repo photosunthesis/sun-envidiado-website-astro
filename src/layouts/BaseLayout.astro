@@ -2,6 +2,22 @@
 import CommandBar from "../components/CommandBar.astro";
 import "../styles/main.scss";
 
+const siteCopy = {
+	siteName: "Sun Envidiado",
+	authorName: "Sun Envidiado",
+	defaultDescription:
+		"Personal website where I share my thoughts about anything and everything.",
+	skipLinkText: "Skip to content",
+	skipLinkAria: "Skip to main content",
+	backUrlLabel: ":back<Enter>",
+	homeUrlLabel: ":home<Enter>",
+	blogFooter: {
+		prefix: "Type",
+		returnSuffix: "to return to the previous page, or",
+		homeSuffix: "to go to the homepage.",
+	},
+};
+
 // Allow pages to pass either top-level props or a `frontmatter` object (markdown pages)
 const {
 	// explicit props (for .astro pages or manual usage)
@@ -19,11 +35,9 @@ const {
 } = Astro.props || {};
 
 // Prefer values from frontmatter when available to support markdown layouts
-const title = frontmatter.title || propTitle || "Sun Envidiado";
+const title = frontmatter.title || propTitle || siteCopy.siteName;
 const description =
-	frontmatter.description ||
-	propDescription ||
-	"Personal website where I share my thoughts about anything and everything.";
+	frontmatter.description || propDescription || siteCopy.defaultDescription;
 const pubDate = frontmatter.pubDate || propPubDate;
 const tags =
 	Array.isArray(frontmatter.tags) && frontmatter.tags.length ? frontmatter.tags : propTags;
@@ -35,9 +49,6 @@ const canonical = new URL(
 	Astro.site || "https://sun-envidiado.com",
 ).toString();
 const fullImage = new URL(String(imageToUse), Astro.site || "https://sun-envidiado.com").toString();
-// Short labels used by blog footer (kept for parity with previous BlogLayout)
-const backUrlLabel = ":back<Enter>";
-const homeUrlLabel = ":home<Enter>";
 ---
 
 <html lang="en">
@@ -62,7 +73,7 @@ const homeUrlLabel = ":home<Enter>";
 		<link rel="canonical" href={canonical} />
 		<meta name="referrer" content="no-referrer-when-downgrade" />
 		<meta name="color-scheme" content="light dark" />
-		<meta name="author" content={title} />
+	<meta name="author" content={siteCopy.authorName} />
 		<link rel="sitemap" href="/sitemap-index.xml" />
 
 		{pubDate && <meta property="article:published_time" content={pubDate} />}
@@ -80,9 +91,9 @@ const homeUrlLabel = ":home<Enter>";
 		<meta property="og:url" content={canonical} />
 		<meta property="og:image" content={fullImage} />
 
-		<!-- Twitter -->
-		<meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
-		<meta name="twitter:site" content={`@${title.replace(/\s+/g, "").toLowerCase()}`} />
+	<!-- Twitter -->
+	<meta name="twitter:card" content={fullImage ? "summary_large_image" : "summary"} />
+	<meta name="twitter:site" content={`@${siteCopy.siteName.replace(/\s+/g, "").toLowerCase()}`} />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={fullImage} />
@@ -129,8 +140,8 @@ const homeUrlLabel = ":home<Enter>";
 	</head>
 	<body class="vim-root crt-text-ca">
 		<script src="/src/scripts/crtPreference.ts"></script>
-		<!-- Skip link for keyboard users -->
-		<a class="skip-link" href="#main" aria-label="Skip to main content">Skip to content</a>
+	<!-- Skip link for keyboard users -->
+	<a class="skip-link" href="#main" aria-label={siteCopy.skipLinkAria}>{siteCopy.skipLinkText}</a>
 
 		<div class="main-flex-container">
 			<main id="main" class="vim-main-content" tabindex="-1">
@@ -160,20 +171,20 @@ const homeUrlLabel = ":home<Enter>";
 									aria-label="Post navigation and actions"
 								>
 									<p class="blog-footer-text">
-										Type
+										{siteCopy.blogFooter.prefix}
 										<button
 											class="link-like"
 											type="button"
 											onclick="history.back();"
 											aria-label="Go back"
 										>
-											{backUrlLabel}
+											{siteCopy.backUrlLabel}
 										</button>
-										to return to the previous page, or
+										{` ${siteCopy.blogFooter.returnSuffix} `}
 										<a href="/" aria-label="Go to homepage">
-											{homeUrlLabel}
+											{siteCopy.homeUrlLabel}
 										</a>
-										to go to the homepage.
+										{` ${siteCopy.blogFooter.homeSuffix}`}
 									</p>
 								</footer>
 							</div>

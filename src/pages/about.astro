@@ -1,15 +1,31 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-
-const aboutMeText = `My name is Sun Envidiado. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.
+// Centralized in-file copy for About page
+const siteCopy = {
+  siteName: "Sun Envidiado",
+  pageTitle: "About — Sun Envidiado",
+  pageHeadline: "About Me",
+  pageDescription:
+    "About Sun Envidiado — software developer from Manila sharing projects, code, gaming, and life.",
+  aboutMeText: `My name is Sun Envidiado. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.
 
 Like most programmers, I've bounced around between languages and frameworks: C# and .NET, then JavaScript and Vue.js, PHP and Laravel, until I somehow ended up with Flutter. Flutter and Dart is great. It's easy to pick up, the development experience is smooth, and writing code once then building it for different platforms is pretty awesome. Flutter web sucks ass though.
 
 When I'm not coding, I'm usually gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling TikTok for way too long. I cook too, though I'm pretty average at it — not terrible, not great either. Someday I hope to have a proper kitchen and quality utensils so I can work toward making Michelin-star quality meals.
 
-You'll notice this site has a vim-like aesthetic to it (I actually use VS Code like a normal person though). I find the retro computer look cool in a techy, hacky way. And there's something appealing about those old-school terminal vibes. This site is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document experiences and whatever's on my mind, and maybe where people can find me and get to know me a little more.`;
-
-const homeUrlLabel = ":home<Enter>";
+You'll notice this site has a vim-like aesthetic to it (I actually use VS Code like a normal person though). I find the retro computer look cool in a techy, hacky way. And there's something appealing about those old-school terminal vibes. This site is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document experiences and whatever's on my mind, and maybe where people can find me and get to know me a little more.`,
+  homeUrlLabel: ":home<Enter>",
+  tags: ["about", "sun-envidiado", "software"],
+  ariaGoHomepage: "Go to homepage",
+  jobTitle: "Software Developer",
+  email: "mailto:sunadriann31@gmail.com",
+  sameAs: [
+    "https://github.com/photosunthesis",
+    "https://twitter.com/sun",
+    "https://www.linkedin.com/in/sun-envidiado",
+  ],
+  footerReturnPrefix: "To go back to the homepage, type",
+};
 
 // SEO / Structured Data
 const siteBase = Astro.site || "https://sun-envidiado.com";
@@ -20,36 +36,31 @@ const absoluteImage = new URL(imagePath, siteBase).toString();
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
-  name: "Sun Envidiado",
+  name: siteCopy.siteName,
   url: absoluteUrl,
   image: absoluteImage,
-  sameAs: [
-    "https://github.com/photosunthesis",
-    "https://twitter.com/sun",
-    "https://www.linkedin.com/in/sun-envidiado",
-  ],
-  jobTitle: "Software Developer",
-  description:
-    "Software developer from Manila sharing projects, ideas, and thoughts about code, gaming, and life.",
+  sameAs: siteCopy.sameAs,
+  jobTitle: siteCopy.jobTitle,
+  description: siteCopy.pageDescription,
 };
 ---
 
 <BaseLayout
-  title="About — Sun Envidiado"
+  title={siteCopy.pageTitle}
   url={absoluteUrl}
-  description="About Sun Envidiado — software developer from Manila sharing projects, code, gaming, and life."
+  description={siteCopy.pageDescription}
   image={absoluteImage}
   type="profile"
-  tags={["about", "sun-envidiado", "software"]}
+  tags={siteCopy.tags}
   jsonLd={jsonLd}
 >
   <div class="about-content">
     <article class="about-article" aria-labelledby="about-title">
-      <h1 id="about-title" class="about-title sr-only">About Me</h1>
-      <p>{aboutMeText}</p>
+      <h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
+      <p>{siteCopy.aboutMeText}</p>
       <footer class="about-footer">
-        To go back to the homepage, type <a href="/" aria-label="Go to homepage"
-          >{homeUrlLabel}</a
+        {siteCopy.footerReturnPrefix} <a href="/" aria-label="Go to homepage"
+          >{siteCopy.homeUrlLabel}</a
         >.
       </footer>
     </article>

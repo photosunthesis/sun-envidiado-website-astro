@@ -2,57 +2,51 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
 
-// Content shown on the page
-const headingText = `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`;
-const introText = `I like building software, playing games (hooked on Helldivers 2 atm), and karaoke. Here you'll find my thoughts on coding, gaming, and life.`;
-
-// Command definitions for the quick-command UI. Each command can optionally map to a navigation href.
-type SiteCommand = {
-	label: string;
-	token: string;
-	href: string;
-	leadingText: string;
-	trailingText: string;
+const siteCopy = {
+	siteName: "Sun Envidiado",
+	headingText: `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`,
+	introText:
+		`I like building software, playing games (hooked on Helldivers 2 atm), and karaoke. Here you'll find my thoughts on coding, gaming, and life.`,
+	commands: [
+		{
+			label: ":about<Enter>",
+			token: ":about",
+			href: "/about",
+			leadingText: "type",
+			trailingText: "to learn more about me.",
+		},
+		{
+			label: ":contact<Enter>",
+			token: ":contact",
+			href: "/contact",
+			leadingText: "type",
+			trailingText: "to get in touch.",
+		},
+		{
+			label: ":blog<Enter>",
+			token: ":blog",
+			href: "/blog",
+			leadingText: "type",
+			trailingText: "to read my latest blogs.",
+		},
+	],
+	pageTitle: "Sun Envidiado",
+	trailingText: "Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast.",
+	tags: ["home", "sun-envidiado", "developer"],
+	imagePath: "/android-chrome-512x512.png",
 };
-
-const commands: SiteCommand[] = [
-	{
-		label: ":about<Enter>",
-		token: ":about",
-		href: "/about",
-		leadingText: "type",
-		trailingText: "to learn more about me.",
-	},
-	{
-		label: ":contact<Enter>",
-		token: ":contact",
-		href: "/contact",
-		leadingText: "type",
-		trailingText: "to get in touch.",
-	},
-	{
-		label: ":blog<Enter>",
-		token: ":blog",
-		href: "/blog",
-		leadingText: "type",
-		trailingText: "to read my latest blogs.",
-	},
-	// TODO Specify CRT toggle commands
-];
 
 const siteBase = Astro.site ?? "https://sun-envidiado.com";
 const pagePath = "/";
 const pageUrl = new URL(pagePath, siteBase).toString();
-const imagePath = "/android-chrome-512x512.png";
-const imageUrl = new URL(imagePath, siteBase).toString();
+const imageUrl = new URL(siteCopy.imagePath, siteBase).toString();
 
 const websiteJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "WebSite",
 	url: siteBase,
-	name: "Sun Envidiado",
-	trailingText:
-		"Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast.",
+	name: siteCopy.siteName,
+	trailingText: siteCopy.trailingText,
 	image: imageUrl,
 	potentialAction: {
 		"@type": "SearchAction",
@@ -64,7 +58,7 @@ const websiteJsonLd = {
 const personJsonLd = {
 	"@context": "https://schema.org",
 	"@type": "Person",
-	name: "Sun Envidiado",
+	name: siteCopy.siteName,
 	url: siteBase,
 	image: imageUrl,
 	jobTitle: "Software Developer",
@@ -72,25 +66,25 @@ const personJsonLd = {
 ---
 
 <BaseLayout
-	title="Sun Envidiado"
+	title={siteCopy.pageTitle}
 	url={pageUrl}
-	trailingText="Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast."
+	trailingText={siteCopy.trailingText}
 	image={imageUrl}
 	type="website"
-	tags={["home", "sun-envidiado", "developer"]}
+	tags={siteCopy.tags}
 	jsonLd={{ ...websiteJsonLd, "@graph": [personJsonLd] }}
 >
 	<div class="index-main-content">
 		<SpinningSunAsciiArt />
 		<div class="intro-container">
 			<h1 class="sr-only">Sun Envidiado</h1>
-			<span class="intro-heading">{headingText}</span>
-			<span class="intro-body">{introText}</span>
+			<span class="intro-heading">{siteCopy.headingText}</span>
+			<span class="intro-body">{siteCopy.introText}</span>
 		</div>
 		<nav class="command-hints-container" aria-label="Quick commands">
 			<div class="command-hints-grid">
 				{
-					commands.map((cmd) => (
+					siteCopy.commands.map((cmd) => (
 						<div class="command-hint-row">
 							<span class="command-hint-type">{cmd.leadingText}</span>
 							<span class="command-hint-command">

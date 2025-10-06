@@ -1,31 +1,30 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-type ContactItem = {
-  label: string;
-  value: string;
-  href: string;
+const siteCopy = {
+  pageTitle: "Contact — Sun Envidiado",
+  pageHeadline: "Contact",
+  pageDescription: "Get in touch with Sun Envidiado — email, LinkedIn, GitHub.",
+  homeUrlLabel: ":home<Enter>",
+  contactItems: [
+    {
+      label: "Email me",
+      value: "sunadriann31@gmail.com",
+      href: "mailto:sunadriann31@gmail.com",
+    },
+    {
+      label: "Connect with me on LinkedIn",
+      value: "in/sunenvidiado/",
+      href: "https://www.linkedin.com/in/sunenvidiado/",
+    },
+    {
+      label: "Check out my GitHub",
+      value: "@photosunthesis",
+      href: "https://github.com/photosunthesis",
+    },
+  ],
 };
 
-const contactItems: ContactItem[] = [
-  {
-    label: "Email me",
-    value: "sunadriann31@gmail.com",
-    href: "mailto:sunadriann31@gmail.com",
-  },
-  {
-    label: "Connect with me on LinkedIn",
-    value: "in/sunenvidiado/",
-    href: "https://www.linkedin.com/in/sunenvidiado/",
-  },
-  {
-    label: "Check out my GitHub",
-    value: "@photosunthesis",
-    href: "https://github.com/photosunthesis",
-  },
-];
-
-const homeUrlLabel = ":home<Enter>";
 const siteBase = Astro.site || "https://sun-envidiado.com";
 const pagePath = "/contact";
 const absoluteUrl = new URL(pagePath, siteBase).toString();
@@ -36,9 +35,8 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "ContactPage",
   url: absoluteUrl,
-  headline: "Contact — Sun Envidiado",
-  description:
-    "Ways to contact Sun Envidiado, including email and social profiles.",
+  headline: siteCopy.pageTitle,
+  description: "Ways to contact Sun Envidiado, including email and social profiles.",
   mainEntity: {
     "@type": "Person",
     name: "Sun Envidiado",
@@ -50,20 +48,20 @@ const jsonLd = {
 ---
 
 <BaseLayout
-  title="Contact — Sun Envidiado"
+  title={siteCopy.pageTitle}
   url={absoluteUrl}
-  description="Get in touch with Sun Envidiado — email, LinkedIn, GitHub."
+  description={siteCopy.pageDescription}
   image={absoluteImage}
   type="contact"
   tags={["contact", "email", "connect"]}
   jsonLd={jsonLd}
 >
   <div class="contact-content">
-    <h1 class="sr-only">Contact</h1>
+    <h1 class="sr-only">{siteCopy.pageHeadline}</h1>
     <div class="contact-container">
       <ul class="contact-list">
         {
-          contactItems.map((item) => {
+          siteCopy.contactItems.map((item) => {
             const isExternal = /^https?:\/\//i.test(item.href);
             return (
               <li class="contact-row">
@@ -85,7 +83,7 @@ const jsonLd = {
       </ul>
     </div>
     <footer class="contact-footer">
-      Type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a> to go back
+      Type <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back
       to the homepage.
     </footer>
   </div>

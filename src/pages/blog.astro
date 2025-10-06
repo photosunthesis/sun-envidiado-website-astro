@@ -54,8 +54,20 @@ const postsByYear: Record<number, PublishedPost[]> = posts.reduce(
 const postList = posts;
 const grouped = postsByYear;
 
-const homeUrlLabel = ":home<Enter>";
-const blogIndexLabel = ":blog[index]";
+// Centralized page copy for blog index
+const siteCopy = {
+	siteName: "Sun Envidiado",
+	pageTitle: "Blog — Sun Envidiado",
+	pageDescription: "A collection of blog posts about code, projects, gaming, and life.",
+	homeUrlLabel: ":home<Enter>",
+	blogIndexLabel: ":blog[index]",
+	pageHeadline: "Blog",
+	contentStartPrefix: "Select a blog post by typing",
+	contentReturnPrefix: "To return to the homepage, type",
+	ariaOpenBlogIndex: "Open blog index",
+	ariaGoHomepage: "Go to homepage",
+	tags: ["blog", "posts", "coding"],
+};
 
 // SEO / Structured Data
 const siteBase = Astro.site || "https://sun-envidiado.com";
@@ -68,8 +80,8 @@ const absoluteImage = new URL(imagePath, siteBase).toString();
 const jsonLd = {
 	"@context": "https://schema.org",
 	"@type": "CollectionPage",
-	name: "Blog — Sun Envidiado",
-	description: "A collection of blog posts about code, projects, gaming, and life.",
+	name: siteCopy.pageTitle,
+	description: siteCopy.pageDescription,
 	url: absoluteUrl,
 	image: absoluteImage,
 	hasPart: postList.slice(0, 10).map((p) => ({
@@ -82,20 +94,20 @@ const jsonLd = {
 ---
 
 <BaseLayout
-	title="Blog — Sun Envidiado"
+	title={siteCopy.pageTitle}
 	url={absoluteUrl}
-	description="Blog posts by Sun Envidiado about coding, projects, and life."
+	description={siteCopy.pageDescription}
 	image={absoluteImage}
 	type="collection"
-	tags={["blog", "posts", "coding"]}
+	tags={siteCopy.tags}
 	jsonLd={jsonLd}
 >
 	<div class="blog-content">
 		<header class="blog-header">
-			<h1 id="blog-title" class="sr-only">Blog</h1>
+			<h1 id="blog-title" class="sr-only">{siteCopy.pageHeadline}</h1>
 			<p class="blog-content-start">
-				Select a blog post by typing <a href="/" aria-label="Open blog index">{blogIndexLabel}</a>.
-				To return to the homepage, type <a href="/" aria-label="Go to homepage">{homeUrlLabel}</a>.
+				{siteCopy.contentStartPrefix} <a href="/" aria-label={siteCopy.ariaOpenBlogIndex}>{siteCopy.blogIndexLabel}</a>.
+				{siteCopy.contentReturnPrefix} <a href="/" aria-label={siteCopy.ariaGoHomepage}>{siteCopy.homeUrlLabel}</a>.
 			</p>
 		</header>
 		<div class="posts-wrapper">
