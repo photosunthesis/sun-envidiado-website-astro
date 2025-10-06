@@ -1,59 +1,33 @@
 name: Build and Deploy
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
-  id-token: write
-  pages: write
   contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
-    name: Build Astro Site
+    name: Build and Upload
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
-
-      - name: Install Sharp dependencies
-        run: sudo apt-get update && sudo apt-get install -y libvips-dev
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
-
-      - name: Show build output
-        run: |
-          echo "=== dist listing ==="
-          ls -la dist || true
-
-      - name: Upload Pages artifact
-        id: upload-pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Build and upload the site output
+        uses: withastro/action@v4
 
   deploy:
-    name: Deploy to GitHub Pages
+    name: Deploy
     needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
