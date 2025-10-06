@@ -1,93 +1,111 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+
 // Centralized in-file copy for About page
 const siteCopy = {
-  siteName: "Sun Envidiado",
-  pageTitle: "About — Sun Envidiado",
-  pageHeadline: "About Me",
-  pageDescription:
-    "About Sun Envidiado — software developer from Manila sharing projects, code, gaming, and life.",
-  aboutMeText: `My name is Sun Envidiado. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.
+	siteName: "Sun Envidiado",
+	pageHeadline: "About Me",
+	aboutMeText: `My name is Sun Envidiado. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.
 
 Like most programmers, I've bounced around between languages and frameworks: C# and .NET, JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.
 
 The look of this website was inspired by vim and retro computers because I think they look cool. Ironically though, I use VS Code for my actual coding (like a normal person).
 
 This is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
-  homeUrlLabel: ":home<Enter>",
-  tags: ["about", "sun-envidiado", "software"],
-  ariaGoHomepage: "Go to homepage",
-  jobTitle: "Software Developer",
-  email: "mailto:sunadriann31@gmail.com",
-  sameAs: [
-    "https://github.com/photosunthesis",
-    "https://twitter.com/sun",
-    "https://www.linkedin.com/in/sun-envidiado",
-  ],
-  footerReturnPrefix: "To go back to the homepage, type",
+	homeUrlLabel: ":home<Enter>",
+	ariaGoHomepage: "Go to homepage",
+	footerReturnPrefix: "To go back to the homepage, type",
 };
 
-// SEO / Structured Data
+// SEO-optimized metadata
+const seoMeta = {
+	title: "About — Sun Envidiado",
+	description:
+		"Learn about Sun Envidiado, a software developer from Manila, Philippines specializing in Flutter and Dart development. Passionate about coding, gaming, and karaoke.",
+	tags: [
+		"about sun envidiado",
+		"flutter developer manila",
+		"software developer philippines",
+		"dart developer",
+		"web developer manila",
+	],
+};
+
+// JSON-LD Structured Data
 const siteBase = Astro.site || "https://sun-envidiado.com";
-const pagePath = "/about";
-const absoluteUrl = new URL(pagePath, siteBase).toString();
-const imagePath = "/android-chrome-512x512.png";
-const absoluteImage = new URL(imagePath, siteBase).toString();
+const imageUrl = new URL("/default.png", siteBase).toString();
+
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: siteCopy.siteName,
-  url: absoluteUrl,
-  image: absoluteImage,
-  sameAs: siteCopy.sameAs,
-  jobTitle: siteCopy.jobTitle,
-  description: siteCopy.pageDescription,
+	"@context": "https://schema.org",
+	"@type": "ProfilePage",
+	mainEntity: {
+		"@type": "Person",
+		"@id": `${siteBase}/#person`,
+		name: siteCopy.siteName,
+		url: siteBase,
+		image: imageUrl,
+		jobTitle: "Software Developer",
+		description: seoMeta.description,
+		knowsAbout: [
+			"Flutter",
+			"Dart",
+			"JavaScript",
+			"Vue.js",
+			"C#",
+			".NET",
+			"PHP",
+			"Laravel",
+			"Web Development",
+			"Mobile Development",
+		],
+		alumniOf: "Manila, Philippines",
+		sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
+		email: "mailto:sunadriann31@gmail.com",
+		interestIn: ["Coding", "Gaming", "Karaoke", "Cooking"],
+	},
 };
 ---
 
 <BaseLayout
-  title={siteCopy.pageTitle}
-  url={absoluteUrl}
-  description={siteCopy.pageDescription}
-  image={absoluteImage}
-  type="profile"
-  tags={siteCopy.tags}
-  jsonLd={jsonLd}
+	title={seoMeta.title}
+	description={seoMeta.description}
+	tags={seoMeta.tags}
+	type="website"
+	jsonLd={jsonLd}
 >
-  <div class="about-content">
-    <article class="about-article" aria-labelledby="about-title">
-      <h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
-      <p>{siteCopy.aboutMeText}</p>
-      <footer class="about-footer">
-        {siteCopy.footerReturnPrefix} <a href="/" aria-label="Go to homepage"
-          >{siteCopy.homeUrlLabel}</a
-        >.
-      </footer>
-    </article>
-  </div>
+	<div class="about-content">
+		<article class="about-article" aria-labelledby="about-title">
+			<h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
+			<p>{siteCopy.aboutMeText}</p>
+			<footer class="about-footer">
+				{siteCopy.footerReturnPrefix}
+				<a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+			</footer>
+		</article>
+	</div>
 </BaseLayout>
 
 <style lang="scss">
-  .about-content {
-    max-width: 600px;
-    margin: 1.5rem;
-    color: var(--foreground);
-    text-align: left;
-    white-space: pre-line;
-    padding: 0 1rem;
-  }
+	.about-content {
+		max-width: 600px;
+		margin: 1.5rem;
+		color: var(--foreground);
+		text-align: left;
+		white-space: pre-line;
+		padding: 0 1rem;
+	}
 
-  .about-footer {
-    color: var(--comment);
-    white-space: nowrap;
-    overflow-wrap: anywhere;
-    padding-bottom: 3rem;
-    padding-top: 1rem;
-  }
+	.about-footer {
+		color: var(--comment);
+		white-space: nowrap;
+		overflow-wrap: anywhere;
+		padding-bottom: 3rem;
+		padding-top: 1rem;
+	}
 
-  @media (max-width: 480px) {
-    .about-footer {
-      white-space: normal;
-    }
-  }
+	@media (max-width: 480px) {
+		.about-footer {
+			white-space: normal;
+		}
+	}
 </style>

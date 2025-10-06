@@ -2,113 +2,125 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const siteCopy = {
-  pageTitle: "Contact — Sun Envidiado",
-  pageHeadline: "Contact",
-  pageDescription: "Get in touch with Sun Envidiado — email, LinkedIn, GitHub.",
-  homeUrlLabel: ":home<Enter>",
-  contactItems: [
-    {
-      label: "Email me",
-      value: "sunadriann31@gmail.com",
-      href: "mailto:sunadriann31@gmail.com",
-    },
-    {
-      label: "Connect with me on LinkedIn",
-      value: "in/sunenvidiado/",
-      href: "https://www.linkedin.com/in/sunenvidiado/",
-    },
-    {
-      label: "Check out my GitHub",
-      value: "@photosunthesis",
-      href: "https://github.com/photosunthesis",
-    },
-  ],
+	pageHeadline: "Contact",
+	homeUrlLabel: ":home<Enter>",
+	contactItems: [
+		{
+			label: "Email me",
+			value: "sunadriann31@gmail.com",
+			href: "mailto:sunadriann31@gmail.com",
+		},
+		{
+			label: "Connect with me on LinkedIn",
+			value: "in/sunenvidiado/",
+			href: "https://www.linkedin.com/in/sunenvidiado/",
+		},
+		{
+			label: "Check out my GitHub",
+			value: "@photosunthesis",
+			href: "https://github.com/photosunthesis",
+		},
+	],
 };
 
+// SEO-optimized metadata
+const seoMeta = {
+	title: "Contact Sun Envidiado — Get in Touch",
+	description:
+		"Get in touch with Sun Envidiado via email, LinkedIn, or GitHub. Open to collaboration, freelance opportunities, and connecting with fellow developers.",
+	tags: [
+		"contact sun envidiado",
+		"software developer contact",
+		"hire flutter developer",
+		"developer email",
+		"freelance developer manila",
+	],
+};
+
+// JSON-LD Structured Data
 const siteBase = Astro.site || "https://sun-envidiado.com";
-const pagePath = "/contact";
-const absoluteUrl = new URL(pagePath, siteBase).toString();
-const imagePath = "/android-chrome-512x512.png";
-const absoluteImage = new URL(imagePath, siteBase).toString();
+const imageUrl = new URL("/default.png", siteBase).toString();
 
 const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ContactPage",
-  url: absoluteUrl,
-  headline: siteCopy.pageTitle,
-  description: "Ways to contact Sun Envidiado, including email and social profiles.",
-  mainEntity: {
-    "@type": "Person",
-    name: "Sun Envidiado",
-    email: "mailto:sunadriann31@gmail.com",
-    url: siteBase,
-    image: absoluteImage,
-  },
+	"@context": "https://schema.org",
+	"@type": "ContactPage",
+	name: seoMeta.title,
+	description: seoMeta.description,
+	url: `${siteBase}/contact`,
+	mainEntity: {
+		"@type": "Person",
+		"@id": `${siteBase}/#person`,
+		name: "Sun Envidiado",
+		email: "sunadriann31@gmail.com",
+		url: siteBase,
+		image: imageUrl,
+		contactPoint: {
+			"@type": "ContactPoint",
+			email: "sunadriann31@gmail.com",
+			contactType: "Professional Inquiries",
+		},
+		sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
+	},
 };
 ---
 
 <BaseLayout
-  title={siteCopy.pageTitle}
-  url={absoluteUrl}
-  description={siteCopy.pageDescription}
-  image={absoluteImage}
-  type="contact"
-  tags={["contact", "email", "connect"]}
-  jsonLd={jsonLd}
+	title={seoMeta.title}
+	description={seoMeta.description}
+	tags={seoMeta.tags}
+	type="website"
+	jsonLd={jsonLd}
 >
-  <div class="contact-content">
-    <h1 class="sr-only">{siteCopy.pageHeadline}</h1>
-    <div class="contact-container">
-      <ul class="contact-list">
-        {
-          siteCopy.contactItems.map((item) => {
-            const isExternal = /^https?:\/\//i.test(item.href);
-            return (
-              <li class="contact-row">
-                <span class="contact-type">{item.label}:</span>
-                <a
-                  class="contact-contact"
-                  href={item.href}
-                  {...(isExternal
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                  aria-label={`${item.label} ${item.value}`}
-                >
-                  {item.value}
-                </a>
-              </li>
-            );
-          })
-        }
-      </ul>
-    </div>
-    <footer class="contact-footer">
-      Type <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back
-      to the homepage.
-    </footer>
-  </div>
+	<div class="contact-content">
+		<h1 class="sr-only">{siteCopy.pageHeadline}</h1>
+		<div class="contact-container">
+			<ul class="contact-list">
+				{
+					siteCopy.contactItems.map((item) => {
+						const isExternal = /^https?:\/\//i.test(item.href);
+						return (
+							<li class="contact-row">
+								<span class="contact-type">{item.label}:</span>
+								<a
+									class="contact-contact"
+									href={item.href}
+									{...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+									aria-label={`${item.label} ${item.value}`}
+								>
+									{item.value}
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</div>
+		<footer class="contact-footer">
+			Type <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back to the homepage.
+		</footer>
+	</div>
 </BaseLayout>
 
 <style lang="scss">
-  .contact-content {
-    max-width: 600px;
-    margin: 1.5rem;
-    color: var(--foreground);
-    text-align: left;
-    padding: 0 1rem;
-  }
+	.contact-content {
+		max-width: 600px;
+		margin: 1.5rem;
+		color: var(--foreground);
+		text-align: left;
+		padding: 0 1rem;
+	}
 
-  .contact-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+	.contact-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
 
-  .contact-row {
-    margin-bottom: 0.8rem;
-  }
+	.contact-row {
+		margin-bottom: 0.8rem;
+	}
 
-  .contact-footer {
-    color: var(--comment);
-  }
+	.contact-footer {
+		color: var(--comment);
+	}
 </style>

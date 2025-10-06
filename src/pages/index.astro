@@ -5,8 +5,7 @@ import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
 const siteCopy = {
 	siteName: "Sun Envidiado",
 	headingText: `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`,
-	introText:
-		`I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`,
+	introText: `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`,
 	commands: [
 		{
 			label: ":about<Enter>",
@@ -30,49 +29,70 @@ const siteCopy = {
 			trailingText: "to read my latest blogs.",
 		},
 	],
-	pageTitle: "Sun Envidiado",
-	trailingText: "Personal site of Sun Envidiado — software developer, gamer, and karaoke enthusiast.",
-	tags: ["home", "sun-envidiado", "developer"],
-	imagePath: "/android-chrome-512x512.png",
 };
 
+// SEO-optimized metadata
+const seoMeta = {
+	title: "Sun Envidiado — Software Developer, Gamer, Karaoke Enthusiast",
+	description:
+		"Personal website of Sun Envidiado, a software developer from Manila specializing in Flutter and Dart. Read about coding, gaming, life, and side projects.",
+	tags: [
+		"sun envidiado",
+		"software developer",
+		"flutter developer",
+		"dart developer",
+		"manila developer",
+		"web developer",
+		"personal website",
+	],
+};
+
+// JSON-LD Structured Data for better SEO
 const siteBase = Astro.site ?? "https://sun-envidiado.com";
-const pagePath = "/";
-const pageUrl = new URL(pagePath, siteBase).toString();
-const imageUrl = new URL(siteCopy.imagePath, siteBase).toString();
+const imageUrl = new URL("/default.png", siteBase).toString();
 
-const websiteJsonLd = {
+const jsonLd = {
 	"@context": "https://schema.org",
-	"@type": "WebSite",
-	url: siteBase,
-	name: siteCopy.siteName,
-	trailingText: siteCopy.trailingText,
-	image: imageUrl,
-	potentialAction: {
-		"@type": "SearchAction",
-		target: `${siteBase}/?s={search_term_string}`,
-		"query-input": "required name=search_term_string",
-	},
-};
-
-const personJsonLd = {
-	"@context": "https://schema.org",
-	"@type": "Person",
-	name: siteCopy.siteName,
-	url: siteBase,
-	image: imageUrl,
-	jobTitle: "Software Developer",
+	"@graph": [
+		{
+			"@type": "WebSite",
+			"@id": `${siteBase}/#website`,
+			url: siteBase,
+			name: "Sun Envidiado",
+			description: seoMeta.description,
+			inLanguage: "en-US",
+		},
+		{
+			"@type": "Person",
+			"@id": `${siteBase}/#person`,
+			name: "Sun Envidiado",
+			url: siteBase,
+			image: imageUrl,
+			jobTitle: "Software Developer",
+			description: seoMeta.description,
+			knowsAbout: [
+				"Flutter",
+				"Dart",
+				"JavaScript",
+				"Web Development",
+				"Mobile Development",
+				"C#",
+				".NET",
+				"PHP",
+				"Laravel",
+			],
+			sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
+		},
+	],
 };
 ---
 
 <BaseLayout
-	title={siteCopy.pageTitle}
-	url={pageUrl}
-	trailingText={siteCopy.trailingText}
-	image={imageUrl}
+	title={seoMeta.title}
+	description={seoMeta.description}
+	tags={seoMeta.tags}
 	type="website"
-	tags={siteCopy.tags}
-	jsonLd={{ ...websiteJsonLd, "@graph": [personJsonLd] }}
+	jsonLd={jsonLd}
 >
 	<div class="index-main-content">
 		<SpinningSunAsciiArt />

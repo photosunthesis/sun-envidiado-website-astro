@@ -2,14 +2,13 @@
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import CommandBar from "../components/CommandBar.astro";
+import { buildSEOMetadata, SITE_CONFIG } from "../utils/seo";
 import "../styles/main.scss";
 
-const SITE_CONFIG = {
-	siteName: "Sun Envidiado",
-	authorName: "Sun Envidiado",
-	defaultDescription: "Personal website where I share my thoughts about anything and everything.",
-	defaultImage: "/android-chrome-512x512.png",
-	siteUrl: "https://sun-envidiado.com",
+/**
+ * UI Configuration for the layout
+ */
+const UI_CONFIG = {
 	skipLinkText: "Skip to content",
 	skipLinkAria: "Skip to main content",
 	backUrlLabel: ":back<Enter>",
@@ -19,18 +18,11 @@ const SITE_CONFIG = {
 		returnSuffix: "to return to the previous page, or",
 		homeSuffix: "to go to the homepage.",
 	},
-};
+} as const;
 
-// Load frontmatter from props
-const { frontmatter = {} } = Astro.props;
-
-const title = frontmatter.title || SITE_CONFIG.siteName;
-const description = frontmatter.description || SITE_CONFIG.defaultDescription;
-const pubDate = frontmatter.pubDate;
-const tags = frontmatter.tags || [];
-const noIndex = frontmatter.noIndex || false;
-const jsonLd = frontmatter.jsonLd || null;
-const type = pubDate ? "article" : "website";
+// Load props (for direct props or frontmatter)
+const props = Astro.props;
+const frontmatter = props.frontmatter || props;
 
 // Load cover image if specified in frontmatter
 let coverImage: ImageMetadata | undefined;
@@ -51,19 +43,23 @@ if (frontmatter.cover) {
 	}
 }
 
-// Generate canonical and meta image URLs
-const baseUrl = Astro.site || SITE_CONFIG.siteUrl;
-const canonical = new URL(Astro.url.pathname, baseUrl).toString();
+// Build SEO metadata
+const seo = buildSEOMetadata({
+	frontmatter,
+	pathname: Astro.url.pathname,
+	site: Astro.site,
+	coverImage,
+});
 
-const defaultImageUrl = new URL(SITE_CONFIG.defaultImage, baseUrl).toString();
-const metaImage = coverImage ? new URL(coverImage.src, baseUrl).toString() : defaultImageUrl;
+// Extract JSON-LD if provided in frontmatter or props
+const jsonLd = frontmatter.jsonLd || null;
 ---
 
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>{title}</title>
+		<title>{seo.title}</title>
 
 		<!-- Cloudflare Web Analytics -->
 		<script
@@ -76,38 +72,36 @@ const metaImage = coverImage ? new URL(coverImage.src, baseUrl).toString() : def
 		<meta name="msapplication-navbutton-color" content="#09090b" />
 		<meta name="mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="#09090b" />
-		<meta name="description" content={description} />
-		<meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow"} />
-		<link rel="canonical" href={canonical} />
+		<meta name="description" content={seo.description} />
+		<meta name="robots" content={seo.noIndex ? "noindex, nofollow" : "index, follow"} />
+		<link rel="canonical" href={seo.canonical} />
 		<meta name="referrer" content="no-referrer-when-downgrade" />
 		<meta name="color-scheme" content="light dark" />
-		<meta name="author" content={SITE_CONFIG.authorName} />
+		<meta name="author" content={seo.author || SITE_CONFIG.authorName} />
 		<link rel="sitemap" href="/sitemap-index.xml" />
 
-		{pubDate && <meta property="article:published_time" content={pubDate} />}
+		{seo.pubDate && <meta property="article:published_time" content={seo.pubDate} />}
+		{seo.author && <meta property="article:author" content={seo.author} />}
 		{
-			Array.isArray(tags) &&
-				tags.length > 0 &&
-				tags.map((tag: string) => <meta property="article:tag" content={tag} />)
+			seo.tags &&
+				Array.isArray(seo.tags) &&
+				seo.tags.length > 0 &&
+				seo.tags.map((tag: string) => <meta property="article:tag" content={tag} />)
 		}
 
 		<!-- Open Graph / Facebook -->
-		<meta property="og:site_name" content={title} />
-		<meta property="og:type" content={type} />
-		<meta property="og:title" content={title} />
-		<meta property="og:description" content={description} />
-		<meta property="og:url" content={canonical} />
-		<meta property="og:image" content={metaImage} />
+		<meta property="og:site_name" content={SITE_CONFIG.siteName} />
+		<meta property="og:type" content={seo.type} />
+		<meta property="og:title" content={seo.title} />
+		<meta property="og:description" content={seo.description} />
+		<meta property="og:url" content={seo.canonical} />
+		<meta property="og:image" content={seo.imageUrl} />
 
 		<!-- Twitter -->
-		<meta name="twitter:card" content={metaImage ? "summary_large_image" : "summary"} />
-		<meta
-			name="twitter:site"
-			content={`@${SITE_CONFIG.siteName.replace(/\s+/g, "").toLowerCase()}`}
-		/>
-		<meta name="twitter:title" content={title} />
-		<meta name="twitter:description" content={description} />
-		<meta name="twitter:image" content={metaImage} />
+		<meta name="twitter:card" content={seo.imageUrl ? "summary_large_image" : "summary"} />
+		<meta name="twitter:title" content={seo.title} />
+		<meta name="twitter:description" content={seo.description} />
+		<meta name="twitter:image" content={seo.imageUrl} />
 
 		<slot name="seo" />
 
@@ -152,15 +146,15 @@ const metaImage = coverImage ? new URL(coverImage.src, baseUrl).toString() : def
 	<body class="vim-root crt-text-ca">
 		<script src="/src/scripts/crtPreference.ts"></script>
 		<!-- Skip link for keyboard users -->
-		<a class="skip-link" href="#main" aria-label={SITE_CONFIG.skipLinkAria}
-			>{SITE_CONFIG.skipLinkText}</a
+		<a class="skip-link" href="#main" aria-label={UI_CONFIG.skipLinkAria}
+			>{UI_CONFIG.skipLinkText}</a
 		>
 
 		<div class="main-flex-container">
 			<main id="main" class="vim-main-content" tabindex="-1">
 				<div class="centered-vim">
 					{
-						pubDate ? (
+						seo.pubDate ? (
 							<div class="blog-layout">
 								{coverImage && (
 									<div class="cover-image-wrapper">
@@ -168,10 +162,10 @@ const metaImage = coverImage ? new URL(coverImage.src, baseUrl).toString() : def
 									</div>
 								)}
 								<h1 id="post-title" class="blog-title">
-									{title}
+									{seo.title}
 								</h1>
 								<p class="post-pub-date">
-									{new Date(pubDate).toLocaleDateString("en-US", {
+									{new Date(seo.pubDate).toLocaleDateString("en-US", {
 										year: "numeric",
 										month: "long",
 										day: "numeric",
@@ -188,20 +182,20 @@ const metaImage = coverImage ? new URL(coverImage.src, baseUrl).toString() : def
 									aria-label="Post navigation and actions"
 								>
 									<p class="blog-footer-text">
-										{SITE_CONFIG.blogFooter.prefix}
+										{UI_CONFIG.blogFooter.prefix}
 										<button
 											class="link-like"
 											type="button"
 											onclick="history.back();"
 											aria-label="Go back"
 										>
-											{SITE_CONFIG.backUrlLabel}
+											{UI_CONFIG.backUrlLabel}
 										</button>
-										{` ${SITE_CONFIG.blogFooter.returnSuffix} `}
+										{` ${UI_CONFIG.blogFooter.returnSuffix} `}
 										<a href="/" aria-label="Go to homepage">
-											{SITE_CONFIG.homeUrlLabel}
+											{UI_CONFIG.homeUrlLabel}
 										</a>
-										{` ${SITE_CONFIG.blogFooter.homeSuffix}`}
+										{` ${UI_CONFIG.blogFooter.homeSuffix}`}
 									</p>
 								</footer>
 							</div>

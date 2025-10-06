@@ -64,9 +64,6 @@ const grouped = postsByYear;
 
 // Centralized page copy for blog index
 const siteCopy = {
-	siteName: "Sun Envidiado",
-	pageTitle: "Blog — Sun Envidiado",
-	pageDescription: "A collection of blog posts about code, projects, gaming, and life.",
 	homeUrlLabel: ":home<Enter>",
 	blogIndexLabel: ":blog[index]",
 	pageHeadline: "Blog",
@@ -74,40 +71,58 @@ const siteCopy = {
 	contentReturnPrefix: "To return to the homepage, type",
 	ariaOpenBlogIndex: "Open blog index",
 	ariaGoHomepage: "Go to homepage",
-	tags: ["blog", "posts", "coding"],
+};
+
+// SEO-optimized metadata
+const seoMeta = {
+	title: "Blog — Sun Envidiado | Coding, Gaming, and Life Updates",
+	description:
+		"Read blog posts by Sun Envidiado about software development, Flutter, web technologies, gaming experiences, and personal life updates. Honest thoughts on tech and life.",
+	tags: [
+		"sun envidiado blog",
+		"software development blog",
+		"flutter blog",
+		"web development articles",
+		"tech blog manila",
+		"developer blog",
+		"coding tutorials",
+	],
 };
 
 // SEO / Structured Data
 const siteBase = Astro.site || "https://sun-envidiado.com";
-const pagePath = "/blog";
-const absoluteUrl = new URL(pagePath, siteBase).toString();
-const imagePath = "/android-chrome-512x512.png";
-const absoluteImage = new URL(imagePath, siteBase).toString();
 
-// Minimal JSON-LD for a blog index / collection page
+// Optimized JSON-LD for a blog with individual posts
 const jsonLd = {
 	"@context": "https://schema.org",
-	"@type": "CollectionPage",
-	name: siteCopy.pageTitle,
-	description: siteCopy.pageDescription,
-	url: absoluteUrl,
-	image: absoluteImage,
-	hasPart: postList.slice(0, 10).map((p) => ({
+	"@type": "Blog",
+	"@id": `${siteBase}/blog#blog`,
+	name: seoMeta.title,
+	description: seoMeta.description,
+	url: `${siteBase}/blog`,
+	author: {
+		"@type": "Person",
+		"@id": `${siteBase}/#person`,
+		name: "Sun Envidiado",
+	},
+	blogPost: postList.map((p) => ({
 		"@type": "BlogPosting",
 		headline: p.title,
 		url: new URL(p.url, siteBase).toString(),
 		datePublished: p.pubDate.toISOString(),
+		author: {
+			"@type": "Person",
+			name: "Sun Envidiado",
+		},
 	})),
 };
 ---
 
 <BaseLayout
-	title={siteCopy.pageTitle}
-	url={absoluteUrl}
-	description={siteCopy.pageDescription}
-	image={absoluteImage}
-	type="collection"
-	tags={siteCopy.tags}
+	title={seoMeta.title}
+	description={seoMeta.description}
+	tags={seoMeta.tags}
+	type="website"
 	jsonLd={jsonLd}
 >
 	<div class="blog-content">
