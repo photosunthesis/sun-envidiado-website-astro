@@ -38,7 +38,7 @@ const candidatePosts: CandidatePost[] = Object.entries(postModules).map(([p, m])
 const posts: PublishedPost[] = candidatePosts
 	.filter((c): c is CandidatePost & { pubDate: Date } => Boolean(c.pubDate))
 	.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
-	.map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i + 1 }));
+	.map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i }));
 
 // Group posts by year using reduce for clarity
 const postsByYear: Record<number, PublishedPost[]> = posts.reduce(

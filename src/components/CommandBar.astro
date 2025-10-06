@@ -138,9 +138,19 @@ const copyright =
 		}
 		const cmd = token.toLowerCase();
 
-		// Support explicit blog selection syntax like `:blog[1]` (case-insensitive)
+		// Support explicit blog selection syntax like `:blog[0]` (case-insensitive)
+		// Only works when on the blog page (/blog or /blog/)
 		const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
 		if (blogMatch) {
+			const currentPath = window.location.pathname;
+			const onBlogPage = currentPath === "/blog" || currentPath === "/blog/";
+			
+			if (!onBlogPage) {
+				showVimError(val);
+				return;
+			}
+			
+			// Use 0-based indexing directly (blog posts are now 0-indexed)
 			const idx = Number(blogMatch[1]);
 			const el = document.querySelector<HTMLElement>(`[data-blog-index="${idx}"]`);
 			if (el) {
@@ -155,6 +165,7 @@ const copyright =
 		}
 
 		// If we're on the blog index and the command is just a number, treat it as selecting that indexed post
+		// Use 0-based indexing directly
 		const numeric = Number(cmd);
 		if (!Number.isNaN(numeric) && window.location.pathname.startsWith("/blog")) {
 			const el = document.querySelector<HTMLElement>(`[data-blog-index="${numeric}"]`);
