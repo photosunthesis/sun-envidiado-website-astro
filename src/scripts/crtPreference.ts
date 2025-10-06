@@ -1,4 +1,10 @@
-export {};
+export { };
+
+declare global {
+	interface Window {
+		__setCrtPreference?: (enabled: boolean) => void;
+	}
+}
 
 const CRT_PREFERENCE_KEY = "crt-enabled";
 
@@ -38,12 +44,6 @@ const setPreference = (val: string) => {
 	}
 	setCookie(CRT_PREFERENCE_KEY, val);
 };
-
-declare global {
-	interface Window {
-		__setCrtPreference?: (enabled: boolean) => void;
-	}
-}
 
 // Expose small API on window so other scripts can update the pref.
 try {
