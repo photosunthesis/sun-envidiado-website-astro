@@ -3,9 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Import all Markdown blog posts in this folder (eager so frontmatter is available)
 const postModules = import.meta.glob<{ frontmatter?: { title?: string; pubDate?: string } }>(
-	"./blog/*.md",
-	{ eager: true }
-) as Record<string, { frontmatter?: { title?: string; pubDate?: string } }>;
+	"./blog/**/*.md",
+	{ eager: true },
+);
 
 // Types for clarity
 type Frontmatter = { title?: string; pubDate?: string };
@@ -13,7 +13,15 @@ type CandidatePost = { title: string; pubDate?: Date; url: string };
 type PublishedPost = { title: string; pubDate: Date; url: string; index: number };
 
 // Helpers
-const slugFromPath = (path: string) => path.split("/").pop()?.replace(/\.md$/, "") ?? "";
+const slugFromPath = (path: string) => {
+	// Remove the .md extension
+	const withoutExt = path.replace(/\.md$/, "");
+	// Get everything after /blog/
+	const afterBlog = withoutExt.split("/blog/")[1];
+	// If it ends with /index, remove that part to get clean URLs
+	return afterBlog?.replace(/\/index$/, "") ?? "";
+};
+
 const parsePubDate = (value?: unknown): Date | undefined => {
 	if (!value) return undefined;
 	const d = new Date(String(value));
@@ -32,7 +40,7 @@ const makeCandidate = (path: string, mod: { frontmatter?: Frontmatter }): Candid
 
 // Build, filter, sort and index posts in a clear pipeline
 const candidatePosts: CandidatePost[] = Object.entries(postModules).map(([p, m]) =>
-	makeCandidate(p, m)
+	makeCandidate(p, m),
 );
 
 const posts: PublishedPost[] = candidatePosts
@@ -47,7 +55,7 @@ const postsByYear: Record<number, PublishedPost[]> = posts.reduce(
 		(acc[year] ||= []).push(p);
 		return acc;
 	},
-	{} as Record<number, PublishedPost[]>
+	{} as Record<number, PublishedPost[]>,
 );
 
 // Keep older variable names compatible with templates below
@@ -106,8 +114,10 @@ const jsonLd = {
 		<header class="blog-header">
 			<h1 id="blog-title" class="sr-only">{siteCopy.pageHeadline}</h1>
 			<p class="blog-content-start">
-				{siteCopy.contentStartPrefix} <a href="/" aria-label={siteCopy.ariaOpenBlogIndex}>{siteCopy.blogIndexLabel}</a>.
-				{siteCopy.contentReturnPrefix} <a href="/" aria-label={siteCopy.ariaGoHomepage}>{siteCopy.homeUrlLabel}</a>.
+				{siteCopy.contentStartPrefix}
+				<a href="/" aria-label={siteCopy.ariaOpenBlogIndex}>{siteCopy.blogIndexLabel}</a>.
+				{siteCopy.contentReturnPrefix}
+				<a href="/" aria-label={siteCopy.ariaGoHomepage}>{siteCopy.homeUrlLabel}</a>.
 			</p>
 		</header>
 		<div class="posts-wrapper">

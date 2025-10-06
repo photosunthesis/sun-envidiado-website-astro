@@ -26,23 +26,22 @@
 .year-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.3rem 0;
+  margin: 0 0 1.0rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 .post-row {
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding-bottom: 0.8rem;
+  align-items: baseline;
+  gap: 0.35rem;
 }
 
 .post-index {
   color: var(--foreground);
-  min-width: 2.4ch;
+  min-width: 2ch;
   text-align: left;
   display: inline-block;
 }
@@ -51,12 +50,13 @@
   color: var(--purple);
   text-decoration: none;
   text-align: left;
+  flex: 1 1 auto;
 }
 
 .post-date {
   color: var(--foreground);
   white-space: nowrap;
-  margin-left: 0.3rem;
+  margin-left: 20px;
 }
 
 .post-pub-date {
@@ -75,4 +75,44 @@
   max-width: 600px;
   margin: 1.5rem;
   color: var(--foreground);
+}
+
+/* Cover image above blog posts */
+.post-cover {
+  max-width: 600px;
+  margin: 0 1.5rem 1rem;
+}
+
+.post-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.cover-image-wrapper {
+  width: 100%;
+  margin: 0 0 2rem;
+}
+
+.cover-image-wrapper img,
+.cover-image-wrapper picture,
+.cover-image-wrapper picture>img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.blog-content img,
+.blog-layout img,
+.blog-content picture,
+.blog-layout picture {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
 }
