@@ -23,6 +23,9 @@ jobs:
         with:
           version: 10
 
+      - name: Install Sharp dependencies
+        run: sudo apt-get update && sudo apt-get install -y libvips-dev
+
       - name: Install dependencies
         run: pnpm install
 
