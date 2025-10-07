@@ -59,13 +59,17 @@ export function buildSEOMetadata(params: {
   const { frontmatter = {}, pathname, site, coverImage } = params;
 
   // Support both frontmatter and direct props for backwards compatibility
-  const title = (frontmatter.title as string) || SITE_CONFIG.siteName;
+  const rawTitle = (frontmatter.title as string) || SITE_CONFIG.siteName;
+  const pubDate = frontmatter.pubDate as string | undefined;
+  
+  // Append site name to blog posts
+  const title = pubDate ? `${rawTitle} — Sun Envidiado` : rawTitle;
+  
   const description =
     (frontmatter.description as string) || SITE_CONFIG.defaultDescription;
   const canonical = frontmatter.url
     ? (frontmatter.url as string)
     : generateCanonicalUrl(pathname, site);
-  const pubDate = frontmatter.pubDate as string | undefined;
   const tags = (frontmatter.tags as string[]) || [];
   const noIndex = (frontmatter.noIndex as boolean) || false;
 
