@@ -10,7 +10,9 @@ export const SITE_CONFIG = {
     "Personal website where I share my thoughts about anything and everything.",
   defaultImage: "/default.png",
   siteUrl: "https://sun-envidiado.com",
-} as const;/**
+} as const;
+
+/**
  * Metadata structure for SEO
  */
 export interface SEOMetadata {
