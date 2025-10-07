@@ -144,7 +144,6 @@ const jsonLd = frontmatter.jsonLd || null;
 		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 	</head>
 	<body class="vim-root crt-text-ca">
-		<script src="/src/scripts/crtPreference.ts"></script>
 		<!-- Skip link for keyboard users -->
 		<a class="skip-link" href="#main" aria-label={UI_CONFIG.skipLinkAria}
 			>{UI_CONFIG.skipLinkText}</a
