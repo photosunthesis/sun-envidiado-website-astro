@@ -1,21 +1,22 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-// Import all Markdown blog posts in this folder (eager so frontmatter is available)
-const postModules = import.meta.glob<{ frontmatter?: { title?: string; pubDate?: string } }>(
-	"./blog/**/*.md",
+const postModules = import.meta.glob<{
+	frontmatter?: { title?: string; pubDate?: string };
+}>(
+	// Include .md and .mdx files, and also allow index.md(x) inside directories
+	"./blog/**/*.{md,mdx}",
 	{ eager: true },
 );
 
-// Types for clarity
 type Frontmatter = { title?: string; pubDate?: string };
 type CandidatePost = { title: string; pubDate?: Date; url: string };
 type PublishedPost = { title: string; pubDate: Date; url: string; index: number };
 
 // Helpers
 const slugFromPath = (path: string) => {
-	// Remove the .md extension
-	const withoutExt = path.replace(/\.md$/, "");
+	// Remove the .md or .mdx extension
+	const withoutExt = path.replace(/\.mdx?$/, "");
 	// Get everything after /blog/
 	const afterBlog = withoutExt.split("/blog/")[1];
 	// If it ends with /index, remove that part to get clean URLs

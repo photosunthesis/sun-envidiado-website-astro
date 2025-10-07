@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import CommandBar from "../components/CommandBar.astro";
 import { buildSEOMetadata, SITE_CONFIG } from "../utils/seo";
@@ -157,7 +157,7 @@ const jsonLd = frontmatter.jsonLd || null;
 							<div class="blog-layout">
 								{coverImage && (
 									<div class="cover-image-wrapper">
-										<Image src={coverImage} alt={frontmatter.coverAlt || "Cover image"} inferSize />
+										<Picture src={coverImage} formats={['avif', 'webp']} alt={frontmatter.coverAlt || "Cover image"} inferSize />
 									</div>
 								)}
 								<h1 id="post-title" class="blog-title">
