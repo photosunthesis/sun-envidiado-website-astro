@@ -1,9 +1,22 @@
 ---
-layout: ../../layouts/BaseLayout.astro
+layout: ../../../layouts/BaseLayout.astro
 title: "How I rebuilt my personal site with Astro"
 pubDate: "2025-09-19"
-description: "A Flutter developer's journey through React's complexity to building a fast, content-focused personal site with Astro."
-tags: ["astro", "webdev", "content-site", "flutter-to-web", "personal-site"]
+description: "Why I migrated my personal site from Flutter to Astro: lessons on React's complexity, an HTML-first content workflow, faster static pages, and improved SEO."
+tags:
+  [
+    "astro",
+    "flutter",
+    "react",
+    "migration",
+    "staticSite",
+    "seo",
+    "blog",
+    "webPerformance",
+    "personalSite",
+  ]
+cover: "how-i-rebuilt-my-personal-site-with-astro/_assets/cover.webp"
+coverAlt: "Computer screen showing code"
 ---
 
 I originally built my website with Flutter. Just a simple home page, about, and contact. Nothing fancy. I had plans to add a blog section but never got around to it.
@@ -36,15 +49,15 @@ The project structure is straightforward — here's a compact directory example:
 
 ```text
 src/
+├─ components/          # reusable UI components
+├─ layouts/
+│   └─ BaseLayout.astro # all pages use this
 ├─ pages/
 │   ├─ index.astro      # homepage
 │   ├─ blog/            # blog posts
-│   │   └─ my-post.md 
 │   └─ ...              # other pages (about, etc.)
-├─ layouts/
-│   └─ BaseLayout.astro # all pages use this
-├─ components/          # reusable UI components
 └─ styles/              # SCSS styles
+└─ utils/               # utility functions
 ```
 
 The killer feature for me: blog posts are just markdown files with frontmatter. No JSX, no components for paragraphs, no complex setup.
@@ -64,7 +77,17 @@ And it works exactly like you'd expect.
 
 That top YAML block (the lines between the `---` markers) is called "frontmatter." It stores metadata like title, date, description, tags, and any other fields your templates or build tools might need. Astro reads those values automatically so your layout can display the title, sort posts by date, or filter by tags without extra code.
 
-Pages use `layouts/BaseLayout.astro`. Styles are in the styles directory. `_base.scss` for core rules, `main.scss` for imports and color variables, and page partials such as `_index.scss` and `_blog.scss`. Complex pages get their own SCSS files; simple pages reuse shared partials to keep CSS small.
+Here's what each directory handles:
+
+- Components — reusable UI bits. In my case, things like the command bar and that spinning ASCII art sun you see on the homepage. Think of them as building blocks you can drop into multiple pages without copy-pasting code everywhere.
+
+- Layouts — wrap your pages with common structure. `BaseLayout.astro` handles the HTML skeleton, meta tags, and shared elements that every page needs. Write it once, use it everywhere. Pages just specify which layout to use in their frontmatter.
+
+- Pages — where the actual content lives. Each file here becomes a route on your site. `index.astro` is the homepage, `about.astro` is `/about`, and so on. The `blog/` subfolder contains all my blog posts as markdown files, which Astro automatically turns into pages.
+
+- Styles — keeps things organized with SCSS. `_base.scss` has the core CSS rules, `main.scss` imports everything and defines color variables, and page-specific files like `_index.scss` and `_blog.scss` handle styling for individual sections. If a page needs unique styles, it gets its own file. Otherwise, it reuses the shared stuff.
+
+- Utils — helper functions. Mine has `seo.ts` which generates all the meta tags, Open Graph stuff, and other SEO-related markup so I don't have to manually write that out for every page.
 
 Astro automatically generates pages from these Markdown files, treats the frontmatter as metadata, and exposes those fields to layouts and collection queries, which makes writing and publishing posts fast and low-friction.
 
@@ -86,7 +109,7 @@ But here's the thing. React isn't bad. It's just that maybe we shouldn't default
 
 - Building a big interactive app with complex state? Use React (or Vue, Svelte, whatever).
 - Building a blog or portfolio site like this one? Use Astro.
-- Building for Flutter web? Honestly, I don't know who actually uses Flutter web. Maybe if you really hate JavaScript? It works, it's just... really not great honestly.
+- Building a Flutter web app? Honestly, I don't know who actually uses Flutter web. If you insist and really like Flutter, it's great, just... as a Flutter developer myself, there are better tools out there for web stuff.
 
 Astro worked for what I needed: simple personal site with a blog that loads fast. It's not some revolutionary framework, just happened to fit what I was trying to do.
 
