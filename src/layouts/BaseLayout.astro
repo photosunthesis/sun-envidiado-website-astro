@@ -1,13 +1,10 @@
 ---
+import "../styles/main.scss";
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import CommandBar from "../components/CommandBar.astro";
 import { buildSEOMetadata, SITE_CONFIG } from "../utils/seo";
-import "../styles/main.scss";
 
-/**
- * UI Configuration for the layout
- */
 const UI_CONFIG = {
 	skipLinkText: "Skip to content",
 	skipLinkAria: "Skip to main content",
@@ -20,11 +17,9 @@ const UI_CONFIG = {
 	},
 } as const;
 
-// Load props (for direct props or frontmatter)
+const isProd = import.meta.env && import.meta.env.PROD;
 const props = Astro.props;
 const frontmatter = props.frontmatter || props;
-
-// Load cover image if specified in frontmatter
 let coverImage: ImageMetadata | undefined;
 
 if (frontmatter.cover) {
@@ -43,7 +38,6 @@ if (frontmatter.cover) {
 	}
 }
 
-// Build SEO metadata
 const seo = buildSEOMetadata({
 	frontmatter,
 	pathname: Astro.url.pathname,
@@ -51,7 +45,6 @@ const seo = buildSEOMetadata({
 	coverImage,
 });
 
-// Extract JSON-LD if provided in frontmatter or props
 const jsonLd = frontmatter.jsonLd || null;
 ---
 
@@ -60,14 +53,6 @@ const jsonLd = frontmatter.jsonLd || null;
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{seo.title}</title>
-
-		<!-- Cloudflare Web Analytics -->
-		<script
-			defer
-			src="https://static.cloudflareinsights.com/beacon.min.js"
-			data-cf-beacon='{"token": "d9d31592b1ef4f86a7bf89125c54227e"}'></script>
-
-		<!-- Primary Meta Tags -->
 		<meta name="theme-color" content="#09090b" />
 		<meta name="msapplication-navbutton-color" content="#09090b" />
 		<meta name="mobile-web-app-capable" content="yes" />
@@ -89,7 +74,6 @@ const jsonLd = frontmatter.jsonLd || null;
 				seo.tags.map((tag: string) => <meta property="article:tag" content={tag} />)
 		}
 
-		<!-- Open Graph / Facebook -->
 		<meta property="og:site_name" content={SITE_CONFIG.siteName} />
 		<meta property="og:type" content={seo.type} />
 		<meta property="og:title" content={seo.title} />
@@ -97,7 +81,6 @@ const jsonLd = frontmatter.jsonLd || null;
 		<meta property="og:url" content={seo.canonical} />
 		<meta property="og:image" content={seo.imageUrl} />
 
-		<!-- Twitter -->
 		<meta name="twitter:card" content={seo.imageUrl ? "summary_large_image" : "summary"} />
 		<meta name="twitter:title" content={seo.title} />
 		<meta name="twitter:description" content={seo.description} />
@@ -105,7 +88,6 @@ const jsonLd = frontmatter.jsonLd || null;
 
 		<slot name="seo" />
 
-		<!-- Site resources -->
 		<link
 			rel="preload"
 			href="/fonts/Web437_ToshibaSat_8x14.woff2"
@@ -118,37 +100,22 @@ const jsonLd = frontmatter.jsonLd || null;
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 		<link rel="manifest" href="/site.webmanifest" />
 
-		<!-- Minimal skip-link styles (hidden visually, visible on keyboard focus) -->
-		<style>
-			.skip-link {
-				position: absolute;
-				left: -999px;
-				top: auto;
-				width: 1px;
-				height: 1px;
-				overflow: hidden;
-				z-index: -999;
-			}
-			.skip-link:focus {
-				position: fixed;
-				left: 1rem;
-				top: 1rem;
-				width: auto;
-				height: auto;
-				padding: 0.5rem 1rem;
-				background: #111;
-				color: #fff;
-				z-index: 1000;
-			}
-		</style>
 		{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+		{
+			isProd && (
+				<script
+					data-goatcounter="https://sunenvidiado.goatcounter.com/count"
+					async
+					src="//gc.zgo.at/count.js"
+				/>
+			)
+		}
 	</head>
 	<body class="vim-root crt-text-ca">
-		<!-- Skip link for keyboard users -->
 		<a class="skip-link" href="#main" aria-label={UI_CONFIG.skipLinkAria}
 			>{UI_CONFIG.skipLinkText}</a
 		>
-
 		<div class="main-flex-container">
 			<main id="main" class="vim-main-content" tabindex="-1">
 				<div class="centered-vim">
@@ -157,7 +124,12 @@ const jsonLd = frontmatter.jsonLd || null;
 							<div class="blog-layout">
 								{coverImage && (
 									<div class="cover-image-wrapper">
-										<Picture src={coverImage} formats={['avif', 'webp']} alt={frontmatter.coverAlt || "Cover image"} inferSize />
+										<Picture
+											src={coverImage}
+											formats={["avif", "webp"]}
+											alt={frontmatter.coverAlt || "Cover image"}
+											inferSize
+										/>
 									</div>
 								)}
 								<h1 id="post-title" class="blog-title">
@@ -206,7 +178,6 @@ const jsonLd = frontmatter.jsonLd || null;
 			</main>
 		</div>
 		<CommandBar />
-		<!-- CSS-only CRT Overlay Container (controlled by user preference) -->
 		<div id="crt-overlay-container" class="crt-enabled"></div>
 	</body>
 </html>
