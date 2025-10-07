@@ -101,25 +101,14 @@ const jsonLd = {
 							<span class="command-hint-type">{cmd.leadingText}</span>
 							<span class="command-hint-command">
 								<span class="command-action-group">
-									{cmd.href ? (
-										<a
-											class="command-action command-hint-action"
-											href={cmd.href}
-											data-command={cmd.token}
-											aria-label={`Go to ${cmd.token}`}
-										>
-											{cmd.label}
-										</a>
-									) : (
-										<button
-											class="command-hint-action"
-											type="button"
-											data-command={cmd.token}
-											aria-label={`Run ${cmd.token}`}
-										>
-											{cmd.label}
-										</button>
-									)}
+									<a
+										class="command-action command-hint-action"
+										href={cmd.href}
+										data-command={cmd.token}
+										aria-label={`Go to ${cmd.token}`}
+									>
+										{cmd.label}
+									</a>
 								</span>
 							</span>
 							<span class="command-hint-description">{cmd.trailingText}</span>
@@ -130,76 +119,3 @@ const jsonLd = {
 		</nav>
 	</div>
 </BaseLayout>
-
-<script>
-	import { navigate } from "astro:transitions/client";
-
-	// Command click handler: uses event delegation and prefers a site-level command API
-	// if available (window.__runSiteCommand). Otherwise it falls back to navigation or
-	// toggling CRT state.
-	const onDocumentClick = (ev: MouseEvent) => {
-		const target = ev.target;
-		if (!(target instanceof Element)) return;
-
-		// Narrowed to HTMLElement so TypeScript recognizes `blur`
-		const actionEl = target.closest(".command-hint-action") as HTMLElement | null;
-		if (!actionEl) return;
-
-		ev.preventDefault();
-
-		const token = (actionEl.getAttribute("data-command") || actionEl.textContent || "").trim();
-
-		// Blur so focus styles don't persist on click
-		if (typeof actionEl.blur === "function") actionEl.blur();
-
-		// Prefer site-level command runner when available
-		const runner = window.__runSiteCommand;
-		if (typeof runner === "function") {
-			try {
-				runner(token, true);
-				return;
-			} catch {
-				// TODO Implement
-			}
-		}
-
-		// Built-in fallbacks
-		switch (token) {
-			case ":about":
-				navigate("/about");
-				break;
-			case ":contact":
-				navigate("/contact");
-				break;
-			case ":blog":
-				navigate("/blog");
-				break;
-			case ":crt":
-				try {
-					localStorage.setItem("crt-enabled", "1");
-				} catch (err) {
-					console.debug("localStorage set failed", err);
-				}
-				document.querySelector("#crt-overlay-container")?.classList.add("crt-enabled");
-				document.body?.classList.add("crt-text-ca");
-				break;
-			case ":no-crt":
-				try {
-					localStorage.setItem("crt-enabled", "0");
-				} catch (err) {
-					console.debug("localStorage set failed", err);
-				}
-				document.querySelector("#crt-overlay-container")?.classList.remove("crt-enabled");
-				document.body?.classList.remove("crt-text-ca");
-				break;
-			default:
-				break;
-		}
-	};
-
-	document.addEventListener("click", onDocumentClick);
-	// Cleanup if the page uses client-side navigation/hMR during development
-	if (import.meta.hot) {
-		import.meta.hot.dispose(() => document.removeEventListener("click", onDocumentClick));
-	}
-</script>
