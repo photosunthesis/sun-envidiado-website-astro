@@ -133,7 +133,7 @@ const jsonLd = frontmatter.jsonLd || null;
 									</div>
 								)}
 								<h1 id="post-title" class="blog-title">
-									{seo.title}
+									{frontmatter.title}
 								</h1>
 								<p class="post-pub-date">
 									{new Date(seo.pubDate).toLocaleDateString("en-US", {
