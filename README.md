@@ -2,7 +2,7 @@
   <img src="public/android-chrome-512x512.png" alt="Site Icon" width="200">
 </div>
 
-A simple website I built with Astro, inspired by vim and terminal interfaces. Here, I share short notes about code, games, and whatever else is on my mind.
+A simple website I built with Astro, inspired by vim and terminal interfaces.
 
 ---
 
@@ -37,27 +37,25 @@ pnpm preview
 ### Project structure 🏗️
 
 ```
-/
-├─ public/
-│  ├─ fonts/          # pixel-style font used site-wide
-│  └─ ...             # static assets (icons, manifest)
-├─ src/
-│  ├─ assets/         # images and site assets
-│  ├─ components/     # small reusable UI pieces
-│  ├─ layouts/        # layout components
-│  ├─ pages/          # top-level pages
-│  └─ styles/
-│     └─ main.scss    # main SCSS entry importing modular partials
-└─ ...                # other project config files
+src/
+├─ components/          # reusable UI components
+├─ layouts/
+│   └─ BaseLayout.astro # all pages use this
+├─ pages/
+│   ├─ index.astro      # homepage
+│   ├─ blog/            # blog posts
+│   └─ ...              # other pages (about, etc.)
+└─ styles/              # SCSS styles
+└─ utils/               # utility functions
 ```
 
-## Deployment 🚀
+### Deployment 🚀
 
 This repo uses GitHub Actions to build and deploy the site to GitHub Pages on every push to `main`.
 
 - To use a custom domain, add a `CNAME` file with your domain (e.g. `example.com`) to the `public/` folder.
 - To change deployment settings, edit `.github/workflows/deploy-pages.yml`.
 
-### License 🪪
+### License & Credits 🪪
 
-See the [`LICENSE`](LICENSE) file for licensing details.
+This project is licensed under the [MIT License](LICENSE). Feel free to use this as inspiration for your own projects. Font used is Toshiba Satellite 8x14 from [The Oldschool PC Font Pack](https://int10h.org/oldschool-pc-fonts/) by VileR, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
