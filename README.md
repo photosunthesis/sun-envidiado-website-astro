@@ -49,13 +49,6 @@ src/
 └─ utils/               # utility functions
 ```
 
-### Deployment 🚀
-
-This repo uses GitHub Actions to build and deploy the site to GitHub Pages on every push to `main`.
-
-- To use a custom domain, add a `CNAME` file with your domain (e.g. `example.com`) to the `public/` folder.
-- To change deployment settings, edit `.github/workflows/deploy-pages.yml`.
-
 ### License & Credits 🪪
 
 This project is licensed under the [MIT License](LICENSE). Feel free to use this as inspiration for your own projects. Font used is Toshiba Satellite 8x14 from [The Oldschool PC Font Pack](https://int10h.org/oldschool-pc-fonts/) by VileR, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
