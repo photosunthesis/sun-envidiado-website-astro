@@ -5,13 +5,12 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 const siteCopy = {
 	siteName: "Sun Envidiado",
 	pageHeadline: "About Me",
-	aboutMeText: `My name is Sun Envidiado. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.
-
-Like most programmers, I've bounced around between languages and frameworks: C# and .NET, JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.
-
-The look of this website was inspired by vim and retro computers because I think they look cool. Ironically though, I use VS Code for my actual coding (like a normal person).
-
-This is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
+	aboutMeText: [
+		`My name is <span class="highlight-yellow">Sun Envidiado</span>. I'm a <span class="highlight-green">software developer</span> from <span class="highlight-cyan">Manila, Philippines</span> who builds software mainly for work and sometimes for fun.`,
+		`Like most programmers, I've bounced around between languages and frameworks: <span class="highlight-purple">C# and .NET</span>, <span class="highlight-yellow">JavaScript and Vue.js</span>, <span class="highlight-red">PHP and Laravel</span>, until I somehow landed on <span class="highlight-blue">Dart and Flutter</span>, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me <span class="highlight-green">gaming</span> (completely hooked on Helldivers 2 right now), doing <span class="highlight-orange">karaoke</span> with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.`,
+		`The look of this website was inspired by <span class="highlight-cyan">vim</span> and <span class="highlight-orange">retro computers</span> because I think they look cool. Ironically though, I use <span class="highlight-purple">VS Code</span> for my actual coding (like a normal person).`,
+		`This is my little corner of the internet where I share projects, ideas, and random thoughts about <span class="highlight-blue">code</span>, <span class="highlight-orange">gaming</span>, and <span class="highlight-green">life</span> in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
+	],
 	homeUrlLabel: ":home<Enter>",
 	ariaGoHomepage: "Go to homepage",
 	footerReturnPrefix: "To go back to the homepage, type",
@@ -70,7 +69,9 @@ const jsonLd = {
 	<div class="about-content">
 		<article class="about-article" aria-labelledby="about-title">
 			<h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
-			<p>{siteCopy.aboutMeText}</p>
+			{siteCopy.aboutMeText.map((paragraph) => (
+				<p set:html={paragraph}></p>
+			))}
 			<footer class="about-footer">
 				{siteCopy.footerReturnPrefix}
 				<a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
@@ -85,7 +86,6 @@ const jsonLd = {
 		margin: 1.5rem;
 		color: var(--foreground);
 		text-align: left;
-		white-space: pre-line;
 		padding: 0 1rem;
 	}
 
@@ -95,6 +95,42 @@ const jsonLd = {
 		overflow-wrap: anywhere;
 		padding-bottom: 3rem;
 		padding-top: 1rem;
+	}
+
+	/* Color highlight spans */
+	:global(.highlight-yellow) {
+		color: var(--yellow);
+		font-weight: bold;
+	}
+
+	:global(.highlight-cyan) {
+		color: var(--cyan);
+		font-weight: bold;
+	}
+
+	:global(.highlight-green) {
+		color: var(--green);
+		font-weight: bold;
+	}
+
+	:global(.highlight-blue) {
+		color: var(--blue);
+		font-weight: bold;
+	}
+
+	:global(.highlight-orange) {
+		color: var(--orange);
+		font-weight: bold;
+	}
+
+	:global(.highlight-purple) {
+		color: var(--purple);
+		font-weight: bold;
+	}
+
+	:global(.highlight-red) {
+		color: var(--red);
+		font-weight: bold;
 	}
 
 	@media (max-width: 480px) {
