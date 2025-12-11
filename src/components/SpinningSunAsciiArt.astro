@@ -1,3 +1,33 @@
+---
+// First frame to render server-side for instant display
+const firstFrame = `                         ##                       
+                       #####                      
+                       #####                      
+                       #####                      
+         ####          #####          #####       
+         ######          ##         #######       
+         #######    ############   #######        
+           ##### ################# #####          
+               #####################              
+              #######         #######             
+             ######             ######            
+             #####                ####            
+  ######### #####                 ##### ######### 
+  ######### #####                 ##### ######### 
+    ######   #####                ####   #######  
+             ######              #####            
+              #######          ######             
+               #####################              
+            #### ################## ###           
+          ######   #############   ######         
+         #######                   ########       
+         #####         #####         ######       
+          ##           #####            #         
+                       #####                      
+                       #####                      
+                        ###                       `;
+---
+
 <div class="sun-spin-wrap" aria-hidden="false">
 	<span class="sr-only">Spinning sun ASCII art</span>
 	<pre
@@ -5,8 +35,7 @@
 		class="sun-pre"
 		role="img"
 		aria-label="Spinning sun ASCII art"
-		data-animated="true">
-	</pre>
+		data-animated="true">{firstFrame}</pre>
 </div>
 
 <script>
