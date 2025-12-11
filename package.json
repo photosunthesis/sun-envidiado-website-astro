@@ -12,9 +12,9 @@
     "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx,.astro --fix"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.3.6",
+    "@astrojs/mdx": "^4.3.13",
     "@astrojs/sitemap": "^3.6.0",
-    "astro": "^5.13.8",
+    "astro": "^5.16.5",
     "sass": "^1.93.2",
     "sharp": "^0.34.4"
   },
