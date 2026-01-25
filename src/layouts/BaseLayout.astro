@@ -128,7 +128,6 @@ const jsonLd = frontmatter.jsonLd || null;
 											src={coverImage}
 											formats={["avif", "webp"]}
 											alt={frontmatter.coverAlt || "Cover image"}
-											inferSize
 										/>
 									</div>
 								)}
@@ -179,5 +178,38 @@ const jsonLd = frontmatter.jsonLd || null;
 		</div>
 		<CommandBar />
 		<div id="crt-overlay-container" class="crt-enabled"></div>
+		<div id="mouse-spotlight"></div>
+		<script>
+			const spotlight = document.getElementById("mouse-spotlight");
+			let mouseX = 0;
+			let mouseY = 0;
+			let currentX = 0;
+			let currentY = 0;
+			let isActive = false;
+
+			document.addEventListener("mousemove", (e) => {
+				mouseX = e.clientX;
+				mouseY = e.clientY;
+				if (!isActive) {
+					isActive = true;
+					spotlight?.classList.add("active");
+					requestAnimationFrame(updatePosition);
+				}
+			});
+
+			document.addEventListener("mouseleave", () => {
+				isActive = false;
+				spotlight?.classList.remove("active");
+			});
+
+			function updatePosition() {
+				if (!spotlight || !isActive) return;
+				currentX += (mouseX - currentX) * 0.15;
+				currentY += (mouseY - currentY) * 0.15;
+				spotlight.style.left = `${currentX}px`;
+				spotlight.style.top = `${currentY}px`;
+				requestAnimationFrame(updatePosition);
+			}
+		</script>
 	</body>
 </html>
