@@ -20,8 +20,8 @@ const siteCopy = {
 	siteName: "Sun Envidiado",
 	pageHeadline: "Work",
 	intro: [
-		`I'm a software developer with ${yearsExperience} years of experience specializing in Dart and Flutter development for Android, iOS, and Web platforms. I enjoy building cross-platform applications that enhance user engagement and streamline operations.`,
-		`Throughout my career, I've gained proficiency in JavaScript (React and Vue), PHP (Laravel), and C# (ASP.NET), with experience in the Firebase ecosystem including Firestore, Authentication, and Cloud Functions. You can download my full resume <a href="/envidiado-resume-october-2025.pdf" target="_blank" class="highlight">here</a>.`,
+		`I've been building software since 2019. My career started with web development and gradually shifted toward mobile development, where I discovered my focus in Flutter and Dart. Over the past ${yearsExperience} years, I've specialized in creating cross-platform applications that work seamlessly across Android, iOS, and Web.`,
+		`I approach development with attention to both functionality and design, ensuring applications not only work well but feel intuitive to use. Along the way, I've developed strong skills in JavaScript (React and Vue), PHP (Laravel), C# (ASP.NET), and the Firebase ecosystem. You can view my complete resume <a href="/envidiado-resume-october-2025.pdf" target="_blank" class="highlight">here</a>.`,
 	],
 	experienceHeadline: "Work Experience",
 	experience: [
@@ -30,7 +30,7 @@ const siteCopy = {
 			title: "Flutter Developer",
 			company: "Miquido",
 			description:
-				"Building scalable cross-platform applications using Flutter for fintech and emergency response domains. Integrated AI services to provide real-time guidance coupled with specialized emergency health documentation.",
+				"Building scalable Flutter apps for fintech and emergency response. I also worked on integrating AI to provide real-time guidance and specialized health documentation.",
 			tags: ["Flutter", "Dart", "AI", "BLoC", "Riverpod"],
 		},
 		{
@@ -38,7 +38,7 @@ const siteCopy = {
 			title: "Flutter Developer",
 			company: "Nextbank",
 			description:
-				"Developed cross-platform mobile applications for fintech corporations. Created a Flutter plugin for liveness check, integrating native iOS and Android code to enhance security measures.",
+				"Built cross-platform apps for fintech corporations. I also developed a custom Flutter plugin for liveness checks, blending native iOS and Android code to keep things secure.",
 			tags: ["Flutter", "Dart", "Native iOS", "Native Android", "BLoC"],
 		},
 		{
@@ -46,7 +46,7 @@ const siteCopy = {
 			title: "Mobile Engineer",
 			company: "Hedgehog Lab",
 			description:
-				"Developed mobile applications across medical and fintech sectors. Created a Flutter plugin for document signing that integrated native iOS and Android code.",
+				"Worked on mobile apps for the medical and fintech sectors. I also built a Flutter plugin for document signing that hooked into native iOS and Android functionality.",
 			tags: ["Flutter", "Dart", "Laravel", "PHP"],
 		},
 		{
@@ -54,7 +54,7 @@ const siteCopy = {
 			title: "Software Engineer",
 			company: "CRAFT-TEC Inc.",
 			description:
-				"Led the Flutter mobile development team while contributing as a full-stack engineer. Developed backend APIs with PHP Laravel and mentored team members.",
+				"Led the Flutter team while wearing a few different hats as a full-stack engineer. I built out backend APIs with Laravel and helped mentor other devs on the team.",
 			tags: ["Flutter", "Dart", "PHP", "Laravel"],
 		},
 		{
@@ -62,7 +62,7 @@ const siteCopy = {
 			title: "Web Developer",
 			company: "Various Organizations",
 			description:
-				"Contributed on various web projects using JavaScript & Vue, C# a& .NET, PHP & Laravel, and Shopify. Developed proficiency with Firebase services including Firestore and Cloud Functions.",
+				"Worked on a bunch of different web projects using everything from Vue and React to .NET and Shopify. This is where I really got comfortable with the Firebase stack.",
 			tags: ["JavaScript", ".NET", "PHP", "Firebase"],
 		},
 	],
@@ -70,28 +70,28 @@ const siteCopy = {
 		{
 			title: "rate-stuff.online",
 			description:
-				"A side project built with React and TanStack Start, deployed on Cloudflare Workers. This marks my real step into the React ecosystem and serverless architecture.",
+				"A side project I built with React and TanStack Start, deployed on Cloudflare Workers. It was my first real deep dive into the React ecosystem and serverless architecture.",
 			link: "https://rate-stuff.online",
 			image: rateStuffImage,
 		},
 		{
 			title: "Bebi App",
 			description:
-				"A couples app featuring image sharing, a shared calendar, and menstruation cycle tracking. Built as a side hobby project for my girlfriend :D",
+				"A couples app I made for my girlfriend :D featuring image sharing, a shared calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed building.",
 			link: "https://github.com/photosunthesis/bebi-app-flutter",
 			image: bebiAppImage,
 		},
 		{
 			title: "Haandvaerker.dk",
 			description:
-				"A digital platform connecting homeowners in Denmark with skilled craftsmen for home repairs and renovations. This was the main system I worked on during my time at CRAFT-TEC Inc., where I developed both the homeowner and craftsman Flutter apps and contributed to the backend API.",
+				"A platform connecting homeowners in Denmark with craftsmen. This was the main project I worked on at CRAFT-TEC Inc., where I built both the homeowner and craftsman Flutter apps and helped out with the backend.",
 			link: "https://www.haandvaerker.dk/",
 			image: haandvaerkerImage,
 		},
 	],
 	projectHeadline: "Project Showcase",
 	projectIntro:
-		"Here are some projects I'm allowed to talk about. Much of my professional work is proprietary to the clients and companies I've worked with, so I can't share everything here.",
+		"Here are some of the projects I've worked on that I'm actually allowed to talk about. A lot of my professional work is proprietary, so this is just a snippet of what I've been up to lately.",
 	homeUrlLabel: ":home<Enter>",
 	footerReturnPrefix: "To go back to the homepage, type",
 };
@@ -250,12 +250,12 @@ const jsonLd = {
 	.experience-title {
 		font-size: 1.1rem;
 		font-weight: 500;
-		color: var(--foreground);
+		color: var(--cyan);
 		margin: 0;
 	}
 
 	.experience-description {
-		color: var(--comment);
+		color: var(--foreground);
 		line-height: 1.6;
 		margin: 0;
 	}
@@ -272,13 +272,13 @@ const jsonLd = {
 
 	.section-title {
 		font-size: 1.5rem;
-		color: var(--foreground);
+		color: var(--purple);
 		margin-bottom: 0.3rem;
 		font-weight: 500;
 	}
 
 	.section-intro {
-		color: var(--comment);
+		color: var(--foreground);
 		margin-top: 0;
 		margin-bottom: 1.5rem;
 		line-height: 1.6;
@@ -297,7 +297,7 @@ const jsonLd = {
 			opacity: 0.8;
 
 			.project-title {
-				color: var(--cyan);
+				text-decoration: underline;
 			}
 		}
 
@@ -338,12 +338,12 @@ const jsonLd = {
 		font-size: 1.1rem;
 		line-height: 1.1;
 		font-weight: 500;
-		color: var(--foreground);
+		color: var(--cyan);
 		margin: -0.2rem 0 0 0;
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
-		transition: color 0.2s ease;
+		transition: opacity 0.2s ease;
 	}
 
 	.arrow {
@@ -351,7 +351,7 @@ const jsonLd = {
 	}
 
 	.project-description {
-		color: var(--comment);
+		color: var(--foreground);
 		line-height: 1.6;
 		margin: 0;
 	}
