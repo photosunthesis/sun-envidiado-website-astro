@@ -147,11 +147,6 @@ const jsonLd = {
 										{job.title} · {job.company}
 									</h2>
 									<p class="experience-description">{job.description}</p>
-									<div class="experience-tags">
-										{job.tags.map((tag) => (
-											<span class="tag">{tag}</span>
-										))}
-									</div>
 								</div>
 							</div>
 						))
@@ -265,26 +260,6 @@ const jsonLd = {
 		margin: 0;
 	}
 
-	.experience-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-top: 0.6rem;
-	}
-
-	.tag {
-		color: var(--purple);
-		font-size: 0.85rem;
-		letter-spacing: 0.05em;
-
-		&::before {
-			content: "#";
-			font-style: italic;
-			margin-right: 2px;
-			opacity: 0.8;
-		}
-	}
-
 	.projects-section {
 		margin-top: 2rem;
 	}
@@ -328,7 +303,7 @@ const jsonLd = {
 
 		@media (max-width: 600px) {
 			grid-template-columns: 1fr;
-			gap: 1rem;
+			gap: 1.5rem;
 		}
 	}
 
