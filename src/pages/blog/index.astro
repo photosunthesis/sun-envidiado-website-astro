@@ -1,12 +1,12 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Newsletter from '../components/Newsletter.astro';
+import Newsletter from '../../components/Newsletter.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const postModules = import.meta.glob<{
   frontmatter?: { title?: string; pubDate?: string };
 }>(
   // Include .md and .mdx files, and also allow index.md(x) inside directories
-  './blog/**/*.{md,mdx}',
+  './**/*.{md,mdx}',
   { eager: true },
 );
 
@@ -16,12 +16,10 @@ type PublishedPost = { title: string; pubDate: Date; url: string; index: number 
 
 // Helpers
 const slugFromPath = (path: string) => {
-  // Remove the .md or .mdx extension
-  const withoutExt = path.replace(/\.mdx?$/, '');
-  // Get everything after /blog/
-  const afterBlog = withoutExt.split('/blog/')[1];
-  // If it ends with /index, remove that part to get clean URLs
-  return afterBlog?.replace(/\/index$/, '') ?? '';
+  // Remove the .md or .mdx extension and leading ./
+  const cleanPath = path.replace(/\.mdx?$/, '').replace(/^\.\//, '');
+  // If it ends with /index (standard Astro pattern), remove that part to get clean URLs
+  return cleanPath.replace(/\/index$/, '');
 };
 
 const parsePubDate = (value?: unknown): Date | undefined => {
@@ -168,3 +166,69 @@ const asciiHeaderTitle = `
     <Newsletter />
   </div>
 </BaseLayout>
+
+<style lang="scss">
+  .blog-content {
+    max-width: 600px;
+  }
+
+  .blog-header {
+    margin-bottom: 2rem;
+  }
+
+  .blog-content-start {
+    color: var(--foreground);
+    margin-bottom: 1rem;
+    text-align: left;
+  }
+
+  .year-heading {
+    margin: 1.5rem 0 1rem;
+    text-align: left;
+    color: var(--comment);
+  }
+
+  .year-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .post-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: 0.35rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0 -0.5rem;
+
+    &:hover {
+      .post-link {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .post-index {
+    color: var(--comment);
+    min-width: 2ch;
+    text-align: left;
+    display: inline-block;
+  }
+
+  .post-link {
+    color: var(--cyan);
+    text-decoration: none;
+    text-align: left;
+    flex: 1 1 auto;
+  }
+
+  .post-date {
+    color: var(--comment);
+    white-space: nowrap;
+    margin-left: 20px;
+  }
+</style>

@@ -1,12 +1,13 @@
 ---
-layout: ../../../layouts/BaseLayout.astro
-title: "React Is Actually Not That Bad"
-pubDate: "2026-01-26"
+layout: ../../../layouts/BlogLayout.astro
+title: 'React Is Actually Not That Bad'
+pubDate: '2026-01-26'
 description: "After years of avoiding React, I finally tried it with TanStack Start. From rewiring my brain for hooks to building a serverless app on Cloudflare, here's how a modern stack changed my mind."
-tags: ["react", "tanstack", "serverless", "cloudflare", "typescript"]
-cover: "react-is-actually-not-that-bad/_assets/cover.jpg"
-coverAlt: "A person giving a thumbs up with a laptop and monitor displaying the TanStack Start homepage in the background"
+tags: ['react', 'tanstack', 'serverless', 'cloudflare', 'typescript']
+cover: 'react-is-actually-not-that-bad/_assets/cover.jpg'
+coverAlt: 'A person giving a thumbs up with a laptop and monitor displaying the TanStack Start homepage in the background'
 ---
+
 import { Picture } from 'astro:assets';
 import RateStuffOnline from './_assets/rate-stuff-online.png';
 
@@ -28,7 +29,7 @@ The TanStack ecosystem, Router, Query, Form, they all play nice together. Coming
 
 The thing that genuinely confused me was Cloudflare Workers. I'm using PostgreSQL for the database and I kept running into connection issues. Why couldn't I just instantiate the Drizzle client and query the database like normal? Why did every request fail when I tried to touch my Postgres instance? Turns out, it's because I was trying to reuse the same database connection across requests.
 
-And Workers simply don't *work* that way.
+And Workers simply don't _work_ that way.
 
 Every request is a fresh execution. There's no persistent process sitting there holding onto connections like a traditional server where the SQL connection stays open, preserving the expensive TLS handshake. Here, you spin up, you do your thing, and you disappear.
 
@@ -36,7 +37,7 @@ This means if you try to connect directly, it won't work. You'll exhaust your da
 
 Enter **Cloudflare Hyperdrive**. It effectively "tricks" the database by holding those heavy TLS connections open at the edge and letting my tiny workers reuse them, making the whole thing actually possible.
 
-I'd *heard* about serverless before but I never really understood what it meant in practice. Now I get it. These little Workers are like tiny ephemeral functions that materialize when needed, do their job, and poof, gone. No idle servers burning money. And with Cloudflare Hyperdrive bridging Workers to PostgreSQL, I get edge performance without giving up my relational database.
+I'd _heard_ about serverless before but I never really understood what it meant in practice. Now I get it. These little Workers are like tiny ephemeral functions that materialize when needed, do their job, and poof, gone. No idle servers burning money. And with Cloudflare Hyperdrive bridging Workers to PostgreSQL, I get edge performance without giving up my relational database.
 
 Pretty elegant once you wrap your head around it.
 
@@ -44,7 +45,7 @@ Pretty elegant once you wrap your head around it.
 
 I used to look at React code and think hooks were bizarre. `useEffect`, `useState`, `useMutation`, `useWhatever`, it all looked like magic incantations. Why is everything a "use"?
 
-Then I actually started *using* them.
+Then I actually started _using_ them.
 
 Turns out they're just functions. They're composable functions that let you tap into React's lifecycle and state management. Once I stopped treating them as mysterious and started treating them as building blocks, they became intuitive. It took me like a day or two to feel comfortable.
 
@@ -52,9 +53,9 @@ I wrote an article lowkey trashing React because setting up a project was overwh
 
 ## The Project
 
-<Picture src={RateStuffOnline} formats={["webp", "avif"]} alt="Rate Stuff Online screenshot" />
+<Picture src={RateStuffOnline} formats={['webp', 'avif']} alt="Rate Stuff Online screenshot" />
 
-This whole learning journey materialized into <a href="https://rate-stuff.online" target="_blank" rel="noopener noreferrer">rate-stuff.online</a>, a place to rate anything. Like literally *anything*. Concrete things like restaurants and albums. Abstract things like "the concept of Mondays" or "that feeling when you remember something embarrassing from ten years ago."
+This whole learning journey materialized into <a href="https://rate-stuff.online" target="_blank" rel="noopener noreferrer">rate-stuff.online</a>, a place to rate anything. Like literally _anything_. Concrete things like restaurants and albums. Abstract things like "the concept of Mondays" or "that feeling when you remember something embarrassing from ten years ago."
 
 You just create a thing, rate it, and see what others think. Simple premise, fun to build.
 
@@ -113,7 +114,7 @@ TanStack Start lets you define server functions that you call from the client li
 
 ```typescript
 // Server: Define the function (functions.ts)
-export const createRatingFn = createServerFn({ method: "POST" })
+export const createRatingFn = createServerFn({ method: 'POST' })
   .middleware([authMiddleware])
   .inputValidator(createRatingSchema)
   .handler(async ({ data, context }) => {
@@ -137,9 +138,9 @@ const { mutate: createRating, isPending } = useCreateRatingMutation();
 
 const handleSubmit = (data) => {
   createRating({
-    stuffId: "...",
+    stuffId: '...',
     score: 8,
-    content: "Pretty good tbh",
+    content: 'Pretty good tbh',
   });
 };
 ```
@@ -155,6 +156,7 @@ When someone votes, everyone looking at that rating sees the count change instan
 ## Edge Rate Limiting
 
 Cloudflare Workers has built in rate limiting. I set up two tiers configured right in `wrangler.jsonc`:
+
 - **General**: 100 requests/minute
 - **Pagination**: 300 requests/minute (for scroll heavy endpoints)
 
@@ -170,9 +172,9 @@ No external service needed. It just works.
 6. **Edge computing is wild.** Millisecond cold starts and globally distributed servers; it changes how you think about architecture.
 
 ## A Note on Vendor Lock-In
- 
+
 One thing to note though is the vendor lock-in. I'm using a lot of specific Cloudflare services here (Workers, Hyperdrive, R2). For this project, I don't really care because this is just a hobby project, but if you're building something critical, you should probably think about it.
- 
+
 Relying heavily on proprietary features like Hyperdrive or specific Worker APIs means you can't just pick up your code and move it to AWS or Vercel tomorrow. You're kind of married to the platform. If that scares you, maybe look into headless solutions or handle the infrastructure manually yourself so you stay agnostic. Just something to keep in mind.
 
 ## So Yeah... React Is Pretty Cool
@@ -182,5 +184,3 @@ Six years. That's how long I avoided React. And now that I've actually used it? 
 Would I have had the same experience with Next.js? Maybe. Probably. But I'm glad I went with TanStack Start because it forced me to understand the pieces instead of just accepting "this is how everyone does it." Sometimes taking the less popular path teaches you more.
 
 Check out <a href="https://rate-stuff.online" target="_blank" rel="noopener noreferrer">rate-stuff.online</a>!
-
-

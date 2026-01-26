@@ -1,22 +1,22 @@
 ---
-layout: ../../../layouts/BaseLayout.astro
-title: "How I rebuilt my personal site with Astro"
-pubDate: "2025-09-19"
+layout: ../../../layouts/BlogLayout.astro
+title: 'How I rebuilt my personal site with Astro'
+pubDate: '2025-09-19'
 description: "I rebuilt this site with Astro after wrestling with Flutter on the web and getting bogged down by React's extra layers. Astro gave me an HTML-first workflow, faster static pages, and better SEO, basically less config, more coding."
 tags:
   [
-    "astro",
-    "flutter",
-    "react",
-    "migration",
-    "staticSite",
-    "seo",
-    "blog",
-    "webPerformance",
-    "personalSite",
+    'astro',
+    'flutter',
+    'react',
+    'migration',
+    'staticSite',
+    'seo',
+    'blog',
+    'webPerformance',
+    'personalSite',
   ]
-cover: "how-i-rebuilt-my-personal-site-with-astro/_assets/cover.webp"
-coverAlt: "Computer screen showing code"
+cover: 'how-i-rebuilt-my-personal-site-with-astro/_assets/cover.webp'
+coverAlt: 'Computer screen showing code'
 ---
 
 My website started its life in Flutter. It was simple enough: home, about, and a contact page. Nothing wild. I always meant to add a blog, but I kept putting it off because, well, Flutter on the web works, but it feels like you're fighting the medium.
@@ -62,15 +62,15 @@ The killer feature is how it handles content. Blog posts are literally just Mark
 
 ```markdown
 ---
-title: "My Post"
-date: "2025-09-19"
-description: "Just a regular blog post"
-tags: ["web", "astro"]
+title: 'My Post'
+date: '2025-09-19'
+description: 'Just a regular blog post'
+tags: ['web', 'astro']
 ---
 
 # This is just markdown
 
-And it works exactly like you'd expect.w
+And it works exactly like you'd expect.
 ```
 
 That YAML block at the top (frontmatter) handles all the metadata. Astro just reads it. I didn't have to write a parser or build a custom API to fetch my own posts.
