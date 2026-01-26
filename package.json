@@ -9,7 +9,8 @@
     "astro": "astro",
     "typecheck": "tsc --noEmit",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx,.astro",
-    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx,.astro --fix"
+    "lint:fix": "eslint . --ext .ts,.tsx,.js,.jsx,.astro --fix",
+    "newsletter": "tsx scripts/send-newsletter.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
@@ -24,6 +25,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "eslint-plugin-astro": "^1.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -31,6 +33,7 @@
     "globals": "^16.5.0",
     "prettier": "^3.8.1",
     "prettier-plugin-astro": "^0.14.1",
+    "tsx": "^4.21.0",
     "typescript-eslint": "^8.53.1"
   }
 }

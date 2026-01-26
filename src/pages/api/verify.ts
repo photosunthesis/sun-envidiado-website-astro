@@ -5,6 +5,7 @@ export const prerender = false;
 
 const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
 const JWT_SECRET = import.meta.env.JWT_SECRET;
+const BLOG_AUDIENCE_ID = import.meta.env.BLOG_AUDIENCE_ID;
 
 export async function GET({ request, redirect }) {
   const url = new URL(request.url);
@@ -14,11 +15,6 @@ export async function GET({ request, redirect }) {
     return new Response('Missing token', { status: 400 });
   }
 
-  if (!RESEND_API_KEY || !JWT_SECRET) {
-    console.error('Missing env vars');
-    return new Response('Server configuration error', { status: 500 });
-  }
-
   try {
     const secret = new TextEncoder().encode(JWT_SECRET);
     const { payload } = await jwtVerify(token, secret);
@@ -26,9 +22,9 @@ export async function GET({ request, redirect }) {
 
     const resend = new Resend(RESEND_API_KEY);
 
-    // Add to Resend Audience
     const { error } = await resend.contacts.create({
       email: email,
+      segmentId: BLOG_AUDIENCE_ID,
     });
 
     if (error) {
