@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const seoMeta = {
+  title: "Subscription Confirmed",
+  description: "You have successfully subscribed to the newsletter.",
+};
+---
+
+<BaseLayout
+  title={seoMeta.title}
+  description={seoMeta.description}
+>
+  <div style="text-align: center; margin-top: 4rem;">
+    <h1 style="color: var(--green);">Subscription Confirmed!</h1>
+    <p style="margin-top: 1rem; color: var(--foreground);">
+        Thank you for subscribing. You'll receive updates when I post new content.
+    </p>
+    <a href="/" style="display: inline-block; margin-top: 2rem; color: var(--cyan); text-decoration: underline;">
+        Return to Home
+    </a>
+  </div>
+</BaseLayout>

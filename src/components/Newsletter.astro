@@ -1,0 +1,178 @@
+---
+---
+
+<section class="newsletter-section">
+  <div class="newsletter-container">
+    <p class="newsletter-desc">
+      You can get notified via email when I publish new posts. No spam, just updates.
+      You can also <a href="/rss.xml">subscribe via RSS</a>.
+    </p>
+
+    <form class="newsletter-form" id="newsletter-form">
+      <div class="input-group">
+        <label for="email" class="sr-only">Email address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          class="newsletter-input"
+        />
+        <button type="submit" class="newsletter-btn">
+          Subscribe
+        </button>
+      </div>
+      <div class="form-message" id="form-message" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('newsletter-form') as HTMLFormElement;
+  const messageEl = document.getElementById('form-message');
+  const btn = form?.querySelector('button');
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!btn || !messageEl) return;
+
+      const formData = new FormData(form);
+      const email = formData.get('email');
+      const originalBtnText = btn.textContent;
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      messageEl.textContent = '';
+      messageEl.className = 'form-message';
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          messageEl.textContent = 'Please check your email to confirm your subscription.';
+          messageEl.classList.add('success');
+          form.reset();
+        } else {
+          messageEl.textContent = data.message || 'Something went wrong. Please try again.';
+          messageEl.classList.add('error');
+        }
+      } catch (err) {
+        messageEl.textContent = 'Network error. Please try again later.';
+        messageEl.classList.add('error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = originalBtnText;
+      }
+    });
+  }
+</script>
+
+<style lang="scss">
+  .newsletter-section {
+    margin: 3rem 0;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    border-top: 1px dashed var(--comment);
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .newsletter-container {
+    width: 100%;
+  }
+
+  .newsletter-desc {
+    color: var(--comment);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+
+    a {
+      font-size: inherit;
+      color: var(--comment);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      
+      &:hover {
+        color: var(--cyan);
+      }
+    }
+  }
+
+  .input-group {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .newsletter-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    border: 1px solid var(--comment);
+    color: var(--foreground);
+    font-family: inherit;
+    font-size: 0.9rem;
+    border-radius: 4px;
+
+    &:focus {
+      outline: none;
+      border-color: var(--foreground);
+    }
+
+    &::placeholder {
+      color: var(--comment);
+      opacity: 0.5;
+    }
+  }
+
+  .newsletter-btn {
+    padding: 0.5rem 2rem;
+    background: var(--foreground);
+    color: var(--background);
+    border: 1px solid var(--foreground);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: normal;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: wait;
+    }
+  }
+
+  .form-message {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    
+    &.success {
+      color: var(--green);
+    }
+    
+    &.error {
+      color: var(--red);
+    }
+  }
+</style>

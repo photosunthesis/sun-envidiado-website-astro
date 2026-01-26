@@ -3,6 +3,7 @@ import "../styles/main.scss";
 import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import CommandBar from "../components/CommandBar.astro";
+import Newsletter from "../components/Newsletter.astro";
 import { buildSEOMetadata, SITE_CONFIG } from "../utils/seo";
 
 const UI_CONFIG = {
@@ -168,6 +169,8 @@ const jsonLd = frontmatter.jsonLd || null;
 										{` ${UI_CONFIG.blogFooter.homeSuffix}`}
 									</p>
 								</footer>
+
+								<Newsletter />
 							</div>
 						) : (
 							<slot />

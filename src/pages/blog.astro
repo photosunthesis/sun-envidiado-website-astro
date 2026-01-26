@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Newsletter from "../components/Newsletter.astro";
 
 const postModules = import.meta.glob<{
 	frontmatter?: { title?: string; pubDate?: string };
@@ -165,5 +166,6 @@ const jsonLd = {
 					))
 			}
 		</div>
+		<Newsletter />
 	</div>
 </BaseLayout>
