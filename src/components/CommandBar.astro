@@ -237,9 +237,7 @@ const copyright =
       case 'crt':
         setCrtEnabled(true);
         break;
-      case 'no-crt':
-        setCrtEnabled(false);
-        break;
+
       default:
         showVimError(val);
     }
@@ -414,3 +412,174 @@ const copyright =
     input.focus();
   };
 </script>
+
+<style lang="scss">
+  /* Global command bar variables are assumed to be available or we use values */
+
+  .cmd-input {
+    outline: none;
+    min-width: 2ch;
+    background: transparent;
+    border: none;
+    /* Let inputs inherit color so inside .command-bar they use the dark page background color */
+    color: inherit;
+    font-family: inherit;
+    font-size: 1rem;
+    /* hide native caret so the custom rectangular cursor is used */
+    caret-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 0.1rem 0.25rem;
+    width: 100%;
+    max-width: min(60ch, 90vw);
+
+    &::placeholder {
+      color: rgba(
+        9,
+        9,
+        11,
+        0.3
+      ); /* using --background-rgb default since we can't easily access scss vars unless imported */
+      /* actually, we can use css vars */
+      color: rgba(var(--background-rgb), 0.3);
+      opacity: 1;
+    }
+  }
+
+  /* Hide the placeholder while in error state so it doesn't overlap the error message */
+  .command-bar.error .cmd-input::placeholder {
+    color: transparent !important;
+    opacity: 0 !important;
+  }
+
+  .cmd-feedback {
+    margin-left: 1rem;
+    color: var(--comment);
+    font-size: 0.95rem;
+  }
+
+  .cmd-wrapper {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    margin-left: -8px;
+  }
+
+  .command-bar {
+    /* Make the command bar full-width and stick to the bottom while
+       respecting device safe-area insets (iOS notch / bottom UI). */
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: block;
+    width: 100vw;
+    /* full-bleed background; inner wrapper provides padding */
+    padding: 0;
+    /* inner handles padding including safe-area */
+    background: var(--foreground);
+    /* foreground becomes background */
+    color: var(--background);
+    /* text uses page background color */
+    backdrop-filter: none;
+    box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+    /* Ensure it sits above other content without overlapping interactive elements */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .command-bar-inner {
+    display: flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem calc(env(safe-area-inset-bottom, 0) + 0.35rem);
+  }
+
+  /* Left area inside the command bar for small persistent info (copyright etc) */
+  .command-bar .cmd-right {
+    margin-left: 1rem;
+    color: rgba(var(--background-rgb), 0.3);
+    /* match the input placeholder color */
+    font-size: 0.95rem;
+    white-space: nowrap;
+    opacity: 1;
+    flex: 0 0 auto;
+  }
+
+  /* Hide the right copyright when the command bar is in error state so it doesn't overlap the error text */
+  .command-bar.error .cmd-right {
+    display: none;
+  }
+
+  .cmd-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* default background; overridden in context-sensitive places */
+    background: var(--foreground);
+    opacity: 0.95;
+    display: none;
+    transform: translateY(0.1em);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 10001;
+    animation: cmd-cursor-blink 1s steps(1) infinite;
+  }
+
+  /* Ensure the block cursor inside the command bar uses the text color (currentColor)
+     so it contrasts against the bar background */
+  .command-bar .cmd-cursor {
+    background: currentColor;
+  }
+
+  /* Ensure inputs inside the command bar inherit the visible color, and the block cursor sits above the input text */
+  .command-bar .cmd-input {
+    color: currentColor;
+    background: transparent;
+    position: relative;
+    z-index: 1;
+  }
+
+  .command-bar .cmd-cursor {
+    z-index: 10002;
+  }
+
+  /* This was a global class possibly applied to body */
+  :global(.command-bar-focused) {
+    overscroll-behavior: contain;
+  }
+
+  .cmd-cursor {
+    display: inline-block;
+    height: 1em;
+  }
+
+  /* Error state for command bar: use red background and show error text inline */
+  .command-bar.error {
+    background: var(--red);
+    color: var(--background);
+    /* keep text readable */
+  }
+
+  .vim-error-inline {
+    display: inline-block;
+    font-size: 0.95rem;
+    color: inherit;
+    margin-left: 0.5rem;
+  }
+
+  @keyframes cmd-cursor-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  .hide-on-mobile {
+    display: block;
+
+    @media (max-width: 480px) {
+      display: none !important;
+    }
+  }
+</style>
