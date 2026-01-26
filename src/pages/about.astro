@@ -1,21 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// Centralized in-file copy for About page
-const siteCopy = {
-  siteName: 'Sun Envidiado',
-  pageHeadline: 'About Me',
-  aboutMeText: [
-    `My name is <span class="highlight-yellow">Sun Envidiado</span>. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.`,
-    `Like most programmers, I've bounced around between languages and frameworks: C# and .NET, JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.`,
-    `The look of this website was inspired by vim and retro computers because I think they look cool. Ironically though, I use VS Code for my actual coding (like a normal person).`,
-    `This is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
-  ],
-  homeUrlLabel: ':home<Enter>',
-  ariaGoHomepage: 'Go to homepage',
-  footerReturnPrefix: 'To go back to the homepage, tap/type',
-};
-
 // SEO-optimized metadata
 const seoMeta = {
   title: 'About — Sun Envidiado',
@@ -34,7 +19,7 @@ const jsonLd = {
   mainEntity: {
     '@type': 'Person',
     '@id': `${siteBase}/#person`,
-    name: siteCopy.siteName,
+    name: 'Sun Envidiado',
     url: siteBase,
     image: imageUrl,
     jobTitle: 'Software Developer',
@@ -57,6 +42,14 @@ const jsonLd = {
     interestIn: ['Coding', 'Gaming', 'Karaoke', 'Cooking'],
   },
 };
+
+const asciiArt = `
+ ▗▄▖ ▗▄▄▖  ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
+▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌  █  
+▐▛▀▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌  █  
+▐▌ ▐▌▐▙▄▞▘▝▚▄▞▘▝▚▄▞▘  █  
+                                                                                             
+`;
 ---
 
 <BaseLayout
@@ -68,11 +61,33 @@ const jsonLd = {
 >
   <div class="about-content">
     <article class="about-article" aria-labelledby="about-title">
-      <h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
-      {siteCopy.aboutMeText.map((paragraph) => <p set:html={paragraph} />)}
+      <pre class="ascii-header-title" aria-hidden="true">{asciiArt}</pre>
+      <h1 id="about-title" class="about-title sr-only">About Me</h1>
+      <p>
+        My name is <span class="highlight-yellow">Sun Envidiado</span>. I'm a software developer
+        from Manila, Philippines who builds software mainly for work and sometimes for fun.
+      </p>
+      <p>
+        Like most programmers, I've bounced around between languages and frameworks: C# and .NET,
+        JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is
+        now my current job and where most of my programming energy goes. Outside of coding, you'll
+        find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or
+        scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just
+        decent at it right now. My dream is to one day have a proper kitchen with good utensils so I
+        can work my way up to making Michelin-star quality meals.
+      </p>
+      <p>
+        The look of this website was inspired by vim and retro computers because I think they look
+        cool. Ironically though, I use VS Code for my actual coding (like a normal person).
+      </p>
+      <p>
+        This is my little corner of the internet where I share projects, ideas, and random thoughts
+        about code, gaming, and life in general. It's where I document my experiences and whatever's
+        on my mind, and a place where people can get to know me a little better.
+      </p>
       <footer class="about-footer">
-        {siteCopy.footerReturnPrefix}
-        <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+        To go back to the homepage, tap/type
+        <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
       </footer>
     </article>
   </div>

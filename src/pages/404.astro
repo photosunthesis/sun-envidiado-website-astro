@@ -1,34 +1,28 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const siteCopy = {
-  kaomojis: [
-    'ヽ(ー_ー )ノ',
-    'ヽ(´ー` )┌',
-    '┐(‘～` )┌',
-    'ヽ(　￣д￣)ノ',
-    '┐(￣ヘ￣)┌',
-    'ヽ(￣～￣　)ノ',
-    '╮(￣_￣)╭',
-    'ヽ(ˇヘˇ)ノ',
-    '┐(￣～￣)┌',
-    '╮(￣～￣)╭',
-    '┐( ´ д ` )┌',
-    '╮(︶︿︶)╭',
-    '┐(￣∀￣)┌',
-    '┐( ˘ ､ ˘ )┌',
-    '╮( ˘ ､ ˘ )╭',
-    '┐( ˘_˘ )┌',
-    '╮( ˘_˘ )╭',
-    '┐(￣ヮ￣)┌',
-  ],
-  headingText: 'Error 404',
-  notFoundMessage:
-    "The page you're looking for doesn't exist. Double-check the URL — it may be a typo, or the page could have been removed.",
-  homeUrlLabel: ':home<Enter>',
-  footerPrefix: 'Tap/type',
-  footerSuffix: 'to go back to the homepage.',
-};
+const kaomojis = [
+  'ヽ(ー_ー )ノ',
+  'ヽ(´ー` )┌',
+  '┐(‘～` )┌',
+  'ヽ(　￣д￣)ノ',
+  '┐(￣ヘ￣)┌',
+  'ヽ(￣～￣　)ノ',
+  '╮(￣_￣)╭',
+  'ヽ(ˇヘˇ)ノ',
+  '┐(￣～￣)┌',
+  '╮(￣～￣)╭',
+  '┐( ´ д ` )┌',
+  '╮(︶︿︶)╭',
+  '┐(￣∀￣)┌',
+  '┐( ˘ ､ ˘ )┌',
+  '╮( ˘ ､ ˘ )╭',
+  '┐( ˘_˘ )┌',
+  '╮( ˘_˘ )╭',
+  '┐(￣ヮ￣)┌',
+];
+
+const kaomoji = kaomojis[Math.floor(Math.random() * kaomojis.length)];
 
 // SEO metadata
 const seoMeta = {
@@ -41,19 +35,18 @@ const seoMeta = {
 <BaseLayout title={seoMeta.title} description={seoMeta.description} noIndex={seoMeta.noIndex}>
   <div class="not-found-container">
     <h1 id="404-heading" class="not-found-heading">
-      {siteCopy.headingText}
-      <i class="not-found-kaomoji">
-        {siteCopy.kaomojis[Math.floor(Math.random() * siteCopy.kaomojis.length)]}
-      </i>
+      Error 404
+      <i class="not-found-kaomoji">{kaomoji}</i>
     </h1>
 
     <p class="not-found-message" role="status" aria-live="polite" aria-labelledby="404-heading">
-      {siteCopy.notFoundMessage}
+      The page you're looking for doesn't exist. Double-check the URL — it may be a typo, or the
+      page could have been removed.
     </p>
     <p class="not-found-end">
-      {siteCopy.footerPrefix}
-      <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>
-      {siteCopy.footerSuffix}
+      Tap/type
+      <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>
+      to go back to the homepage.
     </p>
   </div>
 </BaseLayout>

@@ -14,92 +14,10 @@ if (
 ) {
   years--;
 }
-const yearsExperience = `${years}+`;
-
-const siteCopy = {
-  siteName: 'Sun Envidiado',
-  pageHeadline: 'Work',
-  intro: [
-    `I've been building software since 2019. My career started with web development and gradually shifted toward mobile development, where I discovered my focus in Flutter and Dart. Over the past ${yearsExperience} years, I've specialized in creating cross-platform applications that work seamlessly across Android, iOS, and Web.`,
-    `I approach development with attention to both functionality and design, ensuring applications not only work well but feel intuitive to use. Along the way, I've developed strong skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET), and the Firebase and Cloudflare ecosystems. `,
-    `You can view my complete resume <a href="/envidiado-resume-october-2025.pdf" target="_blank" class="highlight">here</a>.`,
-  ],
-  experienceHeadline: 'Work Experience',
-  experience: [
-    {
-      period: 'Jun 2025 — Present',
-      title: 'Flutter Developer',
-      company: 'Miquido',
-      description:
-        'Building scalable Flutter apps for fintech and emergency response. I also worked on integrating AI to provide real-time guidance and specialized health documentation.',
-      tags: ['Flutter', 'Dart', 'AI', 'BLoC', 'Riverpod'],
-    },
-    {
-      period: 'Nov 2023 — Jun 2025',
-      title: 'Flutter Developer',
-      company: 'Nextbank',
-      description:
-        'Built cross-platform apps for fintech corporations. I also developed a custom Flutter plugin for liveness checks, blending native iOS and Android code to keep things secure.',
-      tags: ['Flutter', 'Dart', 'Native iOS', 'Native Android', 'BLoC'],
-    },
-    {
-      period: 'Aug 2022 — Nov 2023',
-      title: 'Mobile Engineer',
-      company: 'Hedgehog Lab',
-      description:
-        'Worked on mobile apps for the medical and fintech sectors. I also built a Flutter plugin for document signing that hooked into native iOS and Android functionality.',
-      tags: ['Flutter', 'Dart', 'Laravel', 'PHP'],
-    },
-    {
-      period: 'Jan 2021 — Aug 2022',
-      title: 'Software Engineer',
-      company: 'CRAFT-TEC Inc.',
-      description:
-        'Led the Flutter team while wearing a few different hats as a full-stack engineer. I built out backend APIs with Laravel and helped mentor other devs on the team.',
-      tags: ['Flutter', 'Dart', 'PHP', 'Laravel'],
-    },
-    {
-      period: 'Mar 2019 — Jan 2021',
-      title: 'Web Developer',
-      company: 'Various Organizations',
-      description:
-        'Worked on a bunch of different web projects using everything from Vue and React to .NET and Shopify. This is where I really got comfortable with the Firebase stack.',
-      tags: ['JavaScript', '.NET', 'PHP', 'Firebase'],
-    },
-  ],
-  projects: [
-    {
-      title: 'rate-stuff.online',
-      description:
-        'A side project I built with React and TanStack Start, deployed on Cloudflare Workers. It was my first real deep dive into the React ecosystem and serverless architecture.',
-      link: 'https://rate-stuff.online',
-      image: rateStuffImage,
-    },
-    {
-      title: 'Bebi App',
-      description:
-        'A couples app I made for my girlfriend :D featuring image sharing, a shared calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed building.',
-      link: 'https://github.com/photosunthesis/bebi-app-flutter',
-      image: bebiAppImage,
-    },
-    {
-      title: 'Haandvaerker.dk',
-      description:
-        'A platform connecting homeowners in Denmark with craftsmen. This was the main project I worked on at CRAFT-TEC Inc., where I built both the homeowner and craftsman Flutter apps and helped out with the backend.',
-      link: 'https://www.haandvaerker.dk/',
-      image: haandvaerkerImage,
-    },
-  ],
-  projectHeadline: 'Project Showcase',
-  projectIntro:
-    "Here are some of the projects I've worked on that I'm actually allowed to talk about. A lot of my professional work is proprietary, so this is just a snippet of what I've been up to lately.",
-  homeUrlLabel: ':home<Enter>',
-  footerReturnPrefix: 'To go back to the homepage, tap/type',
-};
 
 const seoMeta = {
   title: 'Work — Sun Envidiado',
-  description: `Check out my work experience as a Flutter Developer with ${yearsExperience} years of experience building cross-platform mobile applications.`,
+  description: `Check out my work experience as a Flutter Developer with ${years} years of experience building cross-platform mobile applications.`,
   tags: ['sun envidiado', 'flutter developer', 'work experience', 'mobile developer', 'portfolio'],
 };
 
@@ -112,13 +30,21 @@ const jsonLd = {
   mainEntity: {
     '@type': 'Person',
     '@id': `${siteBase}/#person`,
-    name: siteCopy.siteName,
+    name: 'Sun Envidiado',
     url: siteBase,
     image: imageUrl,
     jobTitle: 'Flutter Developer',
     description: seoMeta.description,
   },
 };
+
+const asciiArtHeader = `
+▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖
+▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌▗▞▘
+▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ 
+▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌
+                    
+`;
 ---
 
 <BaseLayout
@@ -130,65 +56,166 @@ const jsonLd = {
 >
   <div class="work-content">
     <article class="work-article" aria-labelledby="work-title">
-      <h1 id="work-title" class="sr-only">{siteCopy.pageHeadline}</h1>
+      <pre class="ascii-header-title">{asciiArtHeader}</pre>
+      <h1 id="work-title" class="sr-only">Work</h1>
 
       <section class="intro-section">
-        {siteCopy.intro.map((paragraph) => <p set:html={paragraph} />)}
+        <p>
+          I've been building software since 2019. My career started with web development and
+          gradually shifted toward mobile development, where I discovered my focus in Flutter and
+          Dart. Over the past {years}+ years, I've specialized in creating cross-platform
+          applications that work seamlessly across Android, iOS, and Web.
+        </p>
+        <p>
+          I approach development with attention to both functionality and design, ensuring
+          applications not only work well but feel intuitive to use. Along the way, I've developed
+          strong skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET), and the Firebase
+          and Cloudflare ecosystems.
+        </p>
+        <p>
+          You can view my complete resume <a
+            href="/envidiado-resume-october-2025.pdf"
+            target="_blank"
+            class="highlight">here</a
+          >.
+        </p>
       </section>
 
       <section class="experience-section">
-        <h2 class="section-title">{siteCopy.experienceHeadline}</h2>
+        <h2 class="section-title">Work Experience</h2>
         <div class="experience-list">
-          {
-            siteCopy.experience.map((job) => (
-              <div class="experience-item">
-                <span class="experience-period">{job.period}</span>
-                <div class="experience-details">
-                  <h2 class="experience-title">
-                    {job.title} · {job.company}
-                  </h2>
-                  <p class="experience-description">{job.description}</p>
-                </div>
-              </div>
-            ))
-          }
+          <div class="experience-item">
+            <span class="experience-period">Jun 2025 — Present</span>
+            <div class="experience-details">
+              <h2 class="experience-title">Flutter Developer · Miquido</h2>
+              <p class="experience-description">
+                Building scalable Flutter apps for fintech and emergency response. I also worked on
+                integrating AI to provide real-time guidance and specialized health documentation.
+              </p>
+            </div>
+          </div>
+          <div class="experience-item">
+            <span class="experience-period">Nov 2023 — Jun 2025</span>
+            <div class="experience-details">
+              <h2 class="experience-title">Flutter Developer · Nextbank</h2>
+              <p class="experience-description">
+                Built cross-platform apps for fintech corporations. I also developed a custom
+                Flutter plugin for liveness checks, blending native iOS and Android code to keep
+                things secure.
+              </p>
+            </div>
+          </div>
+          <div class="experience-item">
+            <span class="experience-period">Aug 2022 — Nov 2023</span>
+            <div class="experience-details">
+              <h2 class="experience-title">Mobile Engineer · Hedgehog Lab</h2>
+              <p class="experience-description">
+                Worked on mobile apps for the medical and fintech sectors. I also built a Flutter
+                plugin for document signing that hooked into native iOS and Android functionality.
+              </p>
+            </div>
+          </div>
+          <div class="experience-item">
+            <span class="experience-period">Jan 2021 — Aug 2022</span>
+            <div class="experience-details">
+              <h2 class="experience-title">Software Engineer · CRAFT-TEC Inc.</h2>
+              <p class="experience-description">
+                Led the Flutter team while wearing a few different hats as a full-stack engineer. I
+                built out backend APIs with Laravel and helped mentor other devs on the team.
+              </p>
+            </div>
+          </div>
+          <div class="experience-item">
+            <span class="experience-period">Mar 2019 — Jan 2021</span>
+            <div class="experience-details">
+              <h2 class="experience-title">Web Developer · Various Organizations</h2>
+              <p class="experience-description">
+                Worked on a bunch of different web projects using everything from Vue and React to
+                .NET and Shopify. This is where I really got comfortable with the Firebase stack.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="projects-section">
-        <h2 class="section-title">{siteCopy.projectHeadline}</h2>
-        <p class="section-intro">{siteCopy.projectIntro}</p>
+        <h2 class="section-title">Project Showcase</h2>
+        <p class="section-intro">
+          Here are some of the projects I've worked on that I'm actually allowed to talk about. A
+          lot of my professional work is proprietary, so this is just a snippet of what I've been up
+          to lately.
+        </p>
         <div class="projects-list">
-          {
-            siteCopy.projects.map((project) => (
-              <a href={project.link} class="project-item" target="_blank">
-                <div class="project-image-container">
-                  {project.image ? (
-                    <Picture
-                      src={project.image}
-                      formats={['avif', 'webp']}
-                      alt={`Screenshot of ${project.title}`}
-                      class="project-image"
-                    />
-                  ) : (
-                    <div class="project-image-placeholder" />
-                  )}
-                </div>
-                <div class="project-details">
-                  <h2 class="project-title">
-                    {project.title} <span class="arrow">↗</span>
-                  </h2>
-                  <p class="project-description">{project.description}</p>
-                </div>
-              </a>
-            ))
-          }
+          <a href="https://rate-stuff.online" class="project-item" target="_blank">
+            <div class="project-image-container">
+              <Picture
+                src={rateStuffImage}
+                formats={['avif', 'webp']}
+                alt="Screenshot of rate-stuff.online"
+                class="project-image"
+              />
+            </div>
+            <div class="project-details">
+              <h2 class="project-title">
+                rate-stuff.online <span class="arrow">↗</span>
+              </h2>
+              <p class="project-description">
+                A side project I built with React and TanStack Start, deployed on Cloudflare
+                Workers. It was my first real deep dive into the React ecosystem and serverless
+                architecture.
+              </p>
+            </div>
+          </a>
+          <a
+            href="https://github.com/photosunthesis/bebi-app-flutter"
+            class="project-item"
+            target="_blank"
+          >
+            <div class="project-image-container">
+              <Picture
+                src={bebiAppImage}
+                formats={['avif', 'webp']}
+                alt="Screenshot of Bebi App"
+                class="project-image"
+              />
+            </div>
+            <div class="project-details">
+              <h2 class="project-title">
+                Bebi App <span class="arrow">↗</span>
+              </h2>
+              <p class="project-description">
+                A couples app I made for my girlfriend :D featuring image sharing, a shared
+                calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed
+                building.
+              </p>
+            </div>
+          </a>
+          <a href="https://www.haandvaerker.dk/" class="project-item" target="_blank">
+            <div class="project-image-container">
+              <Picture
+                src={haandvaerkerImage}
+                formats={['avif', 'webp']}
+                alt="Screenshot of Haandvaerker.dk"
+                class="project-image"
+              />
+            </div>
+            <div class="project-details">
+              <h2 class="project-title">
+                Haandvaerker.dk <span class="arrow">↗</span>
+              </h2>
+              <p class="project-description">
+                A platform connecting homeowners in Denmark with craftsmen. This was the main
+                project I worked on at CRAFT-TEC Inc., where I built both the homeowner and
+                craftsman Flutter apps and helped out with the backend.
+              </p>
+            </div>
+          </a>
         </div>
       </section>
 
       <footer class="work-footer">
-        {siteCopy.footerReturnPrefix}
-        <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+        To go back to the homepage, tap/type
+        <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
       </footer>
     </article>
   </div>

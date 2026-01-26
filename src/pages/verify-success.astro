@@ -4,23 +4,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const seoMeta = {
   title: 'Subscription Confirmed',
   description: 'You have successfully subscribed to the newsletter.',
-};
-
-const siteCopy = {
-  homeUrlLabel: ':home<Enter>',
-  footerReturnPrefix: 'To go to the homepage, type/tap',
+  noIndex: true,
 };
 ---
 
 <BaseLayout title={seoMeta.title} description={seoMeta.description}>
   <div class="success-content">
-    <h1 class="success-title">Subscription Confirmed!</h1>
+    <h2 class="success-title">Subscription Confirmed!</h2>
     <p class="success-message">
       Thank you for subscribing. You'll receive updates when I post new content.
     </p>
     <footer class="success-footer">
-      {siteCopy.footerReturnPrefix}
-      <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+      To go to the homepage, type/tap
+      <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
     </footer>
   </div>
 </BaseLayout>

@@ -1,28 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const siteCopy = {
-  pageHeadline: 'Contact',
-  homeUrlLabel: ':home<Enter>',
-  contactItems: [
-    {
-      label: 'Email me',
-      value: 'hello@sun-envidiado.com',
-      href: 'mailto:hello@sun-envidiado.com',
-    },
-    {
-      label: 'Connect with me on LinkedIn',
-      value: 'in/sunenvidiado/',
-      href: 'https://www.linkedin.com/in/sunenvidiado/',
-    },
-    {
-      label: 'Check out my GitHub',
-      value: '@photosunthesis',
-      href: 'https://github.com/photosunthesis',
-    },
-  ],
-};
-
 // SEO-optimized metadata
 const seoMeta = {
   title: 'Contact — Sun Envidiado',
@@ -56,6 +34,14 @@ const jsonLd = {
     sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
   },
 };
+
+const asciiHeaderTitle = `
+ ▗▄▄▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▄▖  ▗▄▄▖▗▄▄▄▖
+▐▌   ▐▌ ▐▌▐▛▚▖▐▌  █ ▐▌ ▐▌▐▌     █  
+▐▌   ▐▌ ▐▌▐▌ ▝▜▌  █ ▐▛▀▜▌▐▌     █  
+▝▚▄▄▖▝▚▄▞▘▐▌  ▐▌  █ ▐▌ ▐▌▝▚▄▄▖  █  
+                                   
+`;
 ---
 
 <BaseLayout
@@ -66,31 +52,48 @@ const jsonLd = {
   jsonLd={jsonLd}
 >
   <div class="contact-content">
-    <h1 class="sr-only">{siteCopy.pageHeadline}</h1>
+    <pre class="ascii-header-title">{asciiHeaderTitle}</pre>
+    <h1 class="sr-only">Contact</h1>
     <div class="contact-container">
       <ul class="contact-list">
-        {
-          siteCopy.contactItems.map((item) => {
-            const isExternal = /^https?:\/\//i.test(item.href);
-            return (
-              <li class="contact-row">
-                <span class="contact-type">{item.label}:</span>
-                <a
-                  class="contact-contact"
-                  href={item.href}
-                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  aria-label={`${item.label} ${item.value}`}
-                >
-                  {item.value}
-                </a>
-              </li>
-            );
-          })
-        }
+        <li class="contact-row">
+          <span class="contact-type">Email me:</span>
+          <a
+            class="contact-contact"
+            href="mailto:hello@sun-envidiado.com"
+            aria-label="Email me hello@sun-envidiado.com"
+          >
+            hello@sun-envidiado.com
+          </a>
+        </li>
+        <li class="contact-row">
+          <span class="contact-type">Connect with me on LinkedIn:</span>
+          <a
+            class="contact-contact"
+            href="https://www.linkedin.com/in/sunenvidiado/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Connect with me on LinkedIn in/sunenvidiado/"
+          >
+            in/sunenvidiado/
+          </a>
+        </li>
+        <li class="contact-row">
+          <span class="contact-type">Check out my GitHub:</span>
+          <a
+            class="contact-contact"
+            href="https://github.com/photosunthesis"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Check out my GitHub @photosunthesis"
+          >
+            @photosunthesis
+          </a>
+        </li>
       </ul>
     </div>
     <footer class="contact-footer">
-      Type/tap <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back to the homepage.
+      Type/tap <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a> to go back to the homepage.
     </footer>
   </div>
 </BaseLayout>

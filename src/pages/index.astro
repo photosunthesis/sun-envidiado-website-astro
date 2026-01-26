@@ -2,42 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SpinningSunAsciiArt from '../components/SpinningSunAsciiArt.astro';
 
-const siteCopy = {
-  siteName: 'Sun Envidiado',
-  headingText: `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`,
-  introText: `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`,
-  commands: [
-    {
-      label: ':about<Enter>',
-      token: ':about',
-      href: '/about',
-      leadingText: 'type/tap',
-      trailingText: 'to learn more about me.',
-    },
-    {
-      label: ':contact<Enter>',
-      token: ':contact',
-      href: '/contact',
-      leadingText: 'type/tap',
-      trailingText: 'to get in touch.',
-    },
-    {
-      label: ':blog<Enter>',
-      token: ':blog',
-      href: '/blog',
-      leadingText: 'type/tap',
-      trailingText: 'to read my latest blogs.',
-    },
-    {
-      label: ':work<Enter>',
-      token: ':work',
-      href: '/work',
-      leadingText: 'type/tap',
-      trailingText: 'to see my work experience.',
-    },
-  ],
-};
-
 // SEO-optimized metadata
 const seoMeta = {
   title: 'Sun Envidiado',
@@ -97,31 +61,81 @@ const jsonLd = {
     <SpinningSunAsciiArt />
     <div class="intro-container">
       <h1 class="sr-only">{seoMeta.title}</h1>
-      <span class="intro-heading">{siteCopy.headingText}</span>
-      <span class="intro-body">{siteCopy.introText}</span>
+      <span class="intro-heading"
+        >{`Hi! I'm Sun Envidiado. Welcome to my little corner on the internet.`}</span
+      >
+      <span class="intro-body"
+        >{
+          `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`
+        }</span
+      >
     </div>
     <nav class="command-hints-container" aria-label="Quick commands">
       <div class="command-hints-grid">
-        {
-          siteCopy.commands.map((cmd) => (
-            <div class="command-hint-row">
-              <span class="command-hint-type">{cmd.leadingText}</span>
-              <span class="command-hint-command">
-                <span class="command-action-group">
-                  <a
-                    class="command-action command-hint-action"
-                    href={cmd.href}
-                    data-command={cmd.token}
-                    aria-label={`Go to ${cmd.token}`}
-                  >
-                    {cmd.label}
-                  </a>
-                </span>
-              </span>
-              <span class="command-hint-description">{cmd.trailingText}</span>
-            </div>
-          ))
-        }
+        <div class="command-hint-row">
+          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-command">
+            <span class="command-action-group">
+              <a
+                class="command-action command-hint-action"
+                href="/about"
+                data-command=":about"
+                aria-label="Go to :about"
+              >
+                :about&lt;Enter&gt;
+              </a>
+            </span>
+          </span>
+          <span class="command-hint-description">to learn more about me.</span>
+        </div>
+        <div class="command-hint-row">
+          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-command">
+            <span class="command-action-group">
+              <a
+                class="command-action command-hint-action"
+                href="/contact"
+                data-command=":contact"
+                aria-label="Go to :contact"
+              >
+                :contact&lt;Enter&gt;
+              </a>
+            </span>
+          </span>
+          <span class="command-hint-description">to get in touch.</span>
+        </div>
+        <div class="command-hint-row">
+          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-command">
+            <span class="command-action-group">
+              <a
+                class="command-action command-hint-action"
+                href="/blog"
+                data-command=":blog"
+                aria-label="Go to :blog"
+              >
+                :blog&lt;Enter&gt;
+              </a>
+            </span>
+          </span>
+          <span class="command-hint-description">to read my latest blogs.</span>
+        </div>
+        <div class="command-hint-row">
+          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-command">
+            <span class="command-action-group">
+              <a
+                class="command-action command-hint-action"
+                href="/work"
+                data-command=":work"
+                aria-label="Go to :work"
+              >
+                :work&lt;Enter&gt;
+              </a>
+            </span>
+          </span>
+          <span class="command-hint-description">for work details.</span>
+        </div>
       </div>
     </nav>
   </div>
