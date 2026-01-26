@@ -1,7 +1,10 @@
 /** @type {import("prettier").Config} */
 export default {
   printWidth: 100,
-  useTabs: true,
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  useTabs: false,
   plugins: ["prettier-plugin-astro"],
   overrides: [
     {
