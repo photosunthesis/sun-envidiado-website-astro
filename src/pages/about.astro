@@ -99,7 +99,7 @@ const asciiArt = `
     text-align: left;
     padding: 0 1rem;
 
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       margin: 1.5rem 0;
       padding: 0 1rem;
     }
@@ -111,17 +111,16 @@ const asciiArt = `
     overflow-wrap: anywhere;
     padding-bottom: 3rem;
     padding-top: 1rem;
+    line-height: 1.5;
+
+    @media (max-width: 480px) {
+      white-space: normal;
+    }
   }
 
   /* Color highlight spans */
   :global(.highlight) {
     color: var(--orange);
     font-weight: bold;
-  }
-
-  @media (max-width: 480px) {
-    .about-footer {
-      white-space: normal;
-    }
   }
 </style>

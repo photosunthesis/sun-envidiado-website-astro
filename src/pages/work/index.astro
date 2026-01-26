@@ -1,8 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
 import { Picture } from 'astro:assets';
-import haandvaerkerImage from './_assets/haandvaerker-dk.png';
+import BaseLayout from '../../layouts/BaseLayout.astro';
 import bebiAppImage from './_assets/bebi-app.png';
+import haandvaerkerImage from './_assets/haandvaerker-dk.png';
 import rateStuffImage from './_assets/rate-stuff-online.png';
 
 const startDate = new Date('2019-03-01');
@@ -355,10 +355,9 @@ const projects = [
     overflow-wrap: anywhere;
     padding-bottom: 3rem;
     padding-top: 3rem;
-  }
+    line-height: 1.5;
 
-  @media (max-width: 480px) {
-    .work-footer {
+    @media (max-width: 480px) {
       white-space: normal;
     }
   }

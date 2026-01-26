@@ -142,7 +142,7 @@ pre[class*='astro-code'] {
   color: inherit !important;
   overflow-x: visible !important;
   padding: 0.8rem;
-  line-height: 0.9;
+  line-height: 1.2;
   border-radius: 0;
 
   span {
@@ -630,9 +630,6 @@ body.crt-text-ca .command-bar * {
   font-size: clamp(0.35rem, 4.2vw, 0.9rem);
   line-height: 1;
   margin: 1rem 0 2rem 0;
-  white-space: pre;
   text-align: center;
   overflow: visible;
-  user-select: none;
-  pointer-events: none;
 }
