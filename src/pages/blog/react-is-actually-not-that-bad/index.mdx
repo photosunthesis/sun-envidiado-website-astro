@@ -1,0 +1,184 @@
+---
+layout: ../../../layouts/BaseLayout.astro
+title: "React Is Actually Not That Bad"
+pubDate: "2026-01-26"
+description: "After years of avoiding React, I finally tried it with TanStack Start. From rewiring my brain for hooks to building a serverless app on Cloudflare, here's how a modern stack changed my mind."
+tags: ["react", "tanstack", "serverless", "cloudflare", "typescript"]
+cover: "react-is-actually-not-that-bad/_assets/cover.jpg"
+coverAlt: "A person giving a thumbs up with a laptop and monitor displaying the TanStack Start homepage in the background"
+---
+import { Picture } from 'astro:assets';
+import RateStuffOnline from './_assets/rate-stuff-online.png';
+
+More than half a decade in software development and I've mostly been building web apps and mobile apps. In all that time, I've never used React even though it feels like literally everyone uses it. I went through C# and .NET, PHP and Laravel, now Flutter. I've even built Flutter web apps (Flutter for mobile apps is great, but for web? it's not as fun). I used Vue.js for my capstone project back in college, so I know my way around JavaScript and the web platform.
+
+But React? Never touched it. Until now.
+
+## The Road Less Traveled
+
+When I finally decided to try React, I immediately faced the classic problem: how do I actually want to do this? Next.js is apparently THE default now. Everyone recommends it. It's what you're "supposed" to use.
+
+Naturally, I went with something else.
+
+Look, maybe I just wanted to be different. Maybe I was trying to be cool by not doing what everyone does. Probably both honestly. But I picked **TanStack Start** and I'm actually glad I did.
+
+The TanStack ecosystem, Router, Query, Form, they all play nice together. Coming from OOP heavy frameworks like Laravel, .NET, and Flutter, the shift to functional programming patterns was a bit of a brain rewire. It took me about a week to stop thinking in classes and start thinking in hooks and composable functions. Once it clicked though, it really clicked.
+
+## Serverless Broke My Brain (Temporarily)
+
+The thing that genuinely confused me was Cloudflare Workers. I'm using PostgreSQL for the database and I kept running into connection issues. Why couldn't I just instantiate the Drizzle client and query the database like normal? Why did every request fail when I tried to touch my Postgres instance? Turns out, it's because I was trying to reuse the same database connection across requests.
+
+And Workers simply don't *work* that way.
+
+Every request is a fresh execution. There's no persistent process sitting there holding onto connections like a traditional server where the SQL connection stays open, preserving the expensive TLS handshake. Here, you spin up, you do your thing, and you disappear.
+
+This means if you try to connect directly, it won't work. You'll exhaust your database's connection limit in seconds because every single user request is trying to open a brand new handshake.
+
+Enter **Cloudflare Hyperdrive**. It effectively "tricks" the database by holding those heavy TLS connections open at the edge and letting my tiny workers reuse them, making the whole thing actually possible.
+
+I'd *heard* about serverless before but I never really understood what it meant in practice. Now I get it. These little Workers are like tiny ephemeral functions that materialize when needed, do their job, and poof, gone. No idle servers burning money. And with Cloudflare Hyperdrive bridging Workers to PostgreSQL, I get edge performance without giving up my relational database.
+
+Pretty elegant once you wrap your head around it.
+
+## Hooks Make Sense Now
+
+I used to look at React code and think hooks were bizarre. `useEffect`, `useState`, `useMutation`, `useWhatever`, it all looked like magic incantations. Why is everything a "use"?
+
+Then I actually started *using* them.
+
+Turns out they're just functions. They're composable functions that let you tap into React's lifecycle and state management. Once I stopped treating them as mysterious and started treating them as building blocks, they became intuitive. It took me like a day or two to feel comfortable.
+
+I wrote an article lowkey trashing React because setting up a project was overwhelming. There were too many choices, too many configurations, too many opinions. I ended up using Astro for my personal site instead. Turns out my problem wasn't React itself, it was decision paralysis. You just gotta pick a stack, commit to it, and learn it.
+
+## The Project
+
+<Picture src={RateStuffOnline} formats={["webp", "avif"]} alt="Rate Stuff Online screenshot" />
+
+This whole learning journey materialized into [rate-stuff.online](https://rate-stuff.online), a place to rate anything. Like literally *anything*. Concrete things like restaurants and albums. Abstract things like "the concept of Mondays" or "that feeling when you remember something embarrassing from ten years ago."
+
+You just create a thing, rate it, and see what others think. Simple premise, fun to build.
+
+## The Stack
+
+Here's what powers the whole thing:
+
+- **Framework**: TanStack Start (React 19 + TypeScript + Vite 7)
+- **Routing**: TanStack Router (file based)
+- **Data Fetching**: TanStack Query with SSR integration
+- **Forms**: TanStack Form + Zod validation
+- **Backend**: Cloudflare Workers (edge runtime)
+- **Database**: PostgreSQL via Cloudflare Hyperdrive + Drizzle ORM
+- **Real time**: PartyKit (WebSockets)
+- **Storage**: Cloudflare R2 + ImageKit CDN
+- **Auth**: Better Auth
+- **Styling**: Tailwind CSS v4
+- **Monitoring**: Sentry
+
+The TanStack pieces fit together seamlessly. Drizzle is a joy because it's type safe, has clean migrations, and doesn't hide the SQL from you. And running everything on Cloudflare's edge means the app responds fast from basically anywhere.
+
+## Finding the Right Structure
+
+This part took me a while to figure out.
+
+I went through a few iterations on how to organize the codebase. First I tried the classic **layer based** approach where all controllers go in one folder, all services in another, all components somewhere else. It works fine for small projects but once things grew, I was constantly jumping between folders to work on a single feature.
+
+Then I tried **feature based** where you group everything by feature like "ratings" or "comments". That was better, but it still felt off. The boundaries weren't quite right.
+
+Eventually I landed on a **domain driven** structure and everything just made sense:
+
+```
+src/domains/
+├─ ratings/
+│  ├─ components/    # UI specific to ratings
+│  ├─ functions.ts   # Server functions (the RPC layer)
+│  ├─ service.ts     # Business logic & database calls
+│  ├─ queries.ts     # TanStack Query hooks for data fetching
+│  └─ types.ts       # Zod schemas and TypeScript types
+├─ stuff/            # A "stuff" is a thing that can be rated
+├─ comments/
+├─ users/
+│  └─ auth/          # Better Auth config lives here
+└─ ...
+```
+
+Each domain is self contained. When I'm working on ratings, everything I need is right there in one folder: the components, the server functions, the database queries, the types. I don't have to hunt through a global `components/` folder or try to remember which service file handles what.
+
+I have no idea if this is how "real" React developers structure their apps. But I can map this structure in my head easily and I can navigate quickly. That's what matters to me.
+
+Cross cutting concerns like file storage and rate limiting live in `src/infrastructure/`. Truly reusable UI components go in `src/components/ui/`. The domain folders only contain domain specific stuff.
+
+## Server Functions Are Clean
+
+TanStack Start lets you define server functions that you call from the client like regular functions. The framework handles the network boundary transparently:
+
+```typescript
+// Server: Define the function (functions.ts)
+export const createRatingFn = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .inputValidator(createRatingSchema)
+  .handler(async ({ data, context }) => {
+    // It runs on the server, so we can talk to the DB directly
+    const rating = await createRating(context.user.id, data);
+    return { success: true, data: rating };
+  });
+
+// Client: Consume it via hooks
+export function useCreateRatingMutation() {
+  // Wrap it with useServerFn to make it callable
+  const createRatingMutationFn = useServerFn(createRatingFn);
+
+  return useMutation({
+    mutationFn: (data) => createRatingMutationFn({ data }),
+  });
+}
+
+// Somewhere in the UI
+const { mutate: createRating, isPending } = useCreateRatingMutation();
+
+const handleSubmit = (data) => {
+  createRating({
+    stuffId: "...",
+    score: 8,
+    content: "Pretty good tbh",
+  });
+};
+```
+
+There's no manual fetch and no REST endpoint boilerplate. You just define it, validate with Zod, and call it. Pretty neat!
+
+## Real Time With PartyKit
+
+I wanted votes and comments to update live. PartyKit makes WebSockets trivial because you just define a "party" (essentially a room), and it handles connection management, broadcasting, and state sync for you.
+
+When someone votes, everyone looking at that rating sees the count change instantly. It makes the app feel alive instead of static.
+
+## Edge Rate Limiting
+
+Cloudflare Workers has built in rate limiting. I set up two tiers configured right in `wrangler.jsonc`:
+- **General**: 100 requests/minute
+- **Pagination**: 300 requests/minute (for scroll heavy endpoints)
+
+No external service needed. It just works.
+
+## What I Actually Learned
+
+1. **Serverless means stateless.** Every request starts fresh. You gotta stop fighting it and design around it.
+2. **The TanStack ecosystem is legit.** Router, Query, and Form are all cohesive, well documented, and they play nice together.
+3. **Hooks are just functions.** They looked weird from afar but they make total sense once you use them.
+4. **Pick a stack and commit.** The paradox of choice is worse than any framework's learning curve.
+5. **Structure matters.** Domain driven organization beats layer based when your app has any complexity.
+6. **Edge computing is wild.** Millisecond cold starts and globally distributed servers; it changes how you think about architecture.
+
+## A Note on Vendor Lock-In
+ 
+One thing to note though is the vendor lock-in. I'm using a lot of specific Cloudflare services here (Workers, Hyperdrive, R2). For this project, I don't really care because this is just a hobby project, but if you're building something critical, you should probably think about it.
+ 
+Relying heavily on proprietary features like Hyperdrive or specific Worker APIs means you can't just pick up your code and move it to AWS or Vercel tomorrow. You're kind of married to the platform. If that scares you, maybe look into headless solutions or handle the infrastructure manually yourself so you stay agnostic. Just something to keep in mind.
+
+## So Yeah... React Is Pretty Cool
+
+Six years. That's how long I avoided React. And now that I've actually used it? Yeah, it's pretty cool. Not perfect, but cool. TanStack deserves a lot of credit here because they made the whole experience way more enjoyable than I expected. The ecosystem just works together in a way that makes sense.
+
+Would I have had the same experience with Next.js? Maybe. Probably. But I'm glad I went with TanStack Start because it forced me to understand the pieces instead of just accepting "this is how everyone does it." Sometimes taking the less popular path teaches you more.
+
+Check out [rate-stuff.online](https://rate-stuff.online)!
