@@ -4,9 +4,9 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-const JWT_SECRET = import.meta.env.JWT_SECRET;
-const BLOG_AUDIENCE_ID = import.meta.env.BLOG_AUDIENCE_ID;
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const JWT_SECRET = process.env.JWT_SECRET;
+const BLOG_AUDIENCE_ID = process.env.BLOG_AUDIENCE_ID;
 
 export const GET: APIRoute = async ({ request, redirect }) => {
   const url = new URL(request.url);
@@ -32,7 +32,7 @@ export const GET: APIRoute = async ({ request, redirect }) => {
       console.error('Resend contact creation error:', error);
     }
 
-    return redirect('/verify-success');
+    return redirect('/blog-subscription-success');
   } catch (e) {
     console.error('Token verification failed:', e);
     return new Response('Invalid or expired token', { status: 400 });

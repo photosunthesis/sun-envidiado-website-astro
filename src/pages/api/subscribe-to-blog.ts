@@ -4,9 +4,9 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
-const JWT_SECRET = import.meta.env.JWT_SECRET;
-const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://sun-envidiado.com';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const JWT_SECRET = process.env.JWT_SECRET;
+const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://sun-envidiado.com';
 
 export const POST: APIRoute = async ({ request }) => {
   if (!RESEND_API_KEY || !JWT_SECRET) {
@@ -27,7 +27,7 @@ export const POST: APIRoute = async ({ request }) => {
       .setExpirationTime('24h') // Token valid for 24 hours
       .sign(secret);
 
-    const verifyUrl = `${SITE_URL}/api/verify?token=${token}`;
+    const verifyUrl = `${SITE_URL}/api/verify-blog-subscription?token=${token}`;
 
     const resend = new Resend(RESEND_API_KEY);
 

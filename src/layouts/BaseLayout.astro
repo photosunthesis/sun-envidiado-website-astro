@@ -2,6 +2,7 @@
 import '../styles/main.scss';
 import CommandBar from '../components/CommandBar.astro';
 import { buildSEOMetadata, SITE_CONFIG } from '../utils/seo';
+
 const isProd = import.meta.env && import.meta.env.PROD;
 const props = Astro.props;
 const frontmatter = props.frontmatter || props;
