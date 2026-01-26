@@ -25,13 +25,17 @@ export const GET: APIRoute = async ({ request, redirect, locals }) => {
 
     const resend = new Resend(RESEND_API_KEY);
 
-    const { error } = await resend.contacts.create({
+    const { error: createContactError } = await resend.contacts.create({
       email: email,
-      audienceId: BLOG_SEGMENT_ID, // segments are the new "audiences" in Resend
     });
 
-    if (error) {
-      console.error('Resend contact creation error:', error);
+    const { error: segmentError } = await resend.contacts.segments.add({
+      email: email,
+      segmentId: BLOG_SEGMENT_ID,
+    });
+
+    if (createContactError || segmentError) {
+      console.error('Resend contact creation error:', createContactError || segmentError);
     }
 
     return redirect('/blog-subscription-success');
