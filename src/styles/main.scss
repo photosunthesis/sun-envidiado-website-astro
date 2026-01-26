@@ -46,7 +46,7 @@ body {
   font-size: 1.069rem;
 
   @media (max-width: 480px) {
-    font-size: 15px;
+    font-size: 1rem;
   }
 }
 
@@ -224,56 +224,48 @@ $command-bar-height: 30px;
   border: 0;
 }
 
-/* CRT tunable variables (use SCSS variables) */
-$crt-red-color: rgb(218, 49, 49);
-$crt-green-color: rgb(112, 159, 115);
-$crt-blue-color: rgb(40, 129, 206);
-$crt-stripe-width: 3px; // width of a single color stripe (larger = fewer stripes)
-$crt-stripe-opacity: 0.12; // opacity for the colored stripes (higher -> more visible)
-$crt-scan-opacity: 0.7; // scanline darkness (slightly stronger)
-$crt-vignette-opacity: 0.6; // vignette darkness (0..1)
-$crt-flicker-duration: 2s; // flicker animation duration (very slow, extremely subtle)
-$crt-contrast: 1;
-$crt-saturate: 2;
+$crt-stripe-width: 3px;
+$crt-stripe-opacity: 0.12;
+$crt-scan-opacity: 0.7;
+$crt-vignette-opacity: 0.6;
 $crt-ca-blur: 0.35px;
+$crt-red: rgb(218, 49, 49);
+$crt-green: rgb(112, 159, 115);
+$crt-blue: rgb(40, 129, 206);
 
 #crt-overlay-container {
   position: fixed;
   inset: 0;
-  width: 100vw;
-  height: 100vh;
   pointer-events: none;
   z-index: 0;
 
-  /* Keep base invisible unless enabled */
   &::before,
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    pointer-events: none;
     z-index: 99999;
     display: none;
   }
 
-  /* When enabled, show tint & scanlines + RGB stripes */
   &.crt-enabled {
+    filter: contrast(1) saturate(2) hue-rotate(6deg);
+
     &::before {
-      /* Stronger chromatic stripes: horizontal RGB stripes layered with a subtle tint */
       display: block;
-      /* Add a top black fade to mask mobile status bar areas (uses safe-area inset where available) */
+      mix-blend-mode: screen;
+      opacity: 0.8;
+      transform: translate3d(2px, 0, 0);
+      filter: blur($crt-ca-blur);
       background-image:
         linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
         repeating-linear-gradient(
           to right,
-          rgba($crt-red-color, $crt-stripe-opacity) 0px,
-          rgba($crt-green-color, $crt-stripe-opacity) #{$crt-stripe-width},
-          rgba($crt-blue-color, $crt-stripe-opacity) #{($crt-stripe-width * 2)}
+          rgba($crt-red, $crt-stripe-opacity) 0,
+          rgba($crt-green, $crt-stripe-opacity) $crt-stripe-width,
+          rgba($crt-blue, $crt-stripe-opacity) calc($crt-stripe-width * 2)
         );
-      background-repeat: repeat, repeat;
-      background-size: auto, auto;
 
-      /* Mobile-only: add a top black fade for status bar, with reduced height */
       @media (max-width: 480px) {
         background-image:
           linear-gradient(
@@ -287,9 +279,9 @@ $crt-ca-blur: 0.35px;
           linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
           repeating-linear-gradient(
             to right,
-            rgba($crt-red-color, $crt-stripe-opacity) 0px,
-            rgba($crt-green-color, $crt-stripe-opacity) #{$crt-stripe-width},
-            rgba($crt-blue-color, $crt-stripe-opacity) #{($crt-stripe-width * 2)}
+            rgba($crt-red, $crt-stripe-opacity) 0,
+            rgba($crt-green, $crt-stripe-opacity) $crt-stripe-width,
+            rgba($crt-blue, $crt-stripe-opacity) calc($crt-stripe-width * 2)
           );
         background-repeat: no-repeat, repeat, repeat;
         background-size:
@@ -297,58 +289,35 @@ $crt-ca-blur: 0.35px;
           auto,
           auto;
       }
-
-      mix-blend-mode: screen;
-      opacity: 0.8;
-      transform: translate3d(2px, 0, 0);
-      filter: blur($crt-ca-blur);
     }
 
     &::after {
-      /* Vertical colored stripes and scanlines layered to enhance CA */
       display: block;
-      /* Add a radial vignette on top to focus center and darken edges.
-         Use $crt-vignette-opacity (0..1) to control strength so tweaks are predictable. */
-      // compute vignette alpha as a number and build the rgba() color string so Sass treats it as a number
-      $vignette-alpha: $crt-vignette-opacity * 0.72;
-      $vignette-rgba: 'rgba(0, 0, 0, #{$vignette-alpha})';
+      mix-blend-mode: multiply;
+      opacity: calc(0.6 + ($crt-vignette-opacity * 0.4));
+      transform: translate3d(-2px, 0, 0);
+      filter: blur(calc($crt-ca-blur * 1.2));
       background-image:
-        radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 30%, #{$vignette-rgba} 70%),
+        radial-gradient(
+          ellipse at center,
+          transparent 30%,
+          rgba(0, 0, 0, calc($crt-vignette-opacity * 0.72)) 70%
+        ),
         repeating-linear-gradient(
           90deg,
-          rgba($crt-red-color, $crt-stripe-opacity) 1px,
-          rgba($crt-green-color, $crt-stripe-opacity) 2px,
-          rgba($crt-blue-color, $crt-stripe-opacity) 3px
+          rgba($crt-red, $crt-stripe-opacity) 1px,
+          rgba($crt-green, $crt-stripe-opacity) 2px,
+          rgba($crt-blue, $crt-stripe-opacity) 3px
         ),
         repeating-linear-gradient(
           to bottom,
-          rgba(0, 0, 0, $crt-scan-opacity) 0px,
+          rgba(0, 0, 0, $crt-scan-opacity) 0,
           rgba(0, 0, 0, $crt-scan-opacity) 1px,
           transparent 1px,
           transparent 3px
         );
-      mix-blend-mode: multiply;
-      /* Slightly stronger overlay to make vignette obvious. Blend overall overlay opacity with the vignette variable
-      so changes to $crt-vignette-opacity are visible even when box-shadow alpha alone was not obvious. */
-      opacity: #{0.6 + ($crt-vignette-opacity * 0.4)};
-      $vignette-color: color.adjust(#000, $lightness: -18%);
-      /* Increase inset shadow spread and blur for a stronger falloff; use $crt-vignette-opacity for alpha. */
-      box-shadow: inset 0 0 360px
-        rgba(
-          color.channel($vignette-color, 'red', $space: rgb),
-          color.channel($vignette-color, 'green', $space: rgb),
-          color.channel($vignette-color, 'blue', $space: rgb),
-          $crt-vignette-opacity
-        );
-      transform: translate3d(-2px, 0, 0);
-      filter: blur($crt-ca-blur * 1.2);
+      box-shadow: inset 0 0 360px rgba(0, 0, 0, $crt-vignette-opacity);
     }
-
-    /* subtle animated flicker */
-    animation: crt-flicker #{$crt-flicker-duration} infinite alternate;
-    /* Use interpolation to ensure Sass doesn't try to call built-in color functions */
-    filter: #{'contrast('}#{$crt-contrast}#{')'} #{'saturate('}#{$crt-saturate}#{')'}
-      hue-rotate(6deg);
   }
 }
 
@@ -368,39 +337,21 @@ body.crt-text-ca .vim-main-content,
 body.crt-text-ca .vim-main-content *,
 body.crt-text-ca .command-bar * {
   -webkit-font-smoothing: antialiased;
-  /* Unified, balanced chromatic fringe (hard-coded offsets as requested) */
   text-shadow:
-    $rgb-offset 0 #{$crt-ca-blur} rgba($crt-red-color, 0.14),
-    -$rgb-offset 0 #{$crt-ca-blur} rgba($crt-green-color, 0.26),
-    0 $rgb-offset #{$crt-ca-blur} rgba($crt-blue-color, 0.26),
+    $rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.14),
+    -$rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.26),
+    0 $rgb-offset $crt-ca-blur rgba($crt-blue, 0.26),
     0 0 0.35px rgba(0, 0, 0, 0.1);
   filter: contrast(1.02);
-}
 
-@keyframes crt-flicker {
-  0% {
-    opacity: 0.97;
-    filter: brightness(1);
-  }
+  @media (max-width: 480px) {
+    $mobile-rgb-offset: 1px;
 
-  10% {
-    opacity: 0.98;
-    filter: brightness(1.01);
-  }
-
-  50% {
-    opacity: 0.96;
-    filter: brightness(0.99);
-  }
-
-  90% {
-    opacity: 0.98;
-    filter: brightness(1.01);
-  }
-
-  100% {
-    opacity: 0.97;
-    filter: brightness(1);
+    text-shadow:
+      $mobile-rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.14),
+      -$mobile-rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.26),
+      0 $mobile-rgb-offset $crt-ca-blur rgba($crt-blue, 0.26),
+      0 0 0.35px rgba(0, 0, 0, 0.1);
   }
 }
 
