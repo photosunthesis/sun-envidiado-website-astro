@@ -1,14 +1,16 @@
-import { Resend } from 'resend';
-import { SignJWT } from 'jose';
 import type { APIRoute } from 'astro';
+import { SignJWT } from 'jose';
+import { Resend } from 'resend';
 
 export const prerender = false;
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const JWT_SECRET = process.env.JWT_SECRET;
-const SITE_URL = process.env.PUBLIC_SITE_URL || 'https://sun-envidiado.com';
+export const POST: APIRoute = async ({ request, locals }) => {
+  const { env } = locals.runtime;
 
-export const POST: APIRoute = async ({ request }) => {
+  const RESEND_API_KEY = env.RESEND_API_KEY;
+  const JWT_SECRET = env.JWT_SECRET;
+  const SITE_URL = env.PUBLIC_SITE_URL || 'https://sun-envidiado.com';
+
   if (!RESEND_API_KEY || !JWT_SECRET) {
     return new Response(JSON.stringify({ message: 'Server configuration error' }), { status: 500 });
   }
@@ -44,7 +46,7 @@ export const POST: APIRoute = async ({ request }) => {
             <a href="${verifyUrl}" style="background-color: #09090b; color: #ffffff; padding: 12px 22px; text-decoration: none; border-radius: 4px; font-weight: 500; display: inline-block; font-size: 14px;">Confirm Subscription</a>
           </div>
           <p style="color: #666; font-size: 16px; margin-top: 32px;">
-            If you didn't request this you can safely ignore it.
+            If you didn't request this you can safely ignore this email.
           </p>
           <p style="margin: 16px 0 0; font-size: 16px; color: #333; font-weight: 600;">
             Sun Envidiado
@@ -63,6 +65,8 @@ export const POST: APIRoute = async ({ request }) => {
     return new Response(JSON.stringify({ message: 'Verification email sent' }), { status: 200 });
   } catch (e) {
     console.error(e);
-    return new Response(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
+    return new Response(JSON.stringify({ message: 'Internal server error' }), {
+      status: 500,
+    });
   }
 };

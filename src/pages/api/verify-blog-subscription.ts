@@ -1,14 +1,16 @@
-import { Resend } from 'resend';
-import { jwtVerify } from 'jose';
 import type { APIRoute } from 'astro';
+import { jwtVerify } from 'jose';
+import { Resend } from 'resend';
 
 export const prerender = false;
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const JWT_SECRET = process.env.JWT_SECRET;
-const BLOG_AUDIENCE_ID = process.env.BLOG_AUDIENCE_ID;
+export const GET: APIRoute = async ({ request, redirect, locals }) => {
+  const { env } = locals.runtime;
 
-export const GET: APIRoute = async ({ request, redirect }) => {
+  const RESEND_API_KEY = env.RESEND_API_KEY;
+  const JWT_SECRET = env.JWT_SECRET;
+  const BLOG_SEGMENT_ID = env.BLOG_SEGMENT_ID;
+
   const url = new URL(request.url);
   const token = url.searchParams.get('token');
 
@@ -25,7 +27,7 @@ export const GET: APIRoute = async ({ request, redirect }) => {
 
     const { error } = await resend.contacts.create({
       email: email,
-      segmentId: BLOG_AUDIENCE_ID,
+      audienceId: BLOG_SEGMENT_ID, // segments are the new "audiences" in Resend
     });
 
     if (error) {
