@@ -74,15 +74,15 @@ Here's what powers the whole thing:
 - **Styling**: Tailwind CSS v4
 - **Monitoring**: Sentry
 
-The TanStack pieces fit together seamlessly. Drizzle is a joy because it's type safe, has clean migrations, and doesn't hide the SQL from you. And running everything on Cloudflare's edge means the app responds fast from basically anywhere.
+The TanStack pieces fit together seamlessly. Drizzle felt really familiar to use. Its approach to database setup reminded me of the flow I'm used to with Laravel, which made the whole thing a lot more pleasant. Plus, running everything on Cloudflare's edge ensures the app responds fast from anywhere.
 
-## Finding the Right Structure
+## Finding the Right Folder Structure
 
 This part took me a while to figure out.
 
 I went through a few iterations on how to organize the codebase. First I tried the classic **layer based** approach where all controllers go in one folder, all services in another, all components somewhere else. It works fine for small projects but once things grew, I was constantly jumping between folders to work on a single feature.
 
-Then I tried **feature based** where you group everything by feature like "ratings" or "comments". That was better, but it still felt off. The boundaries weren't quite right.
+Then I tried **feature based** where you group everything by feature like "create ratings" or "rate stuff". That was better, but it still felt off. The boundaries weren't quite right.
 
 Eventually I landed on a **domain driven** structure and everything just made sense:
 
