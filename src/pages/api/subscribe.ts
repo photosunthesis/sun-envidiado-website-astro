@@ -1,5 +1,6 @@
 import { Resend } from 'resend';
 import { SignJWT } from 'jose';
+import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
@@ -7,7 +8,7 @@ const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
 const JWT_SECRET = import.meta.env.JWT_SECRET;
 const SITE_URL = import.meta.env.PUBLIC_SITE_URL || 'https://sun-envidiado.com';
 
-export async function POST({ request }) {
+export const POST: APIRoute = async ({ request }) => {
   if (!RESEND_API_KEY || !JWT_SECRET) {
     return new Response(JSON.stringify({ message: 'Server configuration error' }), { status: 500 });
   }
@@ -64,4 +65,4 @@ export async function POST({ request }) {
     console.error(e);
     return new Response(JSON.stringify({ message: 'Internal server error' }), { status: 500 });
   }
-}
+};

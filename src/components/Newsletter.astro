@@ -1,11 +1,13 @@
 ---
+
 ---
 
 <section class="newsletter-section">
   <div class="newsletter-container">
     <p class="newsletter-desc">
-      You can get notified via email when I publish new posts. No spam, just updates.
-      You can also <a href="/rss.xml">subscribe via RSS</a>.
+      Get notified via email when I publish new blog posts. No spam. I promise! You can also <a
+        href="/rss.xml">subscribe via RSS</a
+      >.
     </p>
 
     <form class="newsletter-form" id="newsletter-form">
@@ -19,9 +21,7 @@
           required
           class="newsletter-input"
         />
-        <button type="submit" class="newsletter-btn">
-          Subscribe
-        </button>
+        <button type="submit" class="newsletter-btn"> Subscribe </button>
       </div>
       <div class="form-message" id="form-message" aria-live="polite"></div>
     </form>
@@ -64,7 +64,7 @@
           messageEl.textContent = data.message || 'Something went wrong. Please try again.';
           messageEl.classList.add('error');
         }
-      } catch (err) {
+      } catch {
         messageEl.textContent = 'Network error. Please try again later.';
         messageEl.classList.add('error');
       } finally {
@@ -104,7 +104,7 @@
       color: var(--comment);
       text-decoration: underline;
       text-underline-offset: 2px;
-      
+
       &:hover {
         color: var(--cyan);
       }
@@ -166,11 +166,11 @@
   .form-message {
     margin-top: 1rem;
     font-size: 0.9rem;
-    
+
     &.success {
       color: var(--green);
     }
-    
+
     &.error {
       color: var(--red);
     }
