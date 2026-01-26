@@ -14,9 +14,7 @@ export const GET: APIRoute = async ({ request, redirect, locals }) => {
   const url = new URL(request.url);
   const token = url.searchParams.get('token');
 
-  if (!token) {
-    return new Response('Missing token', { status: 400 });
-  }
+  if (!token) return new Response('Missing token', { status: 400 });
 
   try {
     const secret = new TextEncoder().encode(JWT_SECRET);
@@ -25,22 +23,21 @@ export const GET: APIRoute = async ({ request, redirect, locals }) => {
 
     const resend = new Resend(RESEND_API_KEY);
 
-    const { error: createContactError } = await resend.contacts.create({
+    const { data: contact, error: createContactError } = await resend.contacts.create({
       email: email,
     });
 
+    if (createContactError || !contact) throw new Error('Failed to create contact');
+
     const { error: segmentError } = await resend.contacts.segments.add({
-      email: email,
+      contactId: contact!.id,
       segmentId: BLOG_SEGMENT_ID,
     });
 
-    if (createContactError || segmentError) {
-      console.error('Resend contact creation error:', createContactError || segmentError);
-    }
+    if (segmentError) throw new Error('Failed to add contact to segment');
 
     return redirect('/blog-subscription-success');
-  } catch (e) {
-    console.error('Token verification failed:', e);
-    return new Response('Invalid or expired token', { status: 400 });
+  } catch {
+    return new Response('Something went wrong: ', { status: 500 });
   }
 };
