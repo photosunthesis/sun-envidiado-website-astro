@@ -1,125 +1,125 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const siteCopy = {
-	pageHeadline: "Contact",
-	homeUrlLabel: ":home<Enter>",
-	contactItems: [
-		{
-			label: "Email me",
-			value: "hello@sun-envidiado.com",
-			href: "mailto:hello@sun-envidiado.com",
-		},
-		{
-			label: "Connect with me on LinkedIn",
-			value: "in/sunenvidiado/",
-			href: "https://www.linkedin.com/in/sunenvidiado/",
-		},
-		{
-			label: "Check out my GitHub",
-			value: "@photosunthesis",
-			href: "https://github.com/photosunthesis",
-		},
-	],
+  pageHeadline: 'Contact',
+  homeUrlLabel: ':home<Enter>',
+  contactItems: [
+    {
+      label: 'Email me',
+      value: 'hello@sun-envidiado.com',
+      href: 'mailto:hello@sun-envidiado.com',
+    },
+    {
+      label: 'Connect with me on LinkedIn',
+      value: 'in/sunenvidiado/',
+      href: 'https://www.linkedin.com/in/sunenvidiado/',
+    },
+    {
+      label: 'Check out my GitHub',
+      value: '@photosunthesis',
+      href: 'https://github.com/photosunthesis',
+    },
+  ],
 };
 
 // SEO-optimized metadata
 const seoMeta = {
-	title: "Contact — Sun Envidiado",
-	description:
-		"Wanna chat? Hit me up via email, LinkedIn, or GitHub. Always down to talk about code, games, or just connect with cool people.",
-	tags: ["contact sun envidiado", "get in touch", "developer contact", "email", "connect"],
+  title: 'Contact — Sun Envidiado',
+  description:
+    'Wanna chat? Hit me up via email, LinkedIn, or GitHub. Always down to talk about code, games, or just connect with cool people.',
+  tags: ['contact sun envidiado', 'get in touch', 'developer contact', 'email', 'connect'],
 };
 
 // JSON-LD Structured Data
-const siteBase = Astro.site || "https://sun-envidiado.com";
-const imageUrl = new URL("/default.png", siteBase).toString();
+const siteBase = Astro.site || 'https://sun-envidiado.com';
+const imageUrl = new URL('/default.png', siteBase).toString();
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "ContactPage",
-	name: seoMeta.title,
-	description: seoMeta.description,
-	url: `${siteBase}/contact`,
-	mainEntity: {
-		"@type": "Person",
-		"@id": `${siteBase}/#person`,
-		name: "Sun Envidiado",
-		email: "hello@sun-envidiado.com",
-		url: siteBase,
-		image: imageUrl,
-		contactPoint: {
-			"@type": "ContactPoint",
-			email: "hello@sun-envidiado.com",
-			contactType: "Professional Inquiries",
-		},
-		sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
-	},
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: seoMeta.title,
+  description: seoMeta.description,
+  url: `${siteBase}/contact`,
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${siteBase}/#person`,
+    name: 'Sun Envidiado',
+    email: 'hello@sun-envidiado.com',
+    url: siteBase,
+    image: imageUrl,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'hello@sun-envidiado.com',
+      contactType: 'Professional Inquiries',
+    },
+    sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
+  },
 };
 ---
 
 <BaseLayout
-	title={seoMeta.title}
-	description={seoMeta.description}
-	tags={seoMeta.tags}
-	type="website"
-	jsonLd={jsonLd}
+  title={seoMeta.title}
+  description={seoMeta.description}
+  tags={seoMeta.tags}
+  type="website"
+  jsonLd={jsonLd}
 >
-	<div class="contact-content">
-		<h1 class="sr-only">{siteCopy.pageHeadline}</h1>
-		<div class="contact-container">
-			<ul class="contact-list">
-				{
-					siteCopy.contactItems.map((item) => {
-						const isExternal = /^https?:\/\//i.test(item.href);
-						return (
-							<li class="contact-row">
-								<span class="contact-type">{item.label}:</span>
-								<a
-									class="contact-contact"
-									href={item.href}
-									{...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-									aria-label={`${item.label} ${item.value}`}
-								>
-									{item.value}
-								</a>
-							</li>
-						);
-					})
-				}
-			</ul>
-		</div>
-		<footer class="contact-footer">
-			Type <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back to the homepage.
-		</footer>
-	</div>
+  <div class="contact-content">
+    <h1 class="sr-only">{siteCopy.pageHeadline}</h1>
+    <div class="contact-container">
+      <ul class="contact-list">
+        {
+          siteCopy.contactItems.map((item) => {
+            const isExternal = /^https?:\/\//i.test(item.href);
+            return (
+              <li class="contact-row">
+                <span class="contact-type">{item.label}:</span>
+                <a
+                  class="contact-contact"
+                  href={item.href}
+                  {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  aria-label={`${item.label} ${item.value}`}
+                >
+                  {item.value}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+    <footer class="contact-footer">
+      Type/tap <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a> to go back to the homepage.
+    </footer>
+  </div>
 </BaseLayout>
 
 <style lang="scss">
-	.contact-content {
-		max-width: 600px;
-		margin: 1.5rem;
-		color: var(--foreground);
-		text-align: left;
-		padding: 0 1rem;
+  .contact-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    text-align: left;
+    padding: 0 1rem;
 
-		@media (max-width: 600px) {
-			margin: 1.5rem 0;
-			padding: 0 1rem;
-		}
-	}
+    @media (max-width: 600px) {
+      margin: 1.5rem 0;
+      padding: 0 1rem;
+    }
+  }
 
-	.contact-list {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
+  .contact-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
 
-	.contact-row {
-		margin-bottom: 0.8rem;
-	}
+  .contact-row {
+    margin-bottom: 0.8rem;
+  }
 
-	.contact-footer {
-		color: var(--comment);
-	}
+  .contact-footer {
+    color: var(--comment);
+  }
 </style>

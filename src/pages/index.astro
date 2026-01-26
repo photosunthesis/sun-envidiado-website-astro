@@ -1,128 +1,128 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import SpinningSunAsciiArt from "../components/SpinningSunAsciiArt.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SpinningSunAsciiArt from '../components/SpinningSunAsciiArt.astro';
 
 const siteCopy = {
-	siteName: "Sun Envidiado",
-	headingText: `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`,
-	introText: `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`,
-	commands: [
-		{
-			label: ":about<Enter>",
-			token: ":about",
-			href: "/about",
-			leadingText: "type",
-			trailingText: "to learn more about me.",
-		},
-		{
-			label: ":contact<Enter>",
-			token: ":contact",
-			href: "/contact",
-			leadingText: "type",
-			trailingText: "to get in touch.",
-		},
-		{
-			label: ":blog<Enter>",
-			token: ":blog",
-			href: "/blog",
-			leadingText: "type",
-			trailingText: "to read my latest blogs.",
-		},
-		{
-			label: ":work<Enter>",
-			token: ":work",
-			href: "/work",
-			leadingText: "type",
-			trailingText: "to see my work experience.",
-		},
-	],
+  siteName: 'Sun Envidiado',
+  headingText: `Hi! I'm Sun Envidiado.\nWelcome to my little corner on the internet.`,
+  introText: `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`,
+  commands: [
+    {
+      label: ':about<Enter>',
+      token: ':about',
+      href: '/about',
+      leadingText: 'type/tap',
+      trailingText: 'to learn more about me.',
+    },
+    {
+      label: ':contact<Enter>',
+      token: ':contact',
+      href: '/contact',
+      leadingText: 'type/tap',
+      trailingText: 'to get in touch.',
+    },
+    {
+      label: ':blog<Enter>',
+      token: ':blog',
+      href: '/blog',
+      leadingText: 'type/tap',
+      trailingText: 'to read my latest blogs.',
+    },
+    {
+      label: ':work<Enter>',
+      token: ':work',
+      href: '/work',
+      leadingText: 'type/tap',
+      trailingText: 'to see my work experience.',
+    },
+  ],
 };
 
 // SEO-optimized metadata
 const seoMeta = {
-	title: "Sun Envidiado",
-	description:
-		"Hey, I'm Sun! I code stuff (mostly Flutter these days), game way too much, and sing my heart out at karaoke. This is my little corner of the internet where I share thoughts on code, games, and whatever else is on my mind.",
-	tags: ["sun envidiado", "personal website", "developer blog", "gaming", "coding", "manila"],
+  title: 'Sun Envidiado',
+  description:
+    "Hey, I'm Sun! I code stuff (mostly Flutter these days), game way too much, and sing my heart out at karaoke. This is my little corner of the internet where I share thoughts on code, games, and whatever else is on my mind.",
+  tags: ['sun envidiado', 'personal website', 'developer blog', 'gaming', 'coding', 'manila'],
 };
 
 // JSON-LD Structured Data for better SEO
-const siteBase = Astro.site ?? "https://sun-envidiado.com";
-const imageUrl = new URL("/default.png", siteBase).toString();
+const siteBase = Astro.site ?? 'https://sun-envidiado.com';
+const imageUrl = new URL('/default.png', siteBase).toString();
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@graph": [
-		{
-			"@type": "WebSite",
-			"@id": `${siteBase}/#website`,
-			url: siteBase,
-			name: "Sun Envidiado",
-			description: seoMeta.description,
-			inLanguage: "en-US",
-		},
-		{
-			"@type": "Person",
-			"@id": `${siteBase}/#person`,
-			name: "Sun Envidiado",
-			url: siteBase,
-			image: imageUrl,
-			jobTitle: "Software Developer",
-			description: seoMeta.description,
-			knowsAbout: [
-				"Flutter",
-				"Dart",
-				"JavaScript",
-				"Web Development",
-				"Mobile Development",
-				"C#",
-				".NET",
-				"PHP",
-				"Laravel",
-			],
-			sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
-		},
-	],
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': `${siteBase}/#website`,
+      url: siteBase,
+      name: 'Sun Envidiado',
+      description: seoMeta.description,
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'Person',
+      '@id': `${siteBase}/#person`,
+      name: 'Sun Envidiado',
+      url: siteBase,
+      image: imageUrl,
+      jobTitle: 'Software Developer',
+      description: seoMeta.description,
+      knowsAbout: [
+        'Flutter',
+        'Dart',
+        'JavaScript',
+        'Web Development',
+        'Mobile Development',
+        'C#',
+        '.NET',
+        'PHP',
+        'Laravel',
+      ],
+      sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
+    },
+  ],
 };
 ---
 
 <BaseLayout
-	title={seoMeta.title}
-	description={seoMeta.description}
-	tags={seoMeta.tags}
-	type="website"
-	jsonLd={jsonLd}
+  title={seoMeta.title}
+  description={seoMeta.description}
+  tags={seoMeta.tags}
+  type="website"
+  jsonLd={jsonLd}
 >
-	<div class="index-main-content">
-		<SpinningSunAsciiArt />
-		<div class="intro-container">
-			<h1 class="sr-only">{seoMeta.title}</h1>
-			<span class="intro-heading">{siteCopy.headingText}</span>
-			<span class="intro-body">{siteCopy.introText}</span>
-		</div>
-		<nav class="command-hints-container" aria-label="Quick commands">
-			<div class="command-hints-grid">
-				{
-					siteCopy.commands.map((cmd) => (
-						<div class="command-hint-row">
-							<span class="command-hint-type">{cmd.leadingText}</span>
-							<span class="command-hint-command">
-								<span class="command-action-group">
-									<a
-										class="command-action command-hint-action"
-										href={cmd.href}
-										data-command={cmd.token}
-										aria-label={`Go to ${cmd.token}`}
-									>
-										{cmd.label}
-									</a>
-								</span>
-							</span>
-							<span class="command-hint-description">{cmd.trailingText}</span>
-						</div>
-					))
-				}
-			</div>
-		</nav>
-	</div>
+  <div class="index-main-content">
+    <SpinningSunAsciiArt />
+    <div class="intro-container">
+      <h1 class="sr-only">{seoMeta.title}</h1>
+      <span class="intro-heading">{siteCopy.headingText}</span>
+      <span class="intro-body">{siteCopy.introText}</span>
+    </div>
+    <nav class="command-hints-container" aria-label="Quick commands">
+      <div class="command-hints-grid">
+        {
+          siteCopy.commands.map((cmd) => (
+            <div class="command-hint-row">
+              <span class="command-hint-type">{cmd.leadingText}</span>
+              <span class="command-hint-command">
+                <span class="command-action-group">
+                  <a
+                    class="command-action command-hint-action"
+                    href={cmd.href}
+                    data-command={cmd.token}
+                    aria-label={`Go to ${cmd.token}`}
+                  >
+                    {cmd.label}
+                  </a>
+                </span>
+              </span>
+              <span class="command-hint-description">{cmd.trailingText}</span>
+            </div>
+          ))
+        }
+      </div>
+    </nav>
+  </div>
 </BaseLayout>

@@ -1,114 +1,114 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 // Centralized in-file copy for About page
 const siteCopy = {
-	siteName: "Sun Envidiado",
-	pageHeadline: "About Me",
-	aboutMeText: [
-		`My name is <span class="highlight-yellow">Sun Envidiado</span>. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.`,
-		`Like most programmers, I've bounced around between languages and frameworks: C# and .NET, JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.`,
-		`The look of this website was inspired by vim and retro computers because I think they look cool. Ironically though, I use VS Code for my actual coding (like a normal person).`,
-		`This is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
-	],
-	homeUrlLabel: ":home<Enter>",
-	ariaGoHomepage: "Go to homepage",
-	footerReturnPrefix: "To go back to the homepage, type",
+  siteName: 'Sun Envidiado',
+  pageHeadline: 'About Me',
+  aboutMeText: [
+    `My name is <span class="highlight-yellow">Sun Envidiado</span>. I'm a software developer from Manila, Philippines who builds software mainly for work and sometimes for fun.`,
+    `Like most programmers, I've bounced around between languages and frameworks: C# and .NET, JavaScript and Vue.js, PHP and Laravel, until I somehow landed on Dart and Flutter, which is now my current job and where most of my programming energy goes. Outside of coding, you'll find me gaming (completely hooked on Helldivers 2 right now), doing karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too, though I'm barely just decent at it right now. My dream is to one day have a proper kitchen with good utensils so I can work my way up to making Michelin-star quality meals.`,
+    `The look of this website was inspired by vim and retro computers because I think they look cool. Ironically though, I use VS Code for my actual coding (like a normal person).`,
+    `This is my little corner of the internet where I share projects, ideas, and random thoughts about code, gaming, and life in general. It's where I document my experiences and whatever's on my mind, and a place where people can get to know me a little better.`,
+  ],
+  homeUrlLabel: ':home<Enter>',
+  ariaGoHomepage: 'Go to homepage',
+  footerReturnPrefix: 'To go back to the homepage, tap/type',
 };
 
 // SEO-optimized metadata
 const seoMeta = {
-	title: "About — Sun Envidiado",
-	description:
-		"Hi! I'm Sun, a developer from Manila who builds stuff with Flutter. When I'm not coding, I'm probably gaming (Helldivers 2 anyone?), doing karaoke, or scrolling TikTok. This is where I share what I'm up to and what's on my mind.",
-	tags: ["about sun envidiado", "developer manila", "personal site", "flutter", "gaming"],
+  title: 'About — Sun Envidiado',
+  description:
+    "Hi! I'm Sun, a developer from Manila who builds stuff with Flutter. When I'm not coding, I'm probably gaming (Helldivers 2 anyone?), doing karaoke, or scrolling TikTok. This is where I share what I'm up to and what's on my mind.",
+  tags: ['about sun envidiado', 'developer manila', 'personal site', 'flutter', 'gaming'],
 };
 
 // JSON-LD Structured Data
-const siteBase = Astro.site || "https://sun-envidiado.com";
-const imageUrl = new URL("/default.png", siteBase).toString();
+const siteBase = Astro.site || 'https://sun-envidiado.com';
+const imageUrl = new URL('/default.png', siteBase).toString();
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "ProfilePage",
-	mainEntity: {
-		"@type": "Person",
-		"@id": `${siteBase}/#person`,
-		name: siteCopy.siteName,
-		url: siteBase,
-		image: imageUrl,
-		jobTitle: "Software Developer",
-		description: seoMeta.description,
-		knowsAbout: [
-			"Flutter",
-			"Dart",
-			"JavaScript",
-			"Vue.js",
-			"C#",
-			".NET",
-			"PHP",
-			"Laravel",
-			"Web Development",
-			"Mobile Development",
-		],
-		alumniOf: "Manila, Philippines",
-		sameAs: ["https://github.com/photosunthesis", "https://www.linkedin.com/in/sunenvidiado/"],
-		email: "mailto:hello@sun-envidiado.com",
-		interestIn: ["Coding", "Gaming", "Karaoke", "Cooking"],
-	},
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${siteBase}/#person`,
+    name: siteCopy.siteName,
+    url: siteBase,
+    image: imageUrl,
+    jobTitle: 'Software Developer',
+    description: seoMeta.description,
+    knowsAbout: [
+      'Flutter',
+      'Dart',
+      'JavaScript',
+      'Vue.js',
+      'C#',
+      '.NET',
+      'PHP',
+      'Laravel',
+      'Web Development',
+      'Mobile Development',
+    ],
+    alumniOf: 'Manila, Philippines',
+    sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
+    email: 'mailto:hello@sun-envidiado.com',
+    interestIn: ['Coding', 'Gaming', 'Karaoke', 'Cooking'],
+  },
 };
 ---
 
 <BaseLayout
-	title={seoMeta.title}
-	description={seoMeta.description}
-	tags={seoMeta.tags}
-	type="website"
-	jsonLd={jsonLd}
+  title={seoMeta.title}
+  description={seoMeta.description}
+  tags={seoMeta.tags}
+  type="website"
+  jsonLd={jsonLd}
 >
-	<div class="about-content">
-		<article class="about-article" aria-labelledby="about-title">
-			<h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
-			{siteCopy.aboutMeText.map((paragraph) => <p set:html={paragraph} />)}
-			<footer class="about-footer">
-				{siteCopy.footerReturnPrefix}
-				<a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
-			</footer>
-		</article>
-	</div>
+  <div class="about-content">
+    <article class="about-article" aria-labelledby="about-title">
+      <h1 id="about-title" class="about-title sr-only">{siteCopy.pageHeadline}</h1>
+      {siteCopy.aboutMeText.map((paragraph) => <p set:html={paragraph} />)}
+      <footer class="about-footer">
+        {siteCopy.footerReturnPrefix}
+        <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+      </footer>
+    </article>
+  </div>
 </BaseLayout>
 
 <style lang="scss">
-	.about-content {
-		max-width: 600px;
-		margin: 1.5rem;
-		color: var(--foreground);
-		text-align: left;
-		padding: 0 1rem;
+  .about-content {
+    max-width: 600px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    text-align: left;
+    padding: 0 1rem;
 
-		@media (max-width: 600px) {
-			margin: 1.5rem 0;
-			padding: 0 1rem;
-		}
-	}
+    @media (max-width: 600px) {
+      margin: 1.5rem 0;
+      padding: 0 1rem;
+    }
+  }
 
-	.about-footer {
-		color: var(--comment);
-		white-space: nowrap;
-		overflow-wrap: anywhere;
-		padding-bottom: 3rem;
-		padding-top: 1rem;
-	}
+  .about-footer {
+    color: var(--comment);
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+    padding-bottom: 3rem;
+    padding-top: 1rem;
+  }
 
-	/* Color highlight spans */
-	:global(.highlight-yellow) {
-		color: var(--yellow);
-		font-weight: bold;
-	}
+  /* Color highlight spans */
+  :global(.highlight-yellow) {
+    color: var(--yellow);
+    font-weight: bold;
+  }
 
-	@media (max-width: 480px) {
-		.about-footer {
-			white-space: normal;
-		}
-	}
+  @media (max-width: 480px) {
+    .about-footer {
+      white-space: normal;
+    }
+  }
 </style>

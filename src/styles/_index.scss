@@ -111,12 +111,8 @@ $max-content-width: 500px;
 
 // Medium screens - allow wider container for better alignment
 @media (min-width: 600px) {
-  .command-hints-container {
-    max-width: calc(100vw - 4rem);
-  }
-
   .command-hints-grid {
-    gap: 0.5rem 1.5ch;
+    gap: 0.5rem 0.1ch;
   }
 
   .command-hint-type {
@@ -128,11 +124,11 @@ $max-content-width: 500px;
   }
 }
 
-// Mobile responsive - stack vertically 
+// Mobile responsive - stack vertically
 @media (max-width: 600px) {
   .index-main-content {
     padding: 0 1rem;
-    margin-top: -4rem
+    margin-top: -4rem;
   }
 
   .command-hints-grid {
@@ -161,17 +157,17 @@ $max-content-width: 500px;
     margin-right: 0;
 
     &::after {
-      content: " ";
+      content: ' ';
     }
   }
 
   .command-hint-command {
     &::before {
-      content: " ";
+      content: ' ';
     }
 
     &::after {
-      content: " ";
+      content: ' ';
     }
   }
 

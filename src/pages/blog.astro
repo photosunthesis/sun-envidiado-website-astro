@@ -1,13 +1,13 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Newsletter from "../components/Newsletter.astro";
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Newsletter from '../components/Newsletter.astro';
 
 const postModules = import.meta.glob<{
-	frontmatter?: { title?: string; pubDate?: string };
+  frontmatter?: { title?: string; pubDate?: string };
 }>(
-	// Include .md and .mdx files, and also allow index.md(x) inside directories
-	"./blog/**/*.{md,mdx}",
-	{ eager: true },
+  // Include .md and .mdx files, and also allow index.md(x) inside directories
+  './blog/**/*.{md,mdx}',
+  { eager: true },
 );
 
 type Frontmatter = { title?: string; pubDate?: string };
@@ -16,48 +16,48 @@ type PublishedPost = { title: string; pubDate: Date; url: string; index: number 
 
 // Helpers
 const slugFromPath = (path: string) => {
-	// Remove the .md or .mdx extension
-	const withoutExt = path.replace(/\.mdx?$/, "");
-	// Get everything after /blog/
-	const afterBlog = withoutExt.split("/blog/")[1];
-	// If it ends with /index, remove that part to get clean URLs
-	return afterBlog?.replace(/\/index$/, "") ?? "";
+  // Remove the .md or .mdx extension
+  const withoutExt = path.replace(/\.mdx?$/, '');
+  // Get everything after /blog/
+  const afterBlog = withoutExt.split('/blog/')[1];
+  // If it ends with /index, remove that part to get clean URLs
+  return afterBlog?.replace(/\/index$/, '') ?? '';
 };
 
 const parsePubDate = (value?: unknown): Date | undefined => {
-	if (!value) return undefined;
-	const d = new Date(String(value));
-	return Number.isFinite(d.valueOf()) ? d : undefined;
+  if (!value) return undefined;
+  const d = new Date(String(value));
+  return Number.isFinite(d.valueOf()) ? d : undefined;
 };
 
 const makeCandidate = (path: string, mod: { frontmatter?: Frontmatter }): CandidatePost => {
-	const slug = slugFromPath(path);
-	const fm = mod.frontmatter ?? {};
-	return {
-		title: String(fm.title ?? slug),
-		pubDate: parsePubDate(fm.pubDate),
-		url: `/blog/${slug}`,
-	};
+  const slug = slugFromPath(path);
+  const fm = mod.frontmatter ?? {};
+  return {
+    title: String(fm.title ?? slug),
+    pubDate: parsePubDate(fm.pubDate),
+    url: `/blog/${slug}`,
+  };
 };
 
 // Build, filter, sort and index posts in a clear pipeline
 const candidatePosts: CandidatePost[] = Object.entries(postModules).map(([p, m]) =>
-	makeCandidate(p, m),
+  makeCandidate(p, m),
 );
 
 const posts: PublishedPost[] = candidatePosts
-	.filter((c): c is CandidatePost & { pubDate: Date } => Boolean(c.pubDate))
-	.sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
-	.map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i }));
+  .filter((c): c is CandidatePost & { pubDate: Date } => Boolean(c.pubDate))
+  .sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
+  .map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i }));
 
 // Group posts by year using reduce for clarity
 const postsByYear: Record<number, PublishedPost[]> = posts.reduce(
-	(acc, p) => {
-		const year = p.pubDate.getFullYear();
-		(acc[year] ||= []).push(p);
-		return acc;
-	},
-	{} as Record<number, PublishedPost[]>,
+  (acc, p) => {
+    const year = p.pubDate.getFullYear();
+    (acc[year] ||= []).push(p);
+    return acc;
+  },
+  {} as Record<number, PublishedPost[]>,
 );
 
 // Keep older variable names compatible with templates below
@@ -66,106 +66,106 @@ const grouped = postsByYear;
 
 // Centralized page copy for blog index
 const siteCopy = {
-	homeUrlLabel: ":home<Enter>",
-	blogIndexLabel: ":blog[index]",
-	pageHeadline: "Blog",
-	contentStartPrefix: "Select a blog post by typing",
-	contentReturnPrefix: "To return to the homepage, type",
-	ariaOpenBlogIndex: "Open blog index",
-	ariaGoHomepage: "Go to homepage",
+  homeUrlLabel: ':home<Enter>',
+  blogIndexLabel: ':blog[index]',
+  pageHeadline: 'Blog',
+  contentStartPrefix: 'Select a blog post by tapping/typing',
+  contentReturnPrefix: 'To return to the homepage, tap/type',
+  ariaOpenBlogIndex: 'Open blog index',
+  ariaGoHomepage: 'Go to homepage',
 };
 
 // SEO-optimized metadata
 const seoMeta = {
-	title: "Blog — Sun Envidiado",
-	description:
-		"Random thoughts from Sun about coding, gaming, life updates, and whatever else crosses my mind. No formal structure, just honest musings about tech and everything in between.",
-	tags: [
-		"sun envidiado blog",
-		"developer blog",
-		"coding thoughts",
-		"gaming blog",
-		"personal blog",
-		"tech musings",
-	],
+  title: 'Blog — Sun Envidiado',
+  description:
+    'Random thoughts from Sun about coding, gaming, life updates, and whatever else crosses my mind. No formal structure, just honest musings about tech and everything in between.',
+  tags: [
+    'sun envidiado blog',
+    'developer blog',
+    'coding thoughts',
+    'gaming blog',
+    'personal blog',
+    'tech musings',
+  ],
 };
 
 // SEO / Structured Data
-const siteBase = Astro.site || "https://sun-envidiado.com";
+const siteBase = Astro.site || 'https://sun-envidiado.com';
 
 // Optimized JSON-LD for a blog with individual posts
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "Blog",
-	"@id": `${siteBase}/blog#blog`,
-	name: seoMeta.title,
-	description: seoMeta.description,
-	url: `${siteBase}/blog`,
-	author: {
-		"@type": "Person",
-		"@id": `${siteBase}/#person`,
-		name: "Sun Envidiado",
-	},
-	blogPost: postList.map((p) => ({
-		"@type": "BlogPosting",
-		headline: p.title,
-		url: new URL(p.url, siteBase).toString(),
-		datePublished: p.pubDate.toISOString(),
-		author: {
-			"@type": "Person",
-			name: "Sun Envidiado",
-		},
-	})),
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  '@id': `${siteBase}/blog#blog`,
+  name: seoMeta.title,
+  description: seoMeta.description,
+  url: `${siteBase}/blog`,
+  author: {
+    '@type': 'Person',
+    '@id': `${siteBase}/#person`,
+    name: 'Sun Envidiado',
+  },
+  blogPost: postList.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.title,
+    url: new URL(p.url, siteBase).toString(),
+    datePublished: p.pubDate.toISOString(),
+    author: {
+      '@type': 'Person',
+      name: 'Sun Envidiado',
+    },
+  })),
 };
 ---
 
 <BaseLayout
-	title={seoMeta.title}
-	description={seoMeta.description}
-	tags={seoMeta.tags}
-	type="website"
-	jsonLd={jsonLd}
+  title={seoMeta.title}
+  description={seoMeta.description}
+  tags={seoMeta.tags}
+  type="website"
+  jsonLd={jsonLd}
 >
-	<div class="blog-content">
-		<header class="blog-header">
-			<h1 id="blog-title" class="sr-only">{siteCopy.pageHeadline}</h1>
-			<p class="blog-content-start">
-				{siteCopy.contentStartPrefix}
-				<a href="/" aria-label={siteCopy.ariaOpenBlogIndex}>{siteCopy.blogIndexLabel}</a>.
-				{siteCopy.contentReturnPrefix}
-				<a href="/" aria-label={siteCopy.ariaGoHomepage}>{siteCopy.homeUrlLabel}</a>.
-			</p>
-		</header>
-		<div class="posts-wrapper">
-			{
-				Object.keys(grouped)
-					.sort((a, b) => Number(b) - Number(a))
-					.map((year) => (
-						<section class="year-group">
-							<h2 class="year-heading" id={`year-${year}`}>
-								{year}
-							</h2>
-							<ul class="year-list" aria-labelledby={`year-${year}`}>
-								{grouped[Number(year)].map((post) => (
-									<li class="post-row" data-blog-index={post.index} data-blog-url={post.url}>
-										<span class="post-index">{post.index}</span>
-										<a class="post-link" href={post.url} rel="bookmark">
-											{post.title}
-										</a>
-										<time class="post-date hide-on-mobile" datetime={post.pubDate.toISOString()}>
-											{post.pubDate.toLocaleDateString("en-US", {
-												month: "short",
-												day: "numeric",
-												year: "numeric",
-											})}
-										</time>
-									</li>
-								))}
-							</ul>
-						</section>
-					))
-			}
-		</div>
-		<Newsletter />
-	</div>
+  <div class="blog-content">
+    <header class="blog-header">
+      <h1 id="blog-title" class="sr-only">{siteCopy.pageHeadline}</h1>
+      <p class="blog-content-start">
+        {siteCopy.contentStartPrefix}
+        <a href="/" aria-label={siteCopy.ariaOpenBlogIndex}>{siteCopy.blogIndexLabel}</a>.
+        {siteCopy.contentReturnPrefix}
+        <a href="/" aria-label={siteCopy.ariaGoHomepage}>{siteCopy.homeUrlLabel}</a>.
+      </p>
+    </header>
+    <div class="posts-wrapper">
+      {
+        Object.keys(grouped)
+          .sort((a, b) => Number(b) - Number(a))
+          .map((year) => (
+            <section class="year-group">
+              <h2 class="year-heading" id={`year-${year}`}>
+                {year}
+              </h2>
+              <ul class="year-list" aria-labelledby={`year-${year}`}>
+                {grouped[Number(year)].map((post) => (
+                  <li class="post-row" data-blog-index={post.index} data-blog-url={post.url}>
+                    <span class="post-index">{post.index}</span>
+                    <a class="post-link" href={post.url} rel="bookmark">
+                      {post.title}
+                    </a>
+                    <time class="post-date hide-on-mobile" datetime={post.pubDate.toISOString()}>
+                      {post.pubDate.toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric',
+                      })}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+      }
+    </div>
+    <Newsletter />
+  </div>
 </BaseLayout>

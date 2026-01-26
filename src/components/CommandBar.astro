@@ -3,414 +3,414 @@ const baseYear = 2025;
 const now = new Date();
 const currentYear = now.getFullYear();
 const copyright =
-	currentYear <= baseYear
-		? `© ${baseYear} Sun Envidiado`
-		: `© ${baseYear} - ${currentYear} Sun Envidiado`;
+  currentYear <= baseYear
+    ? `© ${baseYear} Sun Envidiado`
+    : `© ${baseYear} - ${currentYear} Sun Envidiado`;
 ---
 
 <div class="command-bar" role="region" aria-label="Command bar">
-	<div class="command-bar-inner">
-		<div id="vim-error" class="vim-error-inline" role="status" aria-live="polite"></div>
+  <div class="command-bar-inner">
+    <div id="vim-error" class="vim-error-inline" role="status" aria-live="polite"></div>
 
-		<span class="cmd-wrapper">
-			<input
-				id="site-command-input"
-				class="cmd-input"
-				type="text"
-				placeholder="Type a command (e.g. :home, :back)"
-				aria-label="Site command input"
-				autocomplete="off"
-				spellcheck="false"
-			/>
-			<span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
-		</span>
+    <span class="cmd-wrapper">
+      <input
+        id="site-command-input"
+        class="cmd-input"
+        type="text"
+        placeholder="Type a command (e.g. :home, :back)"
+        aria-label="Site command input"
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <span id="cmd-cursor" class="cmd-cursor" aria-hidden="true"></span>
+    </span>
 
-		<div id="cmd-right" class="cmd-right hide-on-mobile" aria-hidden="true">{copyright}</div>
-	</div>
+    <div id="cmd-right" class="cmd-right hide-on-mobile" aria-hidden="true">{copyright}</div>
+  </div>
 </div>
 
 <script>
-	const input = document.querySelector<HTMLInputElement>("#site-command-input");
-	const vimError = document.querySelector<HTMLElement>("#vim-error");
-	const cursor = document.querySelector<HTMLElement>("#cmd-cursor");
-	let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
+  const input = document.querySelector<HTMLInputElement>('#site-command-input');
+  const vimError = document.querySelector<HTMLElement>('#vim-error');
+  const cursor = document.querySelector<HTMLElement>('#cmd-cursor');
+  let suppressInputHide = false; // used to prevent programmatic input.value changes from hiding the error
 
-	const showVimError = (text: string) => {
-		if (!vimError || !input) return;
-		input.closest(".command-bar")?.classList.add("error");
-		vimError.textContent = `ERROR: "${text}" is not a valid command`;
-	};
+  const showVimError = (text: string) => {
+    if (!vimError || !input) return;
+    input.closest('.command-bar')?.classList.add('error');
+    vimError.textContent = `ERROR: "${text}" is not a valid command`;
+  };
 
-	const hideVimError = () => {
-		if (!vimError || !input) return;
-		input.closest(".command-bar")?.classList.remove("error");
-		vimError.textContent = "";
-	};
+  const hideVimError = () => {
+    if (!vimError || !input) return;
+    input.closest('.command-bar')?.classList.remove('error');
+    vimError.textContent = '';
+  };
 
-	// hide native caret — prefer custom block cursor
-	const hideNativeCaret = () => {
-		if (!input) return;
-		input.style.caretColor = "transparent";
-	};
+  // hide native caret — prefer custom block cursor
+  const hideNativeCaret = () => {
+    if (!input) return;
+    input.style.caretColor = 'transparent';
+  };
 
-	const measureTextWidth = (text: string) => {
-		if (!input) return 0;
-		const span = document.createElement("span");
-		span.style.cssText = `visibility:hidden;position:absolute;white-space:pre;font:${getComputedStyle(input).font}`;
-		span.textContent = text || "";
-		document.body.appendChild(span);
-		const w = span.getBoundingClientRect().width;
-		document.body.removeChild(span);
-		return w;
-	};
+  const measureTextWidth = (text: string) => {
+    if (!input) return 0;
+    const span = document.createElement('span');
+    span.style.cssText = `visibility:hidden;position:absolute;white-space:pre;font:${getComputedStyle(input).font}`;
+    span.textContent = text || '';
+    document.body.appendChild(span);
+    const w = span.getBoundingClientRect().width;
+    document.body.removeChild(span);
+    return w;
+  };
 
-	const positionCursor = () => {
-		if (!cursor || !input) return;
-		const value = input.value || "";
-		const textWidth = measureTextWidth(value);
-		const style = getComputedStyle(input);
-		const paddingLeft = parseFloat(style.paddingLeft) || 0;
-		const left = (input.offsetLeft || 0) + paddingLeft + textWidth - (input.scrollLeft || 0);
-		cursor.style.left = `${left}px`;
+  const positionCursor = () => {
+    if (!cursor || !input) return;
+    const value = input.value || '';
+    const textWidth = measureTextWidth(value);
+    const style = getComputedStyle(input);
+    const paddingLeft = parseFloat(style.paddingLeft) || 0;
+    const left = (input.offsetLeft || 0) + paddingLeft + textWidth - (input.scrollLeft || 0);
+    cursor.style.left = `${left}px`;
 
-		const lastChar = value.slice(-1) || " ";
-		const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
-		const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
-		const caretWidth = Math.max(charWidth, fallbackWidth);
-		cursor.style.width = `${caretWidth}px`;
-		cursor.style.height = `${input.clientHeight}px`;
-		cursor.style.display = document.activeElement === input ? "block" : "none";
-	};
+    const lastChar = value.slice(-1) || ' ';
+    const charWidth = Math.max(1, Math.round(measureTextWidth(lastChar)));
+    const fallbackWidth = (parseFloat(style.fontSize) || 16) * 0.6;
+    const caretWidth = Math.max(charWidth, fallbackWidth);
+    cursor.style.width = `${caretWidth}px`;
+    cursor.style.height = `${input.clientHeight}px`;
+    cursor.style.display = document.activeElement === input ? 'block' : 'none';
+  };
 
-	// reposition cursor on input, focus, and window resize
-	input?.addEventListener("input", () => {
-		hideVimError();
-		positionCursor();
-	});
+  // reposition cursor on input, focus, and window resize
+  input?.addEventListener('input', () => {
+    hideVimError();
+    positionCursor();
+  });
 
-	input?.addEventListener("focus", () => {
-		hideVimError();
-		hideNativeCaret();
-		positionCursor();
-		cursor?.classList.add("visible");
-		try {
-			input.scrollIntoView({ behavior: "smooth", block: "nearest" });
-		} catch {
-			/* ignore */
-		}
-	});
+  input?.addEventListener('focus', () => {
+    hideVimError();
+    hideNativeCaret();
+    positionCursor();
+    cursor?.classList.add('visible');
+    try {
+      input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    } catch {
+      /* ignore */
+    }
+  });
 
-	input?.addEventListener("blur", () => {
-		cursor?.classList.remove("visible");
-		if (cursor) cursor.style.display = "none";
-	});
+  input?.addEventListener('blur', () => {
+    cursor?.classList.remove('visible');
+    if (cursor) cursor.style.display = 'none';
+  });
 
-	window.addEventListener("resize", positionCursor);
+  window.addEventListener('resize', positionCursor);
 
-	// Make the entire command bar clickable — focus input when the bar is clicked.
-	if (input) {
-		const bar = input.closest(".command-bar");
-		if (bar) {
-			bar.addEventListener("click", (ev) => {
-				if (ev.target === input) return;
-				if (document.activeElement === input) {
-					input.blur();
-					hideVimError();
-					return;
-				}
-				input.focus();
-				setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
-			});
-		}
-	}
+  // Make the entire command bar clickable — focus input when the bar is clicked.
+  if (input) {
+    const bar = input.closest('.command-bar');
+    if (bar) {
+      bar.addEventListener('click', (ev) => {
+        if (ev.target === input) return;
+        if (document.activeElement === input) {
+          input.blur();
+          hideVimError();
+          return;
+        }
+        input.focus();
+        setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+      });
+    }
+  }
 
-	function handleCommand(raw: string) {
-		if (!raw) return;
-		const val = raw.trim();
-		if (!val.startsWith(":")) {
-			showVimError(val);
-			return;
-		}
-		const token = val.slice(1);
-		if (!token) {
-			showVimError(val);
-			return;
-		}
-		const cmd = token.toLowerCase();
+  function handleCommand(raw: string) {
+    if (!raw) return;
+    const val = raw.trim();
+    if (!val.startsWith(':')) {
+      showVimError(val);
+      return;
+    }
+    const token = val.slice(1);
+    if (!token) {
+      showVimError(val);
+      return;
+    }
+    const cmd = token.toLowerCase();
 
-		// Support explicit blog selection syntax like `:blog[0]` (case-insensitive)
-		// Only works when on the blog page (/blog or /blog/)
-		const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
-		if (blogMatch) {
-			const currentPath = window.location.pathname;
-			const onBlogPage = currentPath === "/blog" || currentPath === "/blog/";
-			
-			if (!onBlogPage) {
-				showVimError(val);
-				return;
-			}
-			
-			// Use 0-based indexing directly (blog posts are now 0-indexed)
-			const idx = Number(blogMatch[1]);
-			const el = document.querySelector<HTMLElement>(`[data-blog-index="${idx}"]`);
-			if (el) {
-				const url = el.getAttribute("data-blog-url");
-				if (url) {
-					window.location.href = url;
-					return;
-				}
-			}
-			showVimError(val);
-			return;
-		}
+    // Support explicit blog selection syntax like `:blog[0]` (case-insensitive)
+    // Only works when on the blog page (/blog or /blog/)
+    const blogMatch = cmd.match(/^blog\[(\d+)\]$/i);
+    if (blogMatch) {
+      const currentPath = window.location.pathname;
+      const onBlogPage = currentPath === '/blog' || currentPath === '/blog/';
 
-		// If we're on the blog index and the command is just a number, treat it as selecting that indexed post
-		// Use 0-based indexing directly
-		const numeric = Number(cmd);
-		if (!Number.isNaN(numeric) && window.location.pathname.startsWith("/blog")) {
-			const el = document.querySelector<HTMLElement>(`[data-blog-index="${numeric}"]`);
-			if (el) {
-				const url = el.getAttribute("data-blog-url");
-				if (url) {
-					window.location.href = url;
-					return;
-				}
-			}
-			showVimError(val);
-			return;
-		}
+      if (!onBlogPage) {
+        showVimError(val);
+        return;
+      }
 
-		// helpers to enable/disable CRT and persist preference
-		function setCrtEnabled(enabled: boolean) {
-			// allow an external environment to override CRT preference
-			try {
-				window.__setCrtPreference?.(enabled);
-				// If the external handler exists we assume it managed persistence
-				if (typeof window.__setCrtPreference === "function") return;
-			} catch {
-				// ignore and fall back
-			}
+      // Use 0-based indexing directly (blog posts are now 0-indexed)
+      const idx = Number(blogMatch[1]);
+      const el = document.querySelector<HTMLElement>(`[data-blog-index="${idx}"]`);
+      if (el) {
+        const url = el.getAttribute('data-blog-url');
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+      showVimError(val);
+      return;
+    }
 
-			try {
-				const container = document.querySelector<HTMLElement>("#crt-overlay-container");
-				if (enabled) {
-					container?.classList.add("crt-enabled");
-					document.body?.classList.add("crt-text-ca");
-					localStorage.setItem("crt-enabled", "1");
-				} else {
-					container?.classList.remove("crt-enabled");
-					document.body?.classList.remove("crt-text-ca");
-					localStorage.setItem("crt-enabled", "0");
-				}
-			} catch {
-				// storage blocked — still toggle classes for UI
-				const container = document.querySelector<HTMLElement>("#crt-overlay-container");
-				if (enabled) {
-					container?.classList.add("crt-enabled");
-					document.body?.classList.add("crt-text-ca");
-				} else {
-					container?.classList.remove("crt-enabled");
-					document.body?.classList.remove("crt-text-ca");
-				}
-			}
-		}
+    // If we're on the blog index and the command is just a number, treat it as selecting that indexed post
+    // Use 0-based indexing directly
+    const numeric = Number(cmd);
+    if (!Number.isNaN(numeric) && window.location.pathname.startsWith('/blog')) {
+      const el = document.querySelector<HTMLElement>(`[data-blog-index="${numeric}"]`);
+      if (el) {
+        const url = el.getAttribute('data-blog-url');
+        if (url) {
+          window.location.href = url;
+          return;
+        }
+      }
+      showVimError(val);
+      return;
+    }
 
-		switch (cmd) {
-			case "home":
-				window.location.href = "/";
-				break;
-			case "about":
-				window.location.href = "/about";
-				break;
-			case "contact":
-				window.location.href = "/contact";
-				break;
-			case "work":
-				window.location.href = "/work";
-				break;
-			case "blog":
-				window.location.href = "/blog";
-				break;
-			case "back":
-				window.history.back();
-				break;
-			case "crt":
-				setCrtEnabled(true);
-				break;
-			case "no-crt":
-				setCrtEnabled(false);
-				break;
-			default:
-				showVimError(val);
-		}
-	}
+    // helpers to enable/disable CRT and persist preference
+    function setCrtEnabled(enabled: boolean) {
+      // allow an external environment to override CRT preference
+      try {
+        window.__setCrtPreference?.(enabled);
+        // If the external handler exists we assume it managed persistence
+        if (typeof window.__setCrtPreference === 'function') return;
+      } catch {
+        // ignore and fall back
+      }
 
-	// Enter to execute, Escape to clear and hide error
-	if (input) {
-		input.addEventListener("keydown", (e) => {
-			if (e.key === "Enter") {
-				handleCommand(input.value);
-				suppressInputHide = true;
-				input.value = "";
-				positionCursor();
-				input.blur();
-			} else if (e.key === "Escape") {
-				input.value = "";
-				input.blur();
-				hideVimError();
-			}
-		});
+      try {
+        const container = document.querySelector<HTMLElement>('#crt-overlay-container');
+        if (enabled) {
+          container?.classList.add('crt-enabled');
+          document.body?.classList.add('crt-text-ca');
+          localStorage.setItem('crt-enabled', '1');
+        } else {
+          container?.classList.remove('crt-enabled');
+          document.body?.classList.remove('crt-text-ca');
+          localStorage.setItem('crt-enabled', '0');
+        }
+      } catch {
+        // storage blocked — still toggle classes for UI
+        const container = document.querySelector<HTMLElement>('#crt-overlay-container');
+        if (enabled) {
+          container?.classList.add('crt-enabled');
+          document.body?.classList.add('crt-text-ca');
+        } else {
+          container?.classList.remove('crt-enabled');
+          document.body?.classList.remove('crt-text-ca');
+        }
+      }
+    }
 
-		// When user types again, hide the error state (unless suppressed by programmatic clear)
-		input.addEventListener("input", () => {
-			if (suppressInputHide) {
-				suppressInputHide = false;
-				return;
-			}
-			hideVimError();
-		});
-	}
+    switch (cmd) {
+      case 'home':
+        window.location.href = '/';
+        break;
+      case 'about':
+        window.location.href = '/about';
+        break;
+      case 'contact':
+        window.location.href = '/contact';
+        break;
+      case 'work':
+        window.location.href = '/work';
+        break;
+      case 'blog':
+        window.location.href = '/blog';
+        break;
+      case 'back':
+        window.history.back();
+        break;
+      case 'crt':
+        setCrtEnabled(true);
+        break;
+      case 'no-crt':
+        setCrtEnabled(false);
+        break;
+      default:
+        showVimError(val);
+    }
+  }
 
-	// While the error is visible, pressing any normal key should clear it and focus the input
-	window.addEventListener("keydown", (ev) => {
-		if (!vimError || !input) return;
-		const bar = input.closest(".command-bar");
-		if (bar && bar.classList.contains("error")) {
-			if (ev.key.length === 1 || ["Backspace", "Escape"].includes(ev.key)) {
-				hideVimError();
-				input.focus();
-			}
-		}
-	});
+  // Enter to execute, Escape to clear and hide error
+  if (input) {
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        handleCommand(input.value);
+        suppressInputHide = true;
+        input.value = '';
+        positionCursor();
+        input.blur();
+      } else if (e.key === 'Escape') {
+        input.value = '';
+        input.blur();
+        hideVimError();
+      }
+    });
 
-	// Global shortcut: press ':' to focus the input (unless typing in another field)
-	window.addEventListener("keydown", (e) => {
-		if (e.key !== ":") return;
-		const active = document.activeElement;
-		const activeTag = active ? active.tagName || "" : "";
-		if (activeTag !== "INPUT" && activeTag !== "TEXTAREA") {
-			e.preventDefault();
-			input?.focus();
-			setTimeout(() => {
-				if (input) input.setSelectionRange(input.value.length, input.value.length);
-			}, 0);
-		}
-	});
+    // When user types again, hide the error state (unless suppressed by programmatic clear)
+    input.addEventListener('input', () => {
+      if (suppressInputHide) {
+        suppressInputHide = false;
+        return;
+      }
+      hideVimError();
+    });
+  }
 
-	// Prevent the command bar input from stealing scroll when focused on mobile
-	if (input) {
-		input.addEventListener("focus", () => {
-			document.body.classList.add("command-bar-focused");
-		});
-		input.addEventListener("blur", () => {
-			document.body.classList.remove("command-bar-focused");
-		});
-	}
+  // While the error is visible, pressing any normal key should clear it and focus the input
+  window.addEventListener('keydown', (ev) => {
+    if (!vimError || !input) return;
+    const bar = input.closest('.command-bar');
+    if (bar && bar.classList.contains('error')) {
+      if (ev.key.length === 1 || ['Backspace', 'Escape'].includes(ev.key)) {
+        hideVimError();
+        input.focus();
+      }
+    }
+  });
 
-	// CRT preference helpers (moved here so external script is not required)
-	// ...existing code...
-	const CRT_PREFERENCE_KEY = "crt-enabled";
+  // Global shortcut: press ':' to focus the input (unless typing in another field)
+  window.addEventListener('keydown', (e) => {
+    if (e.key !== ':') return;
+    const active = document.activeElement;
+    const activeTag = active ? active.tagName || '' : '';
+    if (activeTag !== 'INPUT' && activeTag !== 'TEXTAREA') {
+      e.preventDefault();
+      input?.focus();
+      setTimeout(() => {
+        if (input) input.setSelectionRange(input.value.length, input.value.length);
+      }, 0);
+    }
+  });
 
-	const getCookie = (key: string): string | null => {
-		try {
-			const match = document.cookie.match(new RegExp("(?:^|; )" + key + "=([^;]+)"));
-			return match ? decodeURIComponent(match[1]) : null;
-		} catch {
-			return null;
-		}
-	};
+  // Prevent the command bar input from stealing scroll when focused on mobile
+  if (input) {
+    input.addEventListener('focus', () => {
+      document.body.classList.add('command-bar-focused');
+    });
+    input.addEventListener('blur', () => {
+      document.body.classList.remove('command-bar-focused');
+    });
+  }
 
-	const setCookie = (key: string, value: string, days = 365) => {
-		try {
-			const maxAge = 60 * 60 * 24 * days;
-			document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax`;
-		} catch {
-			// ignore
-		}
-	};
+  // CRT preference helpers (moved here so external script is not required)
+  // ...existing code...
+  const CRT_PREFERENCE_KEY = 'crt-enabled';
 
-	const getPreference = (): string | null => {
-		try {
-			const v = localStorage.getItem(CRT_PREFERENCE_KEY);
-			if (v !== null) return v;
-		} catch {
-			// localStorage inaccessible
-		}
-		return getCookie(CRT_PREFERENCE_KEY);
-	};
+  const getCookie = (key: string): string | null => {
+    try {
+      const match = document.cookie.match(new RegExp('(?:^|; )' + key + '=([^;]+)'));
+      return match ? decodeURIComponent(match[1]) : null;
+    } catch {
+      return null;
+    }
+  };
 
-	const setPreference = (val: string) => {
-		try {
-			localStorage.setItem(CRT_PREFERENCE_KEY, val);
-		} catch {
-			// ignore
-		}
-		setCookie(CRT_PREFERENCE_KEY, val);
-	};
+  const setCookie = (key: string, value: string, days = 365) => {
+    try {
+      const maxAge = 60 * 60 * 24 * days;
+      document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax`;
+    } catch {
+      // ignore
+    }
+  };
 
-	const applyPreferenceToDom = (val: string | null) => {
-		try {
-			if (val === "1") {
-				document.body.classList.add("crt-text-ca");
-				const container = document.querySelector<HTMLElement>("#crt-overlay-container");
-				if (container) container.classList.add("crt-enabled");
-				else
-					document.addEventListener("DOMContentLoaded", () => {
-						document.querySelector("#crt-overlay-container")?.classList.add("crt-enabled");
-					});
-			} else if (val === "0") {
-				document.body.classList.remove("crt-text-ca");
-				document.querySelector("#crt-overlay-container")?.classList.remove("crt-enabled");
-			}
-		} catch {
-			// ignore
-		}
-	};
+  const getPreference = (): string | null => {
+    try {
+      const v = localStorage.getItem(CRT_PREFERENCE_KEY);
+      if (v !== null) return v;
+    } catch {
+      // localStorage inaccessible
+    }
+    return getCookie(CRT_PREFERENCE_KEY);
+  };
 
-	const exposeWindowSetter = () => {
-		try {
-			window.__setCrtPreference = (enabled: boolean) => {
-				setPreference(enabled ? "1" : "0");
-				if (enabled) {
-					document.body.classList.add("crt-text-ca");
-					document.querySelector("#crt-overlay-container")?.classList.add("crt-enabled");
-				} else {
-					document.body.classList.remove("crt-text-ca");
-					document.querySelector("#crt-overlay-container")?.classList.remove("crt-enabled");
-				}
-			};
-		} catch {
-			// ignore
-		}
-	};
+  const setPreference = (val: string) => {
+    try {
+      localStorage.setItem(CRT_PREFERENCE_KEY, val);
+    } catch {
+      // ignore
+    }
+    setCookie(CRT_PREFERENCE_KEY, val);
+  };
 
-	// Initialize: expose API and apply stored preference (if any)
-	try {
-		exposeWindowSetter();
-		const v = getPreference();
-		applyPreferenceToDom(v);
-	} catch {
-		// ignore initialization errors
-	}
+  const applyPreferenceToDom = (val: string | null) => {
+    try {
+      if (val === '1') {
+        document.body.classList.add('crt-text-ca');
+        const container = document.querySelector<HTMLElement>('#crt-overlay-container');
+        if (container) container.classList.add('crt-enabled');
+        else
+          document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('#crt-overlay-container')?.classList.add('crt-enabled');
+          });
+      } else if (val === '0') {
+        document.body.classList.remove('crt-text-ca');
+        document.querySelector('#crt-overlay-container')?.classList.remove('crt-enabled');
+      }
+    } catch {
+      // ignore
+    }
+  };
 
-	// Augment Window with the small optional API exposed by this script
-	declare global {
-		interface Window {
-			__runSiteCommand?: (raw: string, execute?: boolean) => void;
-			__setCrtPreference?: (enabled: boolean) => void;
-		}
-	}
+  const exposeWindowSetter = () => {
+    try {
+      window.__setCrtPreference = (enabled: boolean) => {
+        setPreference(enabled ? '1' : '0');
+        if (enabled) {
+          document.body.classList.add('crt-text-ca');
+          document.querySelector('#crt-overlay-container')?.classList.add('crt-enabled');
+        } else {
+          document.body.classList.remove('crt-text-ca');
+          document.querySelector('#crt-overlay-container')?.classList.remove('crt-enabled');
+        }
+      };
+    } catch {
+      // ignore
+    }
+  };
 
-	// Expose a small API so other parts of the page can programmatically insert or execute commands.
-	window.__runSiteCommand = (raw: string, execute = false) => {
-		if (!raw || !input) return;
-		const val = raw.trim();
-		if (execute) {
-			handleCommand(val);
-			return;
-		}
-		input.value = val;
-		positionCursor();
-		input.focus();
-	};
+  // Initialize: expose API and apply stored preference (if any)
+  try {
+    exposeWindowSetter();
+    const v = getPreference();
+    applyPreferenceToDom(v);
+  } catch {
+    // ignore initialization errors
+  }
+
+  // Augment Window with the small optional API exposed by this script
+  declare global {
+    interface Window {
+      __runSiteCommand?: (raw: string, execute?: boolean) => void;
+      __setCrtPreference?: (enabled: boolean) => void;
+    }
+  }
+
+  // Expose a small API so other parts of the page can programmatically insert or execute commands.
+  window.__runSiteCommand = (raw: string, execute = false) => {
+    if (!raw || !input) return;
+    const val = raw.trim();
+    if (execute) {
+      handleCommand(val);
+      return;
+    }
+    input.value = val;
+    positionCursor();
+    input.focus();
+  };
 </script>

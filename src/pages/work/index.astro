@@ -1,378 +1,378 @@
 ---
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { Picture } from "astro:assets";
-import haandvaerkerImage from "./_assets/haandvaerker-dk.png";
-import bebiAppImage from "./_assets/bebi-app.png";
-import rateStuffImage from "./_assets/rate-stuff-online.png";
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { Picture } from 'astro:assets';
+import haandvaerkerImage from './_assets/haandvaerker-dk.png';
+import bebiAppImage from './_assets/bebi-app.png';
+import rateStuffImage from './_assets/rate-stuff-online.png';
 
-const startDate = new Date("2019-03-01");
+const startDate = new Date('2019-03-01');
 const today = new Date();
 let years = today.getFullYear() - startDate.getFullYear();
 if (
-	today.getMonth() < startDate.getMonth() ||
-	(today.getMonth() === startDate.getMonth() && today.getDate() < startDate.getDate())
+  today.getMonth() < startDate.getMonth() ||
+  (today.getMonth() === startDate.getMonth() && today.getDate() < startDate.getDate())
 ) {
-	years--;
+  years--;
 }
 const yearsExperience = `${years}+`;
 
 const siteCopy = {
-	siteName: "Sun Envidiado",
-	pageHeadline: "Work",
-	intro: [
-		`I've been building software since 2019. My career started with web development and gradually shifted toward mobile development, where I discovered my focus in Flutter and Dart. Over the past ${yearsExperience} years, I've specialized in creating cross-platform applications that work seamlessly across Android, iOS, and Web.`,
-		`I approach development with attention to both functionality and design, ensuring applications not only work well but feel intuitive to use. Along the way, I've developed strong skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET), and the Firebase and Cloudflare ecosystems. `,
-		`You can view my complete resume <a href="/envidiado-resume-october-2025.pdf" target="_blank" class="highlight">here</a>.`,
-	],
-	experienceHeadline: "Work Experience",
-	experience: [
-		{
-			period: "Jun 2025 — Present",
-			title: "Flutter Developer",
-			company: "Miquido",
-			description:
-				"Building scalable Flutter apps for fintech and emergency response. I also worked on integrating AI to provide real-time guidance and specialized health documentation.",
-			tags: ["Flutter", "Dart", "AI", "BLoC", "Riverpod"],
-		},
-		{
-			period: "Nov 2023 — Jun 2025",
-			title: "Flutter Developer",
-			company: "Nextbank",
-			description:
-				"Built cross-platform apps for fintech corporations. I also developed a custom Flutter plugin for liveness checks, blending native iOS and Android code to keep things secure.",
-			tags: ["Flutter", "Dart", "Native iOS", "Native Android", "BLoC"],
-		},
-		{
-			period: "Aug 2022 — Nov 2023",
-			title: "Mobile Engineer",
-			company: "Hedgehog Lab",
-			description:
-				"Worked on mobile apps for the medical and fintech sectors. I also built a Flutter plugin for document signing that hooked into native iOS and Android functionality.",
-			tags: ["Flutter", "Dart", "Laravel", "PHP"],
-		},
-		{
-			period: "Jan 2021 — Aug 2022",
-			title: "Software Engineer",
-			company: "CRAFT-TEC Inc.",
-			description:
-				"Led the Flutter team while wearing a few different hats as a full-stack engineer. I built out backend APIs with Laravel and helped mentor other devs on the team.",
-			tags: ["Flutter", "Dart", "PHP", "Laravel"],
-		},
-		{
-			period: "Mar 2019 — Jan 2021",
-			title: "Web Developer",
-			company: "Various Organizations",
-			description:
-				"Worked on a bunch of different web projects using everything from Vue and React to .NET and Shopify. This is where I really got comfortable with the Firebase stack.",
-			tags: ["JavaScript", ".NET", "PHP", "Firebase"],
-		},
-	],
-	projects: [
-		{
-			title: "rate-stuff.online",
-			description:
-				"A side project I built with React and TanStack Start, deployed on Cloudflare Workers. It was my first real deep dive into the React ecosystem and serverless architecture.",
-			link: "https://rate-stuff.online",
-			image: rateStuffImage,
-		},
-		{
-			title: "Bebi App",
-			description:
-				"A couples app I made for my girlfriend :D featuring image sharing, a shared calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed building.",
-			link: "https://github.com/photosunthesis/bebi-app-flutter",
-			image: bebiAppImage,
-		},
-		{
-			title: "Haandvaerker.dk",
-			description:
-				"A platform connecting homeowners in Denmark with craftsmen. This was the main project I worked on at CRAFT-TEC Inc., where I built both the homeowner and craftsman Flutter apps and helped out with the backend.",
-			link: "https://www.haandvaerker.dk/",
-			image: haandvaerkerImage,
-		},
-	],
-	projectHeadline: "Project Showcase",
-	projectIntro:
-		"Here are some of the projects I've worked on that I'm actually allowed to talk about. A lot of my professional work is proprietary, so this is just a snippet of what I've been up to lately.",
-	homeUrlLabel: ":home<Enter>",
-	footerReturnPrefix: "To go back to the homepage, type",
+  siteName: 'Sun Envidiado',
+  pageHeadline: 'Work',
+  intro: [
+    `I've been building software since 2019. My career started with web development and gradually shifted toward mobile development, where I discovered my focus in Flutter and Dart. Over the past ${yearsExperience} years, I've specialized in creating cross-platform applications that work seamlessly across Android, iOS, and Web.`,
+    `I approach development with attention to both functionality and design, ensuring applications not only work well but feel intuitive to use. Along the way, I've developed strong skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET), and the Firebase and Cloudflare ecosystems. `,
+    `You can view my complete resume <a href="/envidiado-resume-october-2025.pdf" target="_blank" class="highlight">here</a>.`,
+  ],
+  experienceHeadline: 'Work Experience',
+  experience: [
+    {
+      period: 'Jun 2025 — Present',
+      title: 'Flutter Developer',
+      company: 'Miquido',
+      description:
+        'Building scalable Flutter apps for fintech and emergency response. I also worked on integrating AI to provide real-time guidance and specialized health documentation.',
+      tags: ['Flutter', 'Dart', 'AI', 'BLoC', 'Riverpod'],
+    },
+    {
+      period: 'Nov 2023 — Jun 2025',
+      title: 'Flutter Developer',
+      company: 'Nextbank',
+      description:
+        'Built cross-platform apps for fintech corporations. I also developed a custom Flutter plugin for liveness checks, blending native iOS and Android code to keep things secure.',
+      tags: ['Flutter', 'Dart', 'Native iOS', 'Native Android', 'BLoC'],
+    },
+    {
+      period: 'Aug 2022 — Nov 2023',
+      title: 'Mobile Engineer',
+      company: 'Hedgehog Lab',
+      description:
+        'Worked on mobile apps for the medical and fintech sectors. I also built a Flutter plugin for document signing that hooked into native iOS and Android functionality.',
+      tags: ['Flutter', 'Dart', 'Laravel', 'PHP'],
+    },
+    {
+      period: 'Jan 2021 — Aug 2022',
+      title: 'Software Engineer',
+      company: 'CRAFT-TEC Inc.',
+      description:
+        'Led the Flutter team while wearing a few different hats as a full-stack engineer. I built out backend APIs with Laravel and helped mentor other devs on the team.',
+      tags: ['Flutter', 'Dart', 'PHP', 'Laravel'],
+    },
+    {
+      period: 'Mar 2019 — Jan 2021',
+      title: 'Web Developer',
+      company: 'Various Organizations',
+      description:
+        'Worked on a bunch of different web projects using everything from Vue and React to .NET and Shopify. This is where I really got comfortable with the Firebase stack.',
+      tags: ['JavaScript', '.NET', 'PHP', 'Firebase'],
+    },
+  ],
+  projects: [
+    {
+      title: 'rate-stuff.online',
+      description:
+        'A side project I built with React and TanStack Start, deployed on Cloudflare Workers. It was my first real deep dive into the React ecosystem and serverless architecture.',
+      link: 'https://rate-stuff.online',
+      image: rateStuffImage,
+    },
+    {
+      title: 'Bebi App',
+      description:
+        'A couples app I made for my girlfriend :D featuring image sharing, a shared calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed building.',
+      link: 'https://github.com/photosunthesis/bebi-app-flutter',
+      image: bebiAppImage,
+    },
+    {
+      title: 'Haandvaerker.dk',
+      description:
+        'A platform connecting homeowners in Denmark with craftsmen. This was the main project I worked on at CRAFT-TEC Inc., where I built both the homeowner and craftsman Flutter apps and helped out with the backend.',
+      link: 'https://www.haandvaerker.dk/',
+      image: haandvaerkerImage,
+    },
+  ],
+  projectHeadline: 'Project Showcase',
+  projectIntro:
+    "Here are some of the projects I've worked on that I'm actually allowed to talk about. A lot of my professional work is proprietary, so this is just a snippet of what I've been up to lately.",
+  homeUrlLabel: ':home<Enter>',
+  footerReturnPrefix: 'To go back to the homepage, tap/type',
 };
 
 const seoMeta = {
-	title: "Work — Sun Envidiado",
-	description: `Check out my work experience as a Flutter Developer with ${yearsExperience} years of experience building cross-platform mobile applications.`,
-	tags: ["sun envidiado", "flutter developer", "work experience", "mobile developer", "portfolio"],
+  title: 'Work — Sun Envidiado',
+  description: `Check out my work experience as a Flutter Developer with ${yearsExperience} years of experience building cross-platform mobile applications.`,
+  tags: ['sun envidiado', 'flutter developer', 'work experience', 'mobile developer', 'portfolio'],
 };
 
-const siteBase = Astro.site || "https://sun-envidiado.com";
-const imageUrl = new URL("/default.png", siteBase).toString();
+const siteBase = Astro.site || 'https://sun-envidiado.com';
+const imageUrl = new URL('/default.png', siteBase).toString();
 
 const jsonLd = {
-	"@context": "https://schema.org",
-	"@type": "ProfilePage",
-	mainEntity: {
-		"@type": "Person",
-		"@id": `${siteBase}/#person`,
-		name: siteCopy.siteName,
-		url: siteBase,
-		image: imageUrl,
-		jobTitle: "Flutter Developer",
-		description: seoMeta.description,
-	},
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${siteBase}/#person`,
+    name: siteCopy.siteName,
+    url: siteBase,
+    image: imageUrl,
+    jobTitle: 'Flutter Developer',
+    description: seoMeta.description,
+  },
 };
 ---
 
 <BaseLayout
-	title={seoMeta.title}
-	description={seoMeta.description}
-	tags={seoMeta.tags}
-	type="website"
-	jsonLd={jsonLd}
+  title={seoMeta.title}
+  description={seoMeta.description}
+  tags={seoMeta.tags}
+  type="website"
+  jsonLd={jsonLd}
 >
-	<div class="work-content">
-		<article class="work-article" aria-labelledby="work-title">
-			<h1 id="work-title" class="sr-only">{siteCopy.pageHeadline}</h1>
+  <div class="work-content">
+    <article class="work-article" aria-labelledby="work-title">
+      <h1 id="work-title" class="sr-only">{siteCopy.pageHeadline}</h1>
 
-			<section class="intro-section">
-				{siteCopy.intro.map((paragraph) => <p set:html={paragraph} />)}
-			</section>
+      <section class="intro-section">
+        {siteCopy.intro.map((paragraph) => <p set:html={paragraph} />)}
+      </section>
 
-			<section class="experience-section">
-				<h2 class="section-title">{siteCopy.experienceHeadline}</h2>
-				<div class="experience-list">
-					{
-						siteCopy.experience.map((job) => (
-							<div class="experience-item">
-								<span class="experience-period">{job.period}</span>
-								<div class="experience-details">
-									<h2 class="experience-title">
-										{job.title} · {job.company}
-									</h2>
-									<p class="experience-description">{job.description}</p>
-								</div>
-							</div>
-						))
-					}
-				</div>
-			</section>
+      <section class="experience-section">
+        <h2 class="section-title">{siteCopy.experienceHeadline}</h2>
+        <div class="experience-list">
+          {
+            siteCopy.experience.map((job) => (
+              <div class="experience-item">
+                <span class="experience-period">{job.period}</span>
+                <div class="experience-details">
+                  <h2 class="experience-title">
+                    {job.title} · {job.company}
+                  </h2>
+                  <p class="experience-description">{job.description}</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
 
-			<section class="projects-section">
-				<h2 class="section-title">{siteCopy.projectHeadline}</h2>
-				<p class="section-intro">{siteCopy.projectIntro}</p>
-				<div class="projects-list">
-					{
-						siteCopy.projects.map((project) => (
-							<a href={project.link} class="project-item" target="_blank">
-								<div class="project-image-container">
-									{project.image ? (
-										<Picture
-											src={project.image}
-											formats={["avif", "webp"]}
-											alt={`Screenshot of ${project.title}`}
-											class="project-image"
-										/>
-									) : (
-										<div class="project-image-placeholder" />
-									)}
-								</div>
-								<div class="project-details">
-									<h2 class="project-title">
-										{project.title} <span class="arrow">↗</span>
-									</h2>
-									<p class="project-description">{project.description}</p>
-								</div>
-							</a>
-						))
-					}
-				</div>
-			</section>
+      <section class="projects-section">
+        <h2 class="section-title">{siteCopy.projectHeadline}</h2>
+        <p class="section-intro">{siteCopy.projectIntro}</p>
+        <div class="projects-list">
+          {
+            siteCopy.projects.map((project) => (
+              <a href={project.link} class="project-item" target="_blank">
+                <div class="project-image-container">
+                  {project.image ? (
+                    <Picture
+                      src={project.image}
+                      formats={['avif', 'webp']}
+                      alt={`Screenshot of ${project.title}`}
+                      class="project-image"
+                    />
+                  ) : (
+                    <div class="project-image-placeholder" />
+                  )}
+                </div>
+                <div class="project-details">
+                  <h2 class="project-title">
+                    {project.title} <span class="arrow">↗</span>
+                  </h2>
+                  <p class="project-description">{project.description}</p>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </section>
 
-			<footer class="work-footer">
-				{siteCopy.footerReturnPrefix}
-				<a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
-			</footer>
-		</article>
-	</div>
+      <footer class="work-footer">
+        {siteCopy.footerReturnPrefix}
+        <a href="/" aria-label="Go to homepage">{siteCopy.homeUrlLabel}</a>.
+      </footer>
+    </article>
+  </div>
 </BaseLayout>
 
 <style lang="scss">
-	.work-content {
-		max-width: 700px;
-		margin: 1.5rem;
-		color: var(--foreground);
-		text-align: left;
-		padding: 0 1rem;
+  .work-content {
+    max-width: 700px;
+    margin: 1.5rem;
+    color: var(--foreground);
+    text-align: left;
+    padding: 0 1rem;
 
-		@media (max-width: 600px) {
-			margin: 1.5rem 0;
-			padding: 0 1rem;
-		}
-	}
+    @media (max-width: 600px) {
+      margin: 1.5rem 0;
+      padding: 0 1rem;
+    }
+  }
 
-	.intro-section {
-		margin-bottom: 1.5rem;
+  .intro-section {
+    margin-bottom: 1.5rem;
 
-		p {
-			line-height: 1.7;
-			margin-bottom: 1rem;
-		}
-	}
+    p {
+      line-height: 1.7;
+      margin-bottom: 1rem;
+    }
+  }
 
-	:global(.highlight) {
-		color: var(--cyan);
-		font-weight: 500;
-	}
+  :global(.highlight) {
+    color: var(--cyan);
+    font-weight: 500;
+  }
 
-	.experience-list {
-		display: flex;
-		flex-direction: column;
-		gap: 1.7rem;
-		margin-top: 0.8rem;
-	}
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+    margin-top: 0.8rem;
+  }
 
-	.experience-item {
-		display: grid;
-		grid-template-columns: 170px 1fr;
-		gap: 1.5rem;
-		align-items: baseline;
+  .experience-item {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 1.5rem;
+    align-items: baseline;
 
-		@media (max-width: 600px) {
-			grid-template-columns: 1fr;
-			gap: 0.5rem;
-		}
-	}
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+  }
 
-	.experience-period {
-		color: var(--comment);
-		font-size: 0.85rem;
-		white-space: nowrap;
-	}
+  .experience-period {
+    color: var(--comment);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
 
-	.experience-details {
-		display: flex;
-		flex-direction: column;
-		gap: 0.3rem;
-	}
+  .experience-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
 
-	.experience-title {
-		font-size: 1.1rem;
-		font-weight: 500;
-		color: var(--cyan);
-		margin: 0;
-	}
+  .experience-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--cyan);
+    margin: 0;
+  }
 
-	.experience-description {
-		color: var(--foreground);
-		line-height: 1.6;
-		margin: 0;
-	}
+  .experience-description {
+    color: var(--foreground);
+    line-height: 1.6;
+    margin: 0;
+  }
 
-	.projects-section {
-		margin-top: 2rem;
-	}
+  .projects-section {
+    margin-top: 2rem;
+  }
 
-	.projects-list {
-		display: flex;
-		flex-direction: column;
-		gap: 3rem;
-	}
+  .projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
 
-	.section-title {
-		font-size: 1.5rem;
-		color: var(--purple);
-		margin-bottom: 0.3rem;
-		font-weight: 500;
-	}
+  .section-title {
+    font-size: 1.5rem;
+    color: var(--purple);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+  }
 
-	.section-intro {
-		color: var(--foreground);
-		margin-top: 0;
-		margin-bottom: 1.5rem;
-		line-height: 1.6;
-	}
+  .section-intro {
+    color: var(--foreground);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
 
-	.project-item {
-		display: grid;
-		grid-template-columns: 200px 1fr;
-		gap: 2rem;
-		text-decoration: none;
-		color: inherit;
-		transition: opacity 0.2s ease;
-		align-items: start;
+  .project-item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 2rem;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+    align-items: start;
 
-		&:hover {
-			opacity: 0.8;
+    &:hover {
+      opacity: 0.8;
 
-			.project-title {
-				text-decoration: underline;
-			}
-		}
+      .project-title {
+        text-decoration: underline;
+      }
+    }
 
-		@media (max-width: 600px) {
-			grid-template-columns: 1fr;
-			gap: 1.5rem;
-		}
-	}
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
 
-	.project-image-container {
-		width: 100%;
-		aspect-ratio: 4/3;
-		border-radius: 4px;
-		overflow: hidden;
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		background-color: #333;
-	}
+  .project-image-container {
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #333;
+  }
 
-	.project-image-placeholder {
-		width: 100%;
-		height: 100%;
-		background-color: #333;
-	}
+  .project-image-placeholder {
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+  }
 
-	.project-image {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
+  .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-	.project-details {
-		display: flex;
-		flex-direction: column;
-		gap: 0.4rem;
-	}
+  .project-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
 
-	.project-title {
-		font-size: 1.1rem;
-		line-height: 1.1;
-		font-weight: 500;
-		color: var(--cyan);
-		margin: -0.2rem 0 0 0;
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		transition: opacity 0.2s ease;
-	}
+  .project-title {
+    font-size: 1.1rem;
+    line-height: 1.1;
+    font-weight: 500;
+    color: var(--cyan);
+    margin: -0.2rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: opacity 0.2s ease;
+  }
 
-	.arrow {
-		font-size: 0.9em;
-	}
+  .arrow {
+    font-size: 0.9em;
+  }
 
-	.project-description {
-		color: var(--foreground);
-		line-height: 1.6;
-		margin: 0;
-	}
+  .project-description {
+    color: var(--foreground);
+    line-height: 1.6;
+    margin: 0;
+  }
 
-	.work-footer {
-		color: var(--comment);
-		white-space: nowrap;
-		overflow-wrap: anywhere;
-		padding-bottom: 3rem;
-		padding-top: 3rem;
-	}
+  .work-footer {
+    color: var(--comment);
+    white-space: nowrap;
+    overflow-wrap: anywhere;
+    padding-bottom: 3rem;
+    padding-top: 3rem;
+  }
 
-	@media (max-width: 480px) {
-		.work-footer {
-			white-space: normal;
-		}
-	}
+  @media (max-width: 480px) {
+    .work-footer {
+      white-space: normal;
+    }
+  }
 </style>
