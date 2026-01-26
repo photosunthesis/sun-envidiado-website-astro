@@ -123,7 +123,6 @@ async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
     from: `Sun Envidiado's Blogs <blogs@sun-envidiado.com>`,
     subject: `${blog.metadata.title} – Sun Envidiado`,
     html: emailHtml,
-    send: true,
     name: blog.metadata.title,
   });
 
