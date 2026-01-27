@@ -61,19 +61,17 @@ const jsonLd = {
     <SpinningSunAsciiArt />
     <div class="intro-container">
       <h1 class="sr-only">{seoMeta.title}</h1>
-      <span class="intro-heading"
-        >{`Hi! I'm Sun Envidiado. Welcome to my little corner on the internet.`}</span
-      >
-      <span class="intro-body"
-        >{
-          `I'm a software developer, gamer, and karaoke enthusiast. This space is where you can get to know me better and peek into my thoughts about code, games, life, whatever's on my mind. Navigate around using the commands below.`
+      <span class="intro-heading">{`Hi! I'm Sun Envidiado.`}</span>
+      <span class="intro-body">
+        {
+          `I'm a software developer, gamer, and karaoke enthusiast. Welcome to my little corner of the internet where I post about work, life, and everything else.`
         }</span
       >
     </div>
     <nav class="command-hints-container" aria-label="Quick commands">
       <div class="command-hints-grid">
         <div class="command-hint-row">
-          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
               <a
@@ -82,14 +80,14 @@ const jsonLd = {
                 data-command=":about"
                 aria-label="Go to :about"
               >
-                :about&lt;Enter&gt;
+                :about
               </a>
             </span>
           </span>
           <span class="command-hint-description">to learn more about me.</span>
         </div>
         <div class="command-hint-row">
-          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
               <a
@@ -98,14 +96,14 @@ const jsonLd = {
                 data-command=":contact"
                 aria-label="Go to :contact"
               >
-                :contact&lt;Enter&gt;
+                :contact
               </a>
             </span>
           </span>
           <span class="command-hint-description">to get in touch.</span>
         </div>
         <div class="command-hint-row">
-          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
               <a
@@ -114,14 +112,14 @@ const jsonLd = {
                 data-command=":blog"
                 aria-label="Go to :blog"
               >
-                :blog&lt;Enter&gt;
+                :blog
               </a>
             </span>
           </span>
-          <span class="command-hint-description">to read my latest blogs.</span>
+          <span class="command-hint-description">to read my latest posts.</span>
         </div>
         <div class="command-hint-row">
-          <span class="command-hint-type">type/tap</span>
+          <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
               <a
@@ -130,7 +128,7 @@ const jsonLd = {
                 data-command=":work"
                 aria-label="Go to :work"
               >
-                :work&lt;Enter&gt;
+                :work
               </a>
             </span>
           </span>
@@ -142,10 +140,15 @@ const jsonLd = {
 </BaseLayout>
 
 <style lang="scss">
-  $max-content-width: 500px;
+  $max-content-width: 420px;
 
   .index-main-content {
     margin-top: -5rem;
+
+    @media (max-width: 480px) {
+      padding: 0 2rem;
+      margin-top: -4rem;
+    }
   }
 
   .intro-container {
@@ -173,28 +176,60 @@ const jsonLd = {
     width: 100%;
     max-width: $max-content-width;
     margin: 1rem auto 0;
-    color: var(--comment);
   }
 
-  // CSS Grid approach for perfect column alignment
   .command-hints-grid {
     display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 0.25rem 1ch;
+    grid-template-columns: auto auto auto;
+    justify-content: space-between;
+    row-gap: 0.25rem;
     align-items: baseline;
     width: 100%;
+
+    @media (min-width: 480px) {
+      gap: 0.75rem 0.1ch;
+    }
+
+    @media (max-width: 480px) {
+      display: block;
+    }
   }
 
   .command-hint-row {
-    display: contents; // Makes the row wrapper disappear so children become direct grid items
+    display: contents;
+
+    @media (max-width: 480px) {
+      display: block;
+      margin-bottom: 0.75rem;
+      text-align: left;
+      line-height: 1.5;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .command-hint-type {
-    color: var(--comment);
     font-family: inherit;
     justify-self: end;
     white-space: nowrap;
     margin-right: 0.5ch;
+    color: var(--comment);
+
+    @media (min-width: 480px) {
+      margin-right: 1ch;
+    }
+
+    @media (max-width: 480px) {
+      display: inline;
+      white-space: normal;
+      margin-right: 0;
+
+      &::after {
+        content: ' ';
+      }
+    }
   }
 
   .command-hint-command {
@@ -205,29 +240,53 @@ const jsonLd = {
     flex-wrap: wrap;
     gap: 0.25ch;
     justify-self: start;
+
+    @media (max-width: 480px) {
+      display: inline;
+      white-space: normal;
+
+      &::before {
+        content: ' ';
+      }
+
+      &::after {
+        content: ' ';
+      }
+    }
   }
 
   .command-action-group {
     display: inline-flex;
     align-items: baseline;
     gap: 0.25ch;
+
+    @media (max-width: 480px) {
+      display: inline;
+    }
   }
 
   .command-separator {
-    color: var(--comment);
     white-space: nowrap;
   }
 
   .command-hint-description {
-    color: var(--comment);
     font-family: inherit;
     justify-self: start;
     margin-left: 0.5ch;
     white-space: nowrap;
-
-    // Prevent text from being cut off
     overflow: visible;
     text-overflow: clip;
+    color: var(--comment);
+
+    @media (min-width: 480px) {
+      margin-left: 1ch;
+    }
+
+    @media (max-width: 480px) {
+      display: inline;
+      white-space: normal;
+      margin-left: 0;
+    }
   }
 
   .command-hint-action {
@@ -250,77 +309,6 @@ const jsonLd = {
 
     &:focus-visible {
       box-shadow: 0 0 0 2px color-mix(in srgb, var(--cyan) 30%, transparent);
-    }
-  }
-
-  // Medium screens - allow wider container for better alignment
-  @media (min-width: 600px) {
-    .command-hints-grid {
-      gap: 0.75rem 0.1ch;
-    }
-
-    .command-hint-type {
-      margin-right: 1ch;
-    }
-
-    .command-hint-description {
-      margin-left: 1ch;
-    }
-  }
-
-  // Mobile responsive - stack vertically
-  @media (max-width: 600px) {
-    .index-main-content {
-      padding: 0 1rem;
-      margin-top: -4rem;
-    }
-
-    .command-hints-grid {
-      display: block; // Switch back to block layout
-    }
-
-    .command-hint-row {
-      display: block;
-      margin-bottom: 0.75rem;
-      text-align: left;
-      line-height: 1.5;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-
-    .command-hint-type,
-    .command-hint-command,
-    .command-hint-description {
-      display: inline;
-      white-space: normal;
-    }
-
-    .command-hint-type {
-      margin-right: 0;
-
-      &::after {
-        content: ' ';
-      }
-    }
-
-    .command-hint-command {
-      &::before {
-        content: ' ';
-      }
-
-      &::after {
-        content: ' ';
-      }
-    }
-
-    .command-hint-description {
-      margin-left: 0;
-    }
-
-    .command-action-group {
-      display: inline;
     }
   }
 </style>
