@@ -1,13 +1,11 @@
 ---
-
+const { hasBorderTop = false } = Astro.props;
 ---
 
-<section class="newsletter-section">
+<section class:list={['newsletter-section', { 'has-border-top': hasBorderTop }]}>
   <div class="newsletter-container">
     <p class="newsletter-desc">
-      Get notified via email when I publish new blog posts. No spam, I promise! You can also <a
-        href="/rss.xml">subscribe via RSS</a
-      >.
+      Subscribe for new post notifications. Zero spam, I promise! Or try <a href="/rss.xml">RSS</a>.
     </p>
 
     <form class="newsletter-form" id="newsletter-form">
@@ -21,7 +19,7 @@
           required
           class="newsletter-input"
         />
-        <button type="submit" class="newsletter-btn"> Subscribe </button>
+        <button type="submit" class="newsletter-btn">Subscribe ↪</button>
       </div>
       <div class="form-message" id="form-message" aria-live="polite"></div>
     </form>
@@ -54,18 +52,15 @@
           body: JSON.stringify({ email }),
         });
 
-        const data = await res.json();
+        await res.json();
 
-        if (res.ok) {
-          messageEl.textContent = 'Please check your email to confirm your subscription.';
-          messageEl.classList.add('success');
-          form.reset();
-        } else {
-          messageEl.textContent = data.message || 'Something went wrong. Please try again.';
-          messageEl.classList.add('error');
-        }
+        if (!res.ok) throw new Error();
+
+        messageEl.textContent = 'Check your email to confirm your subscription.';
+        messageEl.classList.add('success');
+        form.reset();
       } catch {
-        messageEl.textContent = 'Network error. Please try again later.';
+        messageEl.textContent = 'Something went wrong. Please try again later.';
         messageEl.classList.add('error');
       } finally {
         btn.disabled = false;
@@ -77,15 +72,16 @@
 
 <style lang="scss">
   .newsletter-section {
-    margin: 3rem 0;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-    border-top: 1px dashed var(--comment);
-    opacity: 0.8;
     transition: opacity 0.2s ease;
 
     &:hover {
       opacity: 1;
+    }
+
+    &.has-border-top {
+      border-top: 1px dashed var(--comment);
+      padding-top: 2rem;
+      margin-top: 3rem;
     }
   }
 
@@ -94,13 +90,11 @@
   }
 
   .newsletter-desc {
-    color: var(--comment);
     margin-bottom: 1.5rem;
     line-height: 1.5;
 
     a {
       font-size: inherit;
-      color: var(--comment);
       text-decoration: underline;
       text-underline-offset: 2px;
 
@@ -123,7 +117,7 @@
     min-width: 200px;
     padding: 0.5rem 0.75rem;
     background: transparent;
-    border: 1px solid var(--comment);
+    border: 1px solid var(--foreground);
     color: var(--foreground);
     font-family: inherit;
     font-size: 0.9rem;
@@ -135,16 +129,15 @@
     }
 
     &::placeholder {
-      color: var(--comment);
+      color: var(--foreground);
       opacity: 0.5;
     }
   }
 
   .newsletter-btn {
-    padding: 0.5rem 2rem;
+    padding: 0.4rem 1rem;
     background: var(--foreground);
     color: var(--background);
-    border: 1px solid var(--foreground);
     font-family: inherit;
     font-size: 0.9rem;
     font-weight: normal;
@@ -159,6 +152,10 @@
     &:disabled {
       opacity: 0.5;
       cursor: wait;
+    }
+
+    @media (max-width: 480px) {
+      padding: 0.5rem 1rem;
     }
   }
 

@@ -104,14 +104,6 @@ const jsonLd = {
     },
   })),
 };
-
-const asciiHeaderTitle = `
-▗▄▄▖ ▗▖    ▗▄▖  ▗▄▄▖
-▐▌ ▐▌▐▌   ▐▌ ▐▌▐▌   
-▐▛▀▚▖▐▌   ▐▌ ▐▌▐▌▝▜▌
-▐▙▄▞▘▐▙▄▄▖▝▚▄▞▘▝▚▄▞▘
-                    
-`;
 ---
 
 <BaseLayout
@@ -123,15 +115,13 @@ const asciiHeaderTitle = `
 >
   <div class="blog-content">
     <header class="blog-header">
-      <pre class="ascii-header-title">{asciiHeaderTitle}</pre>
       <h1 id="blog-title" class="sr-only">Blog</h1>
-      <p class="blog-content-start">
-        Select a blog post by typing
-        <a href="/" aria-label="Open blog index">:blog[index]</a> or by tapping on the post items. To
-        return to the homepage, tap/type
-        <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
-      </p>
+      <div class="back-to-home">
+        <a href="/" aria-label="Go to homepage">← Back to home</a>
+      </div>
     </header>
+
+    <Newsletter />
 
     <div class="posts-wrapper">
       {
@@ -145,7 +135,6 @@ const asciiHeaderTitle = `
               <ul class="year-list" aria-labelledby={`year-${year}`}>
                 {grouped[Number(year)].map((post) => (
                   <li class="post-row" data-blog-index={post.index} data-blog-url={post.url}>
-                    <span class="post-index">{post.index}</span>
                     <a class="post-link" href={post.url} rel="bookmark">
                       {post.title}
                     </a>
@@ -163,22 +152,19 @@ const asciiHeaderTitle = `
           ))
       }
     </div>
-    <Newsletter />
   </div>
 </BaseLayout>
 
 <style lang="scss">
   .blog-content {
     max-width: 500px;
+    text-align: left;
+    width: 100%;
 
     @media (max-width: 480px) {
       margin: 1.5rem 0;
       padding: 0 1rem;
     }
-  }
-
-  .blog-header {
-    margin-bottom: 2rem;
   }
 
   .blog-content-start {
@@ -189,8 +175,9 @@ const asciiHeaderTitle = `
 
   .year-heading {
     margin: 1.5rem 0 1rem;
-    text-align: left;
     color: var(--comment);
+    text-align: left;
+    font-size: 0.9rem;
   }
 
   .year-list {
@@ -200,6 +187,9 @@ const asciiHeaderTitle = `
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
+  }
+  .posts-wrapper {
+    margin-top: 2.5rem;
   }
 
   .post-row {
@@ -217,15 +207,7 @@ const asciiHeaderTitle = `
     }
   }
 
-  .post-index {
-    color: var(--comment);
-    min-width: 2ch;
-    text-align: left;
-    display: inline-block;
-  }
-
   .post-link {
-    color: var(--cyan);
     text-decoration: none;
     text-align: left;
     flex: 1 1 auto;

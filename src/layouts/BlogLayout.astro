@@ -1,8 +1,8 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import Newsletter from '../components/Newsletter.astro';
-import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { Picture } from 'astro:assets';
+import Newsletter from '../components/Newsletter.astro';
+import BaseLayout from './BaseLayout.astro';
 
 const props = Astro.props;
 const frontmatter = props.frontmatter || props;
@@ -27,6 +27,10 @@ if (frontmatter.cover) {
 
 <BaseLayout frontmatter={frontmatter} coverImage={coverImage}>
   <div class="blog-layout">
+    <div class="back-to-home">
+      <button id="back-button" aria-label="Go back">← Back</button>
+    </div>
+
     {
       coverImage && (
         <div class="cover-image-wrapper">
@@ -56,26 +60,41 @@ if (frontmatter.cover) {
       <slot />
     </article>
 
-    <footer class="blog-footer" role="contentinfo" aria-label="Post navigation and actions">
-      <p class="blog-footer-text">
-        Tap/type
-        <button class="link-like" type="button" onclick="history.back();" aria-label="Go back">
-          :back&lt;Enter&gt;
-        </button>
-        {` to return to the previous page, or `}
-        <a href="/" aria-label="Go to homepage"> :home&lt;Enter&gt; </a>
-        {` to go to the homepage.`}
-      </p>
-    </footer>
+    <Newsletter hasBorderTop={true} />
 
-    <Newsletter />
+    <div class="back-to-home">
+      <button id="back-to-top-button" aria-label="Scroll to top">↑ Back to top</button>
+    </div>
   </div>
 </BaseLayout>
+
+<script>
+  const backButton = document.getElementById('back-button');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = '/';
+      }
+    });
+  }
+
+  const backToTopButton = document.getElementById('back-to-top-button');
+  if (backToTopButton) {
+    backToTopButton.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
+  }
+</script>
 
 <style lang="scss">
   .blog-layout {
     margin: 1.5rem;
-    max-width: 600px;
+    max-width: 500px;
     text-align: left !important;
 
     * {
@@ -87,16 +106,6 @@ if (frontmatter.cover) {
     }
   }
 
-  .blog-footer {
-    margin-top: 2rem;
-    color: var(--comment);
-  }
-
-  .blog-footer-text {
-    margin-bottom: 1rem;
-    line-height: 1.5;
-  }
-
   .post-pub-date {
     color: var(--comment);
     margin-top: -0.4rem;
@@ -105,6 +114,15 @@ if (frontmatter.cover) {
   .cover-image-wrapper {
     width: 100%;
     margin: 0 0 2rem;
+  }
+
+  .blog-article {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  #back-to-top-button {
+    margin-top: 2rem;
   }
 
   .blog-article :global(img),
