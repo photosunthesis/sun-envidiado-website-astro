@@ -25,12 +25,13 @@ export const GET: APIRoute = async ({ request, redirect, locals }) => {
 
     const { data: contact, error: createContactError } = await resend.contacts.create({
       email: email,
+      unsubscribed: false,
     });
 
-    if (createContactError || !contact) throw new Error('Failed to create contact');
+    if (createContactError || !contact) throw new Error('Failed to create or update contact');
 
     const { error: segmentError } = await resend.contacts.segments.add({
-      contactId: contact!.id,
+      contactId: contact.id,
       segmentId: BLOG_SEGMENT_ID,
     });
 

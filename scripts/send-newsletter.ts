@@ -1,8 +1,8 @@
-import { Resend } from 'resend';
+import 'dotenv/config';
 import fs from 'fs/promises';
 import path from 'path';
+import { Resend } from 'resend';
 import { fileURLToPath } from 'url';
-import 'dotenv/config';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -84,8 +84,8 @@ async function getNewBlogs(): Promise<Array<{ slug: string; metadata: BlogMetada
 }
 
 async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
-  if (!RESEND_API_KEY) {
-    throw new Error('RESEND_API_KEY not found in environment');
+  if (!RESEND_API_KEY && !BLOG_SEGMENT_ID) {
+    throw new Error('RESEND_API_KEY and BLOG_SEGMENT_ID not found in environment');
   }
 
   const resend = new Resend(RESEND_API_KEY);
@@ -119,16 +119,15 @@ async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
   `;
 
   const { data, error } = await resend.broadcasts.create({
-    segmentId: BLOG_SEGMENT_ID,
+    segmentId: BLOG_SEGMENT_ID!,
     from: `Sun Envidiado's Blogs <blogs@sun-envidiado.com>`,
     subject: `${blog.metadata.title} – Sun Envidiado`,
     html: emailHtml,
     name: blog.metadata.title,
+    send: true,
   });
 
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
 
   return data;
 }
