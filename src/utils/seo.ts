@@ -44,9 +44,10 @@ export function buildSEOMetadata(params: {
   const title = pubDate ? `${rawTitle} — Sun Envidiado` : rawTitle;
 
   const description = (frontmatter.description as string) || SITE_CONFIG.defaultDescription;
-  const canonical = frontmatter.url
-    ? (frontmatter.url as string)
-    : generateCanonicalUrl(pathname, site);
+  const rawCanonical = (frontmatter.url as string) || generateCanonicalUrl(pathname, site);
+  const canonical = rawCanonical.startsWith('http')
+    ? rawCanonical
+    : generateCanonicalUrl(rawCanonical, site);
   const tags = (frontmatter.tags as string[]) || [];
   const noIndex = (frontmatter.noIndex as boolean) || false;
   const explicitType = frontmatter.type as 'website' | 'article' | undefined;
