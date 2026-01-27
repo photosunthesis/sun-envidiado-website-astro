@@ -1,8 +1,9 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
-import sitemap from '@astrojs/sitemap';
-import mdx from '@astrojs/mdx';
 import cloudflare from '@astrojs/cloudflare';
+import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
+import purgecss from 'astro-purgecss';
+import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
@@ -10,5 +11,5 @@ export default defineConfig({
   adapter: cloudflare({
     imageService: 'compile',
   }),
-  integrations: [sitemap(), mdx()],
+  integrations: [sitemap(), mdx(), purgecss()],
 });

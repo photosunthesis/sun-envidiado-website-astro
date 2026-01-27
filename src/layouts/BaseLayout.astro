@@ -1,4 +1,6 @@
 ---
+import { Seo } from 'astro-seo-meta';
+import { Schema } from 'astro-seo-schema';
 import '../styles/main.scss';
 import { buildSEOMetadata, SITE_CONFIG } from '../utils/seo';
 
@@ -19,16 +21,26 @@ const jsonLd = frontmatter.jsonLd || null;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{seo.title}</title>
-    <meta name="theme-color" content="#000000" />
-    <meta name="msapplication-navbutton-color" content="#000000" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="#000000" />
-    <meta name="description" content={seo.description} />
-    <meta name="robots" content={seo.noIndex ? 'noindex, nofollow' : 'index, follow'} />
+    <Seo
+      title={seo.title}
+      description={seo.description}
+      keywords={seo.tags}
+      icon="/favicon-32x32.png"
+      themeColor="#000000"
+      colorScheme={'light dark' as any}
+      robots={seo.noIndex ? 'noindex, nofollow' : 'index, follow'}
+      facebook={{
+        image: seo.imageUrl,
+        url: seo.canonical,
+        type: seo.type as any,
+      }}
+      twitter={{
+        image: seo.imageUrl,
+        card: seo.imageUrl ? 'summary_large_image' : 'summary',
+      }}
+    />
+
     <link rel="canonical" href={seo.canonical} />
-    <meta name="referrer" content="no-referrer-when-downgrade" />
-    <meta name="color-scheme" content="light dark" />
     <meta name="author" content={seo.author || SITE_CONFIG.authorName} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
@@ -42,16 +54,6 @@ const jsonLd = frontmatter.jsonLd || null;
     }
 
     <meta property="og:site_name" content={SITE_CONFIG.siteName} />
-    <meta property="og:type" content={seo.type} />
-    <meta property="og:title" content={seo.title} />
-    <meta property="og:description" content={seo.description} />
-    <meta property="og:url" content={seo.canonical} />
-    <meta property="og:image" content={seo.imageUrl} />
-
-    <meta name="twitter:card" content={seo.imageUrl ? 'summary_large_image' : 'summary'} />
-    <meta name="twitter:title" content={seo.title} />
-    <meta name="twitter:description" content={seo.description} />
-    <meta name="twitter:image" content={seo.imageUrl} />
 
     <slot name="seo" />
 
@@ -63,11 +65,10 @@ const jsonLd = frontmatter.jsonLd || null;
       crossorigin
     />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <Schema item={jsonLd} />}
 
     {
       isProd && (
