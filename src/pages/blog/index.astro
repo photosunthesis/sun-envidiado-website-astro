@@ -3,65 +3,35 @@ import BackButton from '../../components/BackButton.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const postModules = import.meta.glob<{
-  frontmatter?: { title?: string; pubDate?: string };
-}>(
-  // Include .md and .mdx files, and also allow index.md(x) inside directories
-  './**/*.{md,mdx}',
-  { eager: true },
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
-type Frontmatter = { title?: string; pubDate?: string };
-type CandidatePost = { title: string; pubDate?: Date; url: string };
-type PublishedPost = { title: string; pubDate: Date; url: string; index: number };
-
-// Helpers
-const slugFromPath = (path: string) => {
-  // Remove the .md or .mdx extension and leading ./
-  const cleanPath = path.replace(/\.mdx?$/, '').replace(/^\.\//, '');
-  // If it ends with /index (standard Astro pattern), remove that part to get clean URLs
-  return cleanPath.replace(/\/index$/, '');
-};
-
-const parsePubDate = (value?: unknown): Date | undefined => {
-  if (!value) return undefined;
-  const d = new Date(String(value));
-  return Number.isFinite(d.valueOf()) ? d : undefined;
-};
-
-const makeCandidate = (path: string, mod: { frontmatter?: Frontmatter }): CandidatePost => {
-  const slug = slugFromPath(path);
-  const fm = mod.frontmatter ?? {};
-  return {
-    title: String(fm.title ?? slug),
-    pubDate: parsePubDate(fm.pubDate),
-    url: `/blog/${slug}`,
-  };
-};
-
-// Build, filter, sort and index posts in a clear pipeline
-const candidatePosts: CandidatePost[] = Object.entries(postModules).map(([p, m]) =>
-  makeCandidate(p, m),
-);
-
-const posts: PublishedPost[] = candidatePosts
-  .filter((c): c is CandidatePost & { pubDate: Date } => Boolean(c.pubDate))
-  .sort((a, b) => b.pubDate.valueOf() - a.pubDate.valueOf())
-  .map((p, i) => ({ title: p.title, pubDate: p.pubDate as Date, url: p.url, index: i }));
 
 // Group posts by year using reduce for clarity
-const postsByYear: Record<number, PublishedPost[]> = posts.reduce(
-  (acc, p) => {
-    const year = p.pubDate.getFullYear();
-    (acc[year] ||= []).push(p);
+const grouped = posts.reduce(
+  (acc, p, i) => {
+    const year = p.data.pubDate.getFullYear();
+    (acc[year] ||= []).push({
+      title: p.data.title,
+      pubDate: p.data.pubDate,
+      url: `/blog/${p.slug}`,
+      index: i,
+    });
     return acc;
   },
-  {} as Record<number, PublishedPost[]>,
+  {} as Record<number, { title: string; pubDate: Date; url: string; index: number }[]>,
 );
 
 // Keep older variable names compatible with templates below
-const postList = posts;
-const grouped = postsByYear;
+// Used for JSON-LD construction
+const postList = posts.map((p, i) => ({
+  title: p.data.title,
+  pubDate: p.data.pubDate,
+  url: `/blog/${p.slug}`,
+  index: i,
+}));
 
 // SEO-optimized metadata
 const seoMeta = {

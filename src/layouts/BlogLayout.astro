@@ -12,9 +12,9 @@ let coverImage: ImageMetadata | undefined;
 if (frontmatter.cover) {
   try {
     const images = import.meta.glob<{ default: ImageMetadata }>(
-      '/src/pages/blog/**/*.{jpeg,jpg,png,gif,webp}',
+      '/src/content/blog/**/*.{jpeg,jpg,png,gif,webp}',
     );
-    const imagePath = `/src/pages/blog/${frontmatter.cover.replace('./', '')}`;
+    const imagePath = `/src/content/blog/${frontmatter.cover.replace('./', '')}`;
 
     if (images[imagePath]) {
       const imageModule = await images[imagePath]();
