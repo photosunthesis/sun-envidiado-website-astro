@@ -7,7 +7,7 @@ const MAX_DIMENSION = 1280;
 async function optimizeImages() {
   console.log('🔍 Scanning for images...');
 
-  const files = await glob(['public/**/*.{png,jpg,jpeg,webp}', 'src/**/*.{png,jpg,jpeg,webp}'], {
+  const files = await glob(['src/**/*.{png,jpg,jpeg,webp}'], {
     ignore: ['**/node_modules/**'],
   });
 
