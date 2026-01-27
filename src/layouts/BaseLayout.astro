@@ -1,6 +1,5 @@
 ---
 import '../styles/main.scss';
-import CommandBar from '../components/CommandBar.astro';
 import { buildSEOMetadata, SITE_CONFIG } from '../utils/seo';
 
 const isProd = import.meta.env && import.meta.env.PROD;
@@ -80,16 +79,13 @@ const jsonLd = frontmatter.jsonLd || null;
       )
     }
   </head>
-  <body class="vim-root crt-text-ca">
+  <body>
     <a class="skip-link" href="#main" aria-label="Skip to main content">Skip to content</a>
-    <div class="main-flex-container">
-      <main id="main" class="vim-main-content" tabindex="-1">
-        <div class="centered-vim">
-          <slot />
-        </div>
-      </main>
-    </div>
-    <CommandBar />
-    <div id="crt-overlay-container" class="crt-enabled"></div>
+    <main id="main">
+      <div class="content-wrapper">
+        <slot />
+      </div>
+    </main>
+    <div id="crt-overlay-container"></div>
   </body>
 </html>
