@@ -25,7 +25,7 @@
   --red: #e06c75;
   --yellow: #e5c07b;
   --blue: #61afef;
-  --command-bar-height: 30px;
+
   --code-bg: rgba(31, 35, 40, 0.3);
   --code-fg: #dcdfe4;
   --code-inline-color: #b16286;
@@ -68,14 +68,6 @@ button.link-like:focus {
   text-decoration: underline;
 }
 
-.vim-root {
-  display: block;
-  min-height: calc(100vh - var(--command-bar-height));
-  font-family: inherit;
-  background-color: var(--background);
-}
-
-/* Global typography defaults (moved from _blog.scss) */
 h1,
 h2,
 h3,
@@ -154,6 +146,18 @@ pre[class*='astro-code'] {
   }
 }
 
+.back-to-home {
+  padding-bottom: 1rem;
+
+  a {
+    color: var(--comment);
+    &:hover {
+      color: var(--cyan);
+      text-decoration: underline;
+    }
+  }
+}
+
 .skip-link {
   position: absolute;
   left: -999px;
@@ -189,27 +193,15 @@ pre[class*='astro-code'] {
   border: 0 !important;
 }
 
-.vim-main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - var(--command-bar-height));
-}
-
-.main-flex-container {
-  display: flex;
-  align-items: stretch;
-}
-
-$command-bar-height: 30px;
-
-.centered-vim {
+.content-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - #{$command-bar-height});
+  min-height: 100vh;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .sr-only {
@@ -238,6 +230,7 @@ $crt-blue: rgb(40, 129, 206);
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  filter: contrast(1) saturate(2) hue-rotate(6deg);
 
   &::before,
   &::after {
@@ -245,19 +238,33 @@ $crt-blue: rgb(40, 129, 206);
     position: absolute;
     inset: 0;
     z-index: 99999;
-    display: none;
+    display: block;
   }
 
-  &.crt-enabled {
-    filter: contrast(1) saturate(2) hue-rotate(6deg);
+  &::before {
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    transform: translate3d(2px, 0, 0);
+    filter: blur($crt-ca-blur);
+    background-image:
+      linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
+      repeating-linear-gradient(
+        to right,
+        rgba($crt-red, $crt-stripe-opacity) 0,
+        rgba($crt-green, $crt-stripe-opacity) $crt-stripe-width,
+        rgba($crt-blue, $crt-stripe-opacity) calc($crt-stripe-width * 2)
+      );
 
-    &::before {
-      display: block;
-      mix-blend-mode: screen;
-      opacity: 0.8;
-      transform: translate3d(2px, 0, 0);
-      filter: blur($crt-ca-blur);
+    @media (max-width: 480px) {
       background-image:
+        linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.98) 0%,
+          rgba(0, 0, 0, 0.92) 18%,
+          rgba(0, 0, 0, 0.7) 38%,
+          rgba(0, 0, 0, 0.25) 60%,
+          rgba(0, 0, 0, 0) 100%
+        ),
         linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
         repeating-linear-gradient(
           to right,
@@ -265,77 +272,47 @@ $crt-blue: rgb(40, 129, 206);
           rgba($crt-green, $crt-stripe-opacity) $crt-stripe-width,
           rgba($crt-blue, $crt-stripe-opacity) calc($crt-stripe-width * 2)
         );
-
-      @media (max-width: 480px) {
-        background-image:
-          linear-gradient(
-            to bottom,
-            rgba(0, 0, 0, 0.98) 0%,
-            rgba(0, 0, 0, 0.92) 18%,
-            rgba(0, 0, 0, 0.7) 38%,
-            rgba(0, 0, 0, 0.25) 60%,
-            rgba(0, 0, 0, 0) 100%
-          ),
-          linear-gradient(rgba(8, 8, 8, 0.16), rgba(8, 8, 8, 0.16)),
-          repeating-linear-gradient(
-            to right,
-            rgba($crt-red, $crt-stripe-opacity) 0,
-            rgba($crt-green, $crt-stripe-opacity) $crt-stripe-width,
-            rgba($crt-blue, $crt-stripe-opacity) calc($crt-stripe-width * 2)
-          );
-        background-repeat: no-repeat, repeat, repeat;
-        background-size:
-          100% calc(env(safe-area-inset-top, 64px) + 64px),
-          auto,
-          auto;
-      }
-    }
-
-    &::after {
-      display: block;
-      mix-blend-mode: multiply;
-      opacity: calc(0.6 + ($crt-vignette-opacity * 0.4));
-      transform: translate3d(-2px, 0, 0);
-      filter: blur(calc($crt-ca-blur * 1.2));
-      background-image:
-        radial-gradient(
-          ellipse at center,
-          transparent 30%,
-          rgba(0, 0, 0, calc($crt-vignette-opacity * 0.72)) 70%
-        ),
-        repeating-linear-gradient(
-          90deg,
-          rgba($crt-red, $crt-stripe-opacity) 1px,
-          rgba($crt-green, $crt-stripe-opacity) 2px,
-          rgba($crt-blue, $crt-stripe-opacity) 3px
-        ),
-        repeating-linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, $crt-scan-opacity) 0,
-          rgba(0, 0, 0, $crt-scan-opacity) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      box-shadow: inset 0 0 360px rgba(0, 0, 0, $crt-vignette-opacity);
+      background-repeat: no-repeat, repeat, repeat;
+      background-size:
+        100% calc(env(safe-area-inset-top, 64px) + 64px),
+        auto,
+        auto;
     }
   }
-}
 
-/* Ensure main content sits above the overlay so text-shadow/CA is visible */
-.vim-main-content {
-  position: relative;
-  z-index: 1;
+  &::after {
+    mix-blend-mode: multiply;
+    opacity: calc(0.6 + ($crt-vignette-opacity * 0.4));
+    transform: translate3d(-2px, 0, 0);
+    filter: blur(calc($crt-ca-blur * 1.2));
+    background-image:
+      radial-gradient(
+        ellipse at center,
+        transparent 30%,
+        rgba(0, 0, 0, calc($crt-vignette-opacity * 0.72)) 70%
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba($crt-red, $crt-stripe-opacity) 1px,
+        rgba($crt-green, $crt-stripe-opacity) 2px,
+        rgba($crt-blue, $crt-stripe-opacity) 3px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, $crt-scan-opacity) 0,
+        rgba(0, 0, 0, $crt-scan-opacity) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+    box-shadow: inset 0 0 360px rgba(0, 0, 0, $crt-vignette-opacity);
+  }
 }
 
 $rgb-offset: 2px;
 
-/* Root selector: when CRT is enabled on the body, apply chromatic fringe site-wide */
-/* Apply chromatic fringe to main content and to text inside the command bar only.
-  Avoid styling the `.command-bar` container itself to prevent layout/height changes
-  (fixes the accidental gap under the fixed command bar). */
-body.crt-text-ca .vim-main-content,
-body.crt-text-ca .vim-main-content *,
-body.crt-text-ca .command-bar * {
+/* Apply chromatic fringe on fonts site-wide */
+body .content-wrapper,
+body .content-wrapper * {
   -webkit-font-smoothing: antialiased;
   text-shadow:
     $rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.14),

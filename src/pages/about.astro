@@ -1,17 +1,20 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// SEO-optimized metadata
+const siteBase = Astro.site || 'https://sun-envidiado.com';
+const imageUrl = new URL('/default.png', siteBase).toString();
 const seoMeta = {
   title: 'About — Sun Envidiado',
   description:
-    "Hi! I'm Sun, a developer from Manila who builds stuff with Flutter. When I'm not coding, I'm probably gaming (Helldivers 2 anyone?), doing karaoke, or scrolling TikTok. This is where I share what I'm up to and what's on my mind.",
-  tags: ['about sun envidiado', 'developer manila', 'personal site', 'flutter', 'gaming'],
+    "I'm Sun Envidiado, a software developer from Manila who focuses on Flutter app development. Outside of programming, I play games, do karaoke, and cook. This is my corner of the internet where I share work projects, personal posts, and random thoughts.",
+  tags: [
+    'about sun envidiado',
+    'software developer manila',
+    'flutter developer',
+    'personal website',
+    'developer blog',
+  ],
 };
-
-// JSON-LD Structured Data
-const siteBase = Astro.site || 'https://sun-envidiado.com';
-const imageUrl = new URL('/default.png', siteBase).toString();
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -24,32 +27,12 @@ const jsonLd = {
     image: imageUrl,
     jobTitle: 'Software Developer',
     description: seoMeta.description,
-    knowsAbout: [
-      'Flutter',
-      'Dart',
-      'JavaScript',
-      'Vue.js',
-      'C#',
-      '.NET',
-      'PHP',
-      'Laravel',
-      'Web Development',
-      'Mobile Development',
-    ],
-    alumniOf: 'Manila, Philippines',
+    knowsAbout: ['Flutter'],
+    addressLocality: 'Manila, Philippines',
     sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
-    email: 'mailto:hello@sun-envidiado.com',
     interestIn: ['Coding', 'Gaming', 'Karaoke', 'Cooking'],
   },
 };
-
-const asciiArt = `
- ▗▄▖ ▗▄▄▖  ▗▄▖ ▗▖ ▗▖▗▄▄▄▖
-▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌  █  
-▐▛▀▜▌▐▛▀▚▖▐▌ ▐▌▐▌ ▐▌  █  
-▐▌ ▐▌▐▙▄▞▘▝▚▄▞▘▝▚▄▞▘  █  
-                                                                                             
-`;
 ---
 
 <BaseLayout
@@ -61,64 +44,41 @@ const asciiArt = `
 >
   <div class="about-content">
     <article class="about-article" aria-labelledby="about-title">
-      <pre class="ascii-header-title" aria-hidden="true">{asciiArt}</pre>
       <h1 id="about-title" class="about-title sr-only">About Me</h1>
+      <div class="back-to-home">
+        <a href="/" aria-label="Go to homepage">← Back to home</a>
+      </div>
       <p>
         My name is <span class="highlight">Sun Envidiado</span>. I'm a software developer from
-        Manila, Philippines. I've dabbled in plenty of tech stacks over the years, but these days I
-        mostly focus on Flutter.
+        Manila who currently focuses on Flutter app development.
       </p>
       <p>
-        Outside of work, you'll find me gaming (completely hooked on Helldivers 2 right now), doing
-        karaoke with friends, or scrolling through TikTok for unhealthy amounts of time. I cook too,
-        though I'm barely just decent at it right now. My dream is to one day have a proper kitchen
-        with good utensils so I can work my way up to making Michelin-star quality meals.
+        Outside of programming, you'll find me playing games, doing karaoke, or scrolling through
+        TikTok for unhealthy amounts of time. I cook too, though I'm barely decent at it. My dream
+        is to one day have a proper kitchen so I can make Michelin-star quality meals.
       </p>
       <p>
-        The look of this website was inspired by vim and retro computers because I think they look
-        cool. Ironically though, I use VS Code for my actual coding (like a normal person).
+        I designed this site to look like vim and retro computers because I think they're cool
+        (though ironically, I use VS Code). You'll find a mix of work projects, personal posts, and
+        random thoughts here.
       </p>
-      <p>
-        This is my little corner of the internet where I share projects, ideas, and random thoughts
-        about code, gaming, and life in general. It's where I document my experiences and whatever's
-        on my mind, and a place where people can get to know me a little better.
-      </p>
-      <footer class="about-footer">
-        To go back to the homepage, tap/type
-        <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
-      </footer>
     </article>
   </div>
 </BaseLayout>
 
 <style lang="scss">
   .about-content {
-    max-width: 600px;
+    max-width: 480px;
     margin: 1.5rem;
     color: var(--foreground);
     text-align: left;
     padding: 0 1rem;
 
     @media (max-width: 480px) {
-      margin: 1.5rem 0;
-      padding: 0 1rem;
+      margin: 0 2rem;
     }
   }
 
-  .about-footer {
-    color: var(--comment);
-    white-space: nowrap;
-    overflow-wrap: anywhere;
-    padding-bottom: 3rem;
-    padding-top: 1rem;
-    line-height: 1.5;
-
-    @media (max-width: 480px) {
-      white-space: normal;
-    }
-  }
-
-  /* Color highlight spans */
   :global(.highlight) {
     color: var(--orange);
     font-weight: bold;

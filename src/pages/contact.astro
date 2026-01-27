@@ -34,14 +34,6 @@ const jsonLd = {
     sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
   },
 };
-
-const asciiHeaderTitle = `
- ▗▄▄▖ ▗▄▖ ▗▖  ▗▖▗▄▄▄▖▗▄▖  ▗▄▄▖▗▄▄▄▖
-▐▌   ▐▌ ▐▌▐▛▚▖▐▌  █ ▐▌ ▐▌▐▌     █  
-▐▌   ▐▌ ▐▌▐▌ ▝▜▌  █ ▐▛▀▜▌▐▌     █  
-▝▚▄▄▖▝▚▄▞▘▐▌  ▐▌  █ ▐▌ ▐▌▝▚▄▄▖  █  
-                                   
-`;
 ---
 
 <BaseLayout
@@ -52,8 +44,10 @@ const asciiHeaderTitle = `
   jsonLd={jsonLd}
 >
   <div class="contact-content">
-    <pre class="ascii-header-title">{asciiHeaderTitle}</pre>
     <h1 class="sr-only">Contact</h1>
+    <div class="back-to-home">
+      <a href="/" aria-label="Go to homepage">← Back to home</a>
+    </div>
     <div class="contact-container">
       <ul class="contact-list">
         <li class="contact-row">
@@ -92,15 +86,12 @@ const asciiHeaderTitle = `
         </li>
       </ul>
     </div>
-    <footer class="contact-footer">
-      Type/tap <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a> to go back to the homepage.
-    </footer>
   </div>
 </BaseLayout>
 
 <style lang="scss">
   .contact-content {
-    max-width: 400px;
+    max-width: 480px;
     margin: 1.5rem;
     color: var(--foreground);
     text-align: left;
@@ -122,9 +113,7 @@ const asciiHeaderTitle = `
     margin-bottom: 0.8rem;
   }
 
-  .contact-footer {
-    color: var(--comment);
-    margin-top: 2rem;
-    line-height: 1.6;
+  .back-to-home {
+    padding-bottom: 2rem;
   }
 </style>
