@@ -2,6 +2,7 @@
 import type { ImageMetadata } from 'astro';
 import { Picture } from 'astro:assets';
 import Newsletter from '../components/Newsletter.astro';
+import BackButton from '../components/BackButton.astro';
 import BaseLayout from './BaseLayout.astro';
 
 const props = Astro.props;
@@ -27,9 +28,7 @@ if (frontmatter.cover) {
 
 <BaseLayout frontmatter={frontmatter} coverImage={coverImage}>
   <div class="blog-layout">
-    <div class="back-to-home">
-      <button id="back-button" aria-label="Go back">← Back</button>
-    </div>
+    <BackButton />
 
     {
       coverImage && (
@@ -63,24 +62,13 @@ if (frontmatter.cover) {
 
     <Newsletter hasBorderTop={true} />
 
-    <div class="back-to-home">
+    <div class="back-to-top-wrapper">
       <button id="back-to-top-button" aria-label="Scroll to top">↑ Back to top</button>
     </div>
   </div>
 </BaseLayout>
 
 <script>
-  const backButton = document.getElementById('back-button');
-  if (backButton) {
-    backButton.addEventListener('click', () => {
-      if (window.history.length > 1) {
-        window.history.back();
-      } else {
-        window.location.href = '/';
-      }
-    });
-  }
-
   const backToTopButton = document.getElementById('back-to-top-button');
   if (backToTopButton) {
     backToTopButton.addEventListener('click', () => {
@@ -144,5 +132,20 @@ if (frontmatter.cover) {
     max-width: 100%;
     height: auto;
     border-radius: 4px;
+  }
+
+  .back-to-top-wrapper {
+    padding-bottom: 1rem;
+
+    button {
+      color: var(--comment);
+      padding: 0;
+      text-decoration: none;
+
+      &:hover {
+        color: var(--cyan);
+        text-decoration: underline;
+      }
+    }
   }
 </style>

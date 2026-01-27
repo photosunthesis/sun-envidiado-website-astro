@@ -1,5 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BackButton from '../components/BackButton.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
 const siteBase = Astro.site || 'https://sun-envidiado.com';
 const imageUrl = new URL('/default.png', siteBase).toString();
@@ -45,12 +46,10 @@ const jsonLd = {
   <div class="about-content">
     <article class="about-article" aria-labelledby="about-title">
       <h1 id="about-title" class="about-title sr-only">About Me</h1>
-      <div class="back-to-home">
-        <a href="/" aria-label="Go to homepage">← Back</a>
-      </div>
+      <BackButton />
       <p>
         My name is <span class="highlight">Sun Envidiado</span>. And yes, I am named after <i>the</i
-        > Sun. I'm a software developer by day, and by night, I... might still be coding (or sleeping).
+        > Sun. I'm a software developer from the Philippines, currently living in Metro Manila.
       </p>
       <p>
         Outside of programming, you'll find me watching anime and films, playing videogames, doing
@@ -59,9 +58,10 @@ const jsonLd = {
         utensils so I can make Michelin-star meals.
       </p>
       <p>
-        The design of this website is inspired by vim and terminal user interfaces because those
-        look cool and hacky and computer-y. Though ironically, I use VS Code as my IDE. You'll find
-        a mix of work projects, personal posts, and random thoughts here.
+        The design of this website is inspired by vim and TUIs. I've always found them cool and
+        hacky and computer-y. Though ironically, I mainly use VS Code. This website is my small
+        corner on the internet where you can find a mix of software projects, personal posts, and
+        random thoughts about life, anime, games, and everything in between.
       </p>
     </article>
   </div>
@@ -70,13 +70,12 @@ const jsonLd = {
 <style lang="scss">
   .about-content {
     max-width: 480px;
-    margin: 1.5rem;
+    margin: 1.5rem 0;
     color: var(--foreground);
     text-align: left;
-    padding: 0 1rem;
 
     @media (max-width: 480px) {
-      margin: 0 2rem;
+      margin: 1.5rem 1.5rem;
     }
   }
 

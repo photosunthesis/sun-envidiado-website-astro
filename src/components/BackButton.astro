@@ -1,0 +1,53 @@
+---
+interface Props {
+  href?: string;
+  label?: string;
+  class?: string;
+}
+
+const { href = '/', label = '← Back', class: className } = Astro.props;
+---
+
+<div class:list={['back-button-wrapper', className]}>
+  <a href={href} aria-label="Go back or to homepage" class="js-back-button">{label}</a>
+</div>
+
+<script>
+  const backButtons = document.querySelectorAll('a.js-back-button');
+
+  backButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const hasHistory = window.history.length > 1;
+      const isSameOrigin =
+        document.referrer && document.referrer.indexOf(window.location.host) !== -1;
+
+      if (hasHistory && isSameOrigin) {
+        e.preventDefault();
+        window.history.back();
+        return;
+      }
+    });
+  });
+</script>
+
+<style lang="scss">
+  .back-button-wrapper {
+    padding-bottom: 1rem;
+
+    a {
+      color: var(--comment);
+      padding: 0;
+      text-decoration: none;
+      cursor: pointer;
+      font-family: inherit;
+      background: none;
+      border: none;
+      display: inline-block;
+
+      &:hover {
+        color: var(--cyan);
+        text-decoration: underline;
+      }
+    }
+  }
+</style>

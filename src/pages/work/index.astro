@@ -1,5 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
+import BackButton from '../../components/BackButton.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import bebiAppImage from './_assets/bebi-app.png';
 import haandvaerkerImage from './_assets/haandvaerker-dk.png';
@@ -70,7 +71,7 @@ const experiences = [
     period: 'Mar 2019 — Jan 2021',
     company: 'Various Organizations',
     role: 'Web Developer',
-    description: 'Web projects with Vue, React, .NET, and Shopify.',
+    description: 'Web projects with JavaScript, PHP, C#, and Shopify.',
   },
 ];
 
@@ -110,16 +111,14 @@ const projects = [
 >
   <div class="work-content">
     <article class="work-article" aria-labelledby="work-title">
-      <div class="back-to-home">
-        <a href="/" aria-label="Go to homepage">← Back</a>
-      </div>
+      <BackButton />
 
       <h1 id="work-title" class="sr-only">Work</h1>
 
       <section class="intro-section">
         <p>
-          I've been in software for {years}+ years, starting with web before shifting to mobile. I
-          specialize in Flutter and Dart for cross-platform apps on Android, iOS, and Web.
+          I've been in software for {years}+ years, starting with web before shifting to mobile. My
+          current focus is Flutter and Dart for cross-platform apps on Android, iOS, and Web.
         </p>
         <p>
           Along the way, I developed skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET),
@@ -177,6 +176,14 @@ const projects = [
           }
         </div>
       </section>
+
+      <section class="contact-section">
+        <p>
+          If you'd like to get in touch, you can reach me through the <a href="/contact"
+            >contact page</a
+          >.
+        </p>
+      </section>
     </article>
   </div>
 </BaseLayout>
@@ -226,6 +233,7 @@ const projects = [
   .experience-company-period {
     color: var(--comment);
     margin-bottom: 0.15rem;
+    line-height: 1.5;
   }
 
   .experience-role {
@@ -250,11 +258,12 @@ const projects = [
     flex-direction: column;
     gap: 3rem;
     margin-top: 1rem;
+    margin-bottom: 3rem;
   }
 
   .section-title {
-    margin-bottom: 0.6rem;
-    margin-top: 1.4rem;
+    margin-bottom: 1rem;
+    margin-top: 3rem;
     font-weight: 500;
   }
 
@@ -325,5 +334,9 @@ const projects = [
     color: var(--foreground);
     line-height: 1.6;
     margin: 0;
+  }
+
+  .contact-section {
+    margin-bottom: 2rem;
   }
 </style>

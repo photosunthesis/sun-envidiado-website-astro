@@ -1,4 +1,5 @@
 ---
+import BackButton from '../components/BackButton.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // SEO-optimized metadata
@@ -45,9 +46,7 @@ const jsonLd = {
 >
   <div class="contact-content">
     <h1 class="sr-only">Contact</h1>
-    <div class="back-to-home">
-      <a href="/" aria-label="Go to homepage">← Back</a>
-    </div>
+    <BackButton class="custom-back-spacing" />
     <div class="contact-container">
       <ul class="contact-list">
         <li class="contact-row">
@@ -113,7 +112,7 @@ const jsonLd = {
     margin-bottom: 0.8rem;
   }
 
-  .back-to-home {
+  .custom-back-spacing {
     padding-bottom: 2rem;
   }
 </style>

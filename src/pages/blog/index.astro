@@ -1,4 +1,5 @@
 ---
+import BackButton from '../../components/BackButton.astro';
 import Newsletter from '../../components/Newsletter.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -116,9 +117,7 @@ const jsonLd = {
   <div class="blog-content">
     <header class="blog-header">
       <h1 id="blog-title" class="sr-only">Blog</h1>
-      <div class="back-to-home">
-        <a href="/" aria-label="Go to homepage">← Back</a>
-      </div>
+      <BackButton />
     </header>
 
     <Newsletter />
@@ -162,8 +161,7 @@ const jsonLd = {
     width: 100%;
 
     @media (max-width: 480px) {
-      margin: 1.5rem 0;
-      padding: 0 1rem;
+      padding: 1.5rem 1.5rem;
     }
   }
 
