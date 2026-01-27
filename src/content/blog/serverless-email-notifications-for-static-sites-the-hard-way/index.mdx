@@ -6,53 +6,52 @@ tags: ['astro', 'serverless', 'cloudflare', 'typescript', 'rss', 'automation']
 cover: 'serverless-email-notifications-for-static-sites-the-hard-way/_assets/cover.png'
 coverAlt: 'A scribbled diagram of a serverless email notification system.'
 ---
+
 import { Picture } from 'astro:assets';
 import ImmaDoMyOwnThing from './_assets/imma_do_my_own_thing.gif';
 
 I wanted to set up a newsletter because that's apparently what you're supposed to do when you have a blog.
 
-But here's the thing: I really didn't want to pay a monthly fee for something I'm doing for fun. So I had two options: rely on a free tier of some service that limits my customization, or spend like 2 hours writing and testing a script to save $0 and feel cool about it.
-
-Naturally, I chose the latter.
+I looked at the standard ways to handle this and they all felt like a lot of overhead for a small personal project. I wanted something that felt like it belonged here, without the extra baggage of a typical marketing platform or a complex setup.
 
 ## The Problem
 
-I wanted a simple flow: I write a blog post in Markdown, I push to GitHub, Cloudflare Pages builds my site, and my subscribers get an email.
+I wanted a simple flow. I write a blog post in Markdown, push to GitHub, let Cloudflare Pages build the site, and my subscribers get an email.
 
-Most "free" tiers on newsletter platforms are great until you want to own your data or customize the design without their branding plastered everywhere. Plus, I already have the content right here in my repo. Why duplicate it?
+I already use <a href="https://resend.com" target="_blank" rel="noopener noreferrer" title="Resend">Resend</a> for other projects, and so I wanted to stick with that instead of adding another vendor to my stack. I didn't want to hook up to more services, mess with new APIs, or deal with heavy SDKs just to bridge my content to my subscribers.
 
-Since I'm already using <a href="https://resend.com" target="_blank" rel="noopener noreferrer" title="Resend">Resend</a> for other projects, it made sense to just create a new account for this site and handle delivery through a platform I'm already familiar with. I know there are turnkey tools specifically built for this kind of thing, many of which are completely frictionless, but I looked at them and thought...
+I know there are turnkey tools built for this kind of thing, and many of them are practically frictionless. But they are often paid or require you to duplicate your content into their own dashboards. Even then, there was still the issue of how to actually get the Markdown into an email. I looked at several solutions ranging from basic automation hooks to full on marketing platforms that do it all for you, but I thought...
 
-<Picture 
-  src={ImmaDoMyOwnThing} 
+<Picture
+  src={ImmaDoMyOwnThing}
   formats={['webp']}
-  fallbackFormat="gif" 
-  alt="Miles Morales saying 'Imma do my own thing' in the movie Spider-Man: Across the Spider-Verse" 
+  fallbackFormat="gif"
+  alt="Miles Morales saying 'Imma do my own thing' in the movie Spider-Man: Across the Spider-Verse"
 />
 <figcaption>Credit: Spider-Man: Across the Spider-Verse</figcaption>
 
 ## The Stack
 
-So I DIYed... something. Here are the moving parts:
+So I DIYed an automated email notification pipeline. Here are the moving parts:
 
 - **Astro**: Generates the RSS feed (`rss.xml`) from my existing content collections.
 - **Resend**: Actually sends the emails (their free tier is generous).
 - **RSS Parser**: Reads my own feed.
-- **Cloudflare Pages**: runs the build (and my weird script).
+- **Cloudflare Pages**: runs a simple script and then builds the site.
 
 ## The Logic
 
-Instead of hooking into a database or a complex CMS, I realized my production RSS feed is basically the "single source of truth" for what is currently live.
+Instead of hooking into a database or a complex CMS or mailing platform, I realized my production RSS feed is basically the "single source of truth" for what is currently live.
 
-I wrote a script that runs **before** the build completes. It grabs the *live* RSS feed (what's currently on the site) and compares it to the local file system (what I'm about to deploy).
+I wrote a script that runs **before** the build completes. It grabs the _live_ RSS feed (what's currently on the site) and compares it to the local file system (what I'm about to deploy).
 
 ```txt
-If "Local Post" exists AND "Local Post" is NOT in "Live RSS" -> Send Email.
+If "Local Post" exists AND "Local Post" is NOT in "Live RSS" => Send Email.
 ```
 
 It's stupid simple. It listens to the "diff" between deployments.
 
-### The Script
+## The Script
 
 I added a `build:prod` command to my `package.json`:
 
@@ -67,23 +66,24 @@ The script (`send-newsletter.ts`) does the heavy lifting:
 3. **Checks for new slugs**.
 4. **Fires off an email via Resend** to a specific contact segment.
 
-It's essentially a CI/CD pipeline step that acts as my marketing team.
+It's essentially a CI/CD pipeline step that acts as my marketing team!
 
 ## The "Gotchas"
 
 Of course, it wasn't seamless.
 
 - **Double Builds**: If I run this locally without checks, I casually spam everyone with "Hello World" test posts. So I added a check to only send emails if in production.
-- **Timing**: The email sends *before* the build finishes. Technically, for a few minutes, the link in the email 404s until Cloudflare swaps the deployment. I call this "building anticipation" (also Astro sites deploy in like 10 seconds).
+- **Timing**: The email sends _before_ the build finishes. Technically, for a few minutes, the link in the email 404s until Cloudflare swaps the deployment. I call this "building anticipation".
 - **Edits**: If I fix a typo in an old post, I have to make sure the script doesn't think it's "new." The RSS comparison handles this nicely; it only cares about slugs, not content timestamps.
 
 ## Conclusion
 
-Is this over-engineered? Maybe. Yes.
+Is this over-engineered? Probably.
+Is there a better way to do this? Most likely.
 Is it satisfying? Absolutely.
 
 It works for me, costs me nothing, and gives me an excuse to write more TypeScript. If you're reading this after clicking the link in the email, it worked!
 
-If you're reading this on the site, maybe subscribe below and test my code for me? 
+If you're reading this on the site, maybe subscribe below and test my code for me?
 
 (ㅅ •᷄ ₃•᷅ )
