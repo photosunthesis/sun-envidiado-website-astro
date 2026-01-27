@@ -4,7 +4,7 @@ pubDate: '2026-01-27'
 description: "Why pay for a newsletter service when you can just build it yourself? Here's how I cobbled together RSS, Resend, and Cloudflare to annoy my subscribers automatically."
 tags: ['astro', 'serverless', 'cloudflare', 'typescript', 'rss', 'automation']
 cover: 'serverless-email-notifications-for-static-sites-the-hard-way/_assets/cover.png'
-coverAlt: 'A screenshot of code.'
+coverAlt: 'A scribbled diagram of a serverless email notification system.'
 ---
 import { Picture } from 'astro:assets';
 import ImmaDoMyOwnThing from './_assets/imma_do_my_own_thing.gif';
@@ -21,14 +21,15 @@ I wanted a simple flow: I write a blog post in Markdown, I push to GitHub, Cloud
 
 Most "free" tiers on newsletter platforms are great until you want to own your data or customize the design without their branding plastered everywhere. Plus, I already have the content right here in my repo. Why duplicate it?
 
-Since I'm already using Resend for other projects, it made sense to just create a new account for this site and handle delivery through a platform I'm already familiar with. I know there are turnkey tools specifically built for this kind of thing, many of which are completely frictionless, but I looked at them and thought...
+Since I'm already using <a href="https://resend.com" target="_blank" rel="noopener noreferrer" title="Resend">Resend</a> for other projects, it made sense to just create a new account for this site and handle delivery through a platform I'm already familiar with. I know there are turnkey tools specifically built for this kind of thing, many of which are completely frictionless, but I looked at them and thought...
 
 <Picture 
   src={ImmaDoMyOwnThing} 
   formats={['webp']}
   fallbackFormat="gif" 
-  alt="Imma do my own thing meme gif" 
+  alt="Miles Morales saying 'Imma do my own thing' in the movie Spider-Man: Across the Spider-Verse" 
 />
+<figcaption>Credit: Spider-Man: Across the Spider-Verse</figcaption>
 
 ## The Stack
 
