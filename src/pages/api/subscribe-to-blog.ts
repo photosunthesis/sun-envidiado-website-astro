@@ -45,6 +45,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
           <div style="margin: 32px 0;">
             <a href="${verifyUrl}" style="background-color: #09090b; color: #ffffff; padding: 12px 22px; text-decoration: none; border-radius: 4px; font-weight: 500; display: inline-block; font-size: 14px;">Confirm Subscription</a>
           </div>
+          <p style="font-size: 14px; color: #666; margin-bottom: 24px;">
+            Or copy and paste this link into your browser: <br>
+            <a href="${verifyUrl}" style="color: #666; text-decoration: underline;">${verifyUrl}</a>
+          </p>
           <p style="color: #666; font-size: 16px; margin-top: 32px;">
             If you didn't request this you can safely ignore this email.
           </p>

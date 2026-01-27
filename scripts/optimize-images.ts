@@ -7,7 +7,7 @@ const MAX_DIMENSION = 1280;
 async function optimizeImages() {
   console.log('🔍 Scanning for images...');
 
-  const files = await glob(['src/**/*.{png,jpg,jpeg,webp}'], {
+  const files = await glob(['src/**/*.{png,jpg,jpeg,webp,gif}'], {
     ignore: ['**/node_modules/**'],
   });
 
@@ -19,7 +19,7 @@ async function optimizeImages() {
 
   for (const file of files) {
     try {
-      const image = sharp(file);
+      const image = sharp(file, { animated: true });
       const metadata = await image.metadata();
 
       if (!metadata.width || !metadata.height) {
@@ -46,6 +46,8 @@ async function optimizeImages() {
           pipeline = pipeline.webp({ quality: 80 });
         } else if (metadata.format === 'avif') {
           pipeline = pipeline.avif({ quality: 80 });
+        } else if (metadata.format === 'gif') {
+          pipeline = pipeline.gif({ effort: 7 }); 
         }
 
         const buffer = await pipeline.toBuffer();

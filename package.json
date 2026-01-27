@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:prod": "tsx scripts/send-newsletter.ts && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "typecheck": "tsc --noEmit",
@@ -24,6 +25,7 @@
     "astro-seo-schema": "^5.1.0",
     "jose": "^6.1.3",
     "resend": "^6.8.0",
+    "rss-parser": "^3.13.0",
     "sass": "^1.97.3",
     "schema-dts": "^1.1.5",
     "sharp": "^0.34.5"
