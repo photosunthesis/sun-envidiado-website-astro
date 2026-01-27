@@ -39,8 +39,6 @@ Enter **Cloudflare Hyperdrive**. It effectively "tricks" the database by holding
 
 I'd _heard_ about serverless before but I never really understood what it meant in practice. Now I get it. These little Workers are like tiny ephemeral functions that materialize when needed, do their job, and poof, gone. No idle servers burning money. And with Cloudflare Hyperdrive bridging Workers to PostgreSQL, I get edge performance without giving up my relational database.
 
-Pretty elegant once you wrap your head around it.
-
 ## Hooks Make Sense Now
 
 I used to look at React code and think hooks were bizarre. `useEffect`, `useState`, `useMutation`, `useWhatever`, it all looked like magic incantations. Why is everything a "use"?
@@ -110,48 +108,56 @@ Cross cutting concerns like file storage and rate limiting live in `src/infrastr
 
 ## Server Functions Are Clean
 
-TanStack Start lets you define server functions that you call from the client like regular functions. The framework handles the network boundary transparently:
+TanStack Start lets you define server functions that you call from the client like regular functions. The framework handles the network boundary transparently.
+
+You can chain middleware (auth, rate limiting), validate inputs with Zod, and access typed context in your handlers. On the client, wrap them with `useServerFn` and integrate with React Query for automatic cache invalidation:
 
 ```typescript
-// Server: Define the function (functions.ts)
+// Server: Define the function (src/domains/ratings/functions/create.ts)
 export const createRatingFn = createServerFn({ method: 'POST' })
-  .middleware([authMiddleware])
+  .middleware([authMiddleware, actionRateLimitMiddleware])
   .inputValidator(createRatingSchema)
   .handler(async ({ data, context }) => {
-    // It runs on the server, so we can talk to the DB directly
+    // It runs on the server, so we can talk to the DB directly (via services)
     const rating = await createRating(context.user.id, data);
     return { success: true, data: rating };
   });
 
-// Client: Consume it via hooks
+// Client: Consume it via hooks (src/domains/ratings/queries/create.ts)
 export function useCreateRatingMutation() {
-  // Wrap it with useServerFn to make it callable
   const createRatingMutationFn = useServerFn(createRatingFn);
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data) => createRatingMutationFn({ data }),
+    mutationFn: (data: CreateRatingInput) => createRatingMutationFn({ data }),
+    onSuccess: (res) => {
+      if (res.success) {
+        queryClient.invalidateQueries({ queryKey: ['ratings'] });
+      }
+    },
   });
 }
 
-// Somewhere in the UI
+// In a component, use the mutation hook
 const { mutate: createRating, isPending } = useCreateRatingMutation();
 
 const handleSubmit = (data) => {
   createRating({
-    stuffId: '...',
-    score: 8,
-    content: 'Pretty good tbh',
+    stuffName: 'Helldivers II',
+    score: 10,
+    content: 'Best horde shooter hands down',
+    tags: ['game', 'gaming'],
   });
 };
 ```
 
-There's no manual fetch and no REST endpoint boilerplate. You just define it, validate with Zod, and call it. Pretty neat!
+There's no manual fetch and no REST endpoint boilerplate. You just define it, validate with Zod, and call it. Neat!
 
 ## Real Time With PartyKit
 
-I wanted votes and comments to update live. PartyKit makes WebSockets trivial because you just define a "party" (essentially a room), and it handles connection management, broadcasting, and state sync for you.
+I use PartyKit for real-time in-app notifications. Specifically, whenever someone leaves a comment on a rating, or upvotes/downvotes a comment or rating, the recipient gets notified instantly.
 
-When someone votes, everyone looking at that rating sees the count change instantly. It makes the app feel alive instead of static.
+PartyKit makes WebSockets trivial because you just define a "party" (essentially a room), and it handles connection management, broadcasting, and state sync for you. It makes the app feel alive instead of static.
 
 ## Edge Rate Limiting
 
