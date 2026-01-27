@@ -31,14 +31,24 @@ async function optimizeImages() {
       if (metadata.width > MAX_DIMENSION || metadata.height > MAX_DIMENSION) {
         console.log(`✨ Optimizing ${file} (${metadata.width}x${metadata.height})...`);
 
-        const buffer = await image
-          .resize({
-            width: MAX_DIMENSION,
-            height: MAX_DIMENSION,
-            fit: 'inside',
-            withoutEnlargement: true,
-          })
-          .toBuffer();
+        let pipeline = image.resize({
+          width: MAX_DIMENSION,
+          height: MAX_DIMENSION,
+          fit: 'inside',
+          withoutEnlargement: true,
+        });
+
+        if (metadata.format === 'jpeg' || metadata.format === 'jpg') {
+          pipeline = pipeline.jpeg({ quality: 80, mozjpeg: true });
+        } else if (metadata.format === 'png') {
+          pipeline = pipeline.png({ quality: 80, compressionLevel: 9 });
+        } else if (metadata.format === 'webp') {
+          pipeline = pipeline.webp({ quality: 80 });
+        } else if (metadata.format === 'avif') {
+          pipeline = pipeline.avif({ quality: 80 });
+        }
+
+        const buffer = await pipeline.toBuffer();
 
         await fs.writeFile(file, new Uint8Array(buffer));
         processedCount++;

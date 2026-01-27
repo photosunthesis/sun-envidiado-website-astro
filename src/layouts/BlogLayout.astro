@@ -36,7 +36,8 @@ if (frontmatter.cover) {
         <div class="cover-image-wrapper">
           <Picture
             src={coverImage}
-            formats={['avif', 'webp']}
+            formats={['webp']}
+            fallbackFormat="jpg"
             alt={frontmatter.coverAlt || 'Cover image'}
           />
         </div>
