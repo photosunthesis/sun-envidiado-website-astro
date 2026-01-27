@@ -66,6 +66,9 @@ importers:
       eslint-plugin-prettier:
         specifier: ^5.5.5
         version: 5.5.5(eslint@9.39.2)(prettier@3.8.1)
+      fast-glob:
+        specifier: ^3.3.3
+        version: 3.3.3
       globals:
         specifier: ^16.5.0
         version: 16.5.0
