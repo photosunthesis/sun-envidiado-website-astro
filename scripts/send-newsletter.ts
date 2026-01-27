@@ -171,8 +171,8 @@ async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
 async function main() {
   console.log('🔍 Checking for new blog posts to announce...');
   
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('⚠️ Not in production. Running in dry-run mode (no emails will be sent).');
+  if (SITE_URL.includes('localhost')) {
+    console.log('⚠️ SITE_URL contains localhost. Running in dry-run mode (no emails will be sent).');
   }
 
   const newBlogs = await getNewBlogs();
@@ -188,7 +188,7 @@ async function main() {
     console.log(`   - ${blog.metadata.title} (${blog.slug})`);
   }
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (SITE_URL.includes('localhost')) {
     console.log('\n🚫 Dry-run finished. No emails sent.');
     return;
   }
