@@ -64,7 +64,7 @@ const jsonLd = {
       <span class="intro-heading">{`Hi! I'm Sun Envidiado.`}</span>
       <span class="intro-body">
         {
-          `I'm a software developer, gamer, and karaoke enthusiast. Welcome to my little corner of the internet where I post about work, life, and everything else.`
+          `I'm a software developer, gamer, and karaoke enthusiast. Welcome to my little corner of the internet where I post about life, work, and everything else.`
         }</span
       >
     </div>
@@ -74,13 +74,8 @@ const jsonLd = {
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
-              <a
-                class="command-action command-hint-action"
-                href="/about"
-                data-command=":about"
-                aria-label="Go to :about"
-              >
-                :about
+              <a class="command-action command-hint-action" href="/about" aria-label="Go to about">
+                about
               </a>
             </span>
           </span>
@@ -93,10 +88,9 @@ const jsonLd = {
               <a
                 class="command-action command-hint-action"
                 href="/contact"
-                data-command=":contact"
-                aria-label="Go to :contact"
+                aria-label="Go to contact"
               >
-                :contact
+                contact
               </a>
             </span>
           </span>
@@ -106,13 +100,8 @@ const jsonLd = {
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
-              <a
-                class="command-action command-hint-action"
-                href="/blog"
-                data-command=":blog"
-                aria-label="Go to :blog"
-              >
-                :blog
+              <a class="command-action command-hint-action" href="/blog" aria-label="Go to blog">
+                blog
               </a>
             </span>
           </span>
@@ -122,13 +111,8 @@ const jsonLd = {
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
-              <a
-                class="command-action command-hint-action"
-                href="/work"
-                data-command=":work"
-                aria-label="Go to :work"
-              >
-                :work
+              <a class="command-action command-hint-action" href="/work" aria-label="Go to work">
+                work
               </a>
             </span>
           </span>
@@ -183,7 +167,7 @@ const jsonLd = {
     grid-template-columns: auto auto auto;
     justify-content: space-between;
     row-gap: 0.25rem;
-    align-items: baseline;
+    align-items: center;
     width: 100%;
 
     @media (min-width: 480px) {
@@ -236,7 +220,7 @@ const jsonLd = {
     color: var(--foreground);
     font-family: inherit;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     flex-wrap: wrap;
     gap: 0.25ch;
     justify-self: start;
@@ -299,6 +283,14 @@ const jsonLd = {
     font-family: inherit;
     white-space: nowrap;
     cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25ch;
+
+    &::after {
+      content: '↗';
+      display: inline-block;
+    }
 
     &:hover,
     &:focus {

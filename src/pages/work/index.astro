@@ -38,48 +38,39 @@ const jsonLd = {
   },
 };
 
-const asciiArtHeader = `
-▗▖ ▗▖ ▗▄▖ ▗▄▄▖ ▗▖ ▗▖
-▐▌ ▐▌▐▌ ▐▌▐▌ ▐▌▐▌▗▞▘
-▐▌ ▐▌▐▌ ▐▌▐▛▀▚▖▐▛▚▖ 
-▐▙█▟▌▝▚▄▞▘▐▌ ▐▌▐▌ ▐▌
-                    
-`;
-
 const experiences = [
   {
     period: 'Jun 2025 — Present',
     company: 'Miquido',
     role: 'Flutter Developer',
-    description: `Building cross-platform apps for fintech and healthcare industries. I integrated AI capabilities into Flutter applications, working with LLM APIs and implementing intelligent features that enhance user experience.`,
+    description: `Cross-platform apps for fintech and healthcare. Integrated LLM APIs and AI features into Flutter applications.`,
   },
   {
     period: 'Nov 2023 — Jun 2025',
     company: 'Nextbank',
     role: 'Flutter Developer',
     description:
-      'Built cross-platform apps for fintech corporations. I developed a custom Flutter plugin for liveness checks for banking apps, blending native iOS and Android code to keep things secure.',
+      'Fintech apps for banking corporations. Built a custom Flutter plugin for liveness checks with native iOS/Android integration.',
   },
   {
     period: 'Aug 2022 — Nov 2023',
     company: 'Hedgehog Lab',
     role: 'Mobile Engineer',
     description:
-      'Worked on mobile apps for the medical and fintech sectors. Here, I built a Flutter plugin for document signing that hooked into native iOS and Android functionality.',
+      'Mobile apps for medical and fintech. Built a Flutter plugin for document signing with native iOS/Android functionality.',
   },
   {
     period: 'Jan 2021 — Aug 2022',
     company: 'CRAFT-TEC Inc.',
     role: 'Software Engineer',
     description:
-      'Led the Flutter team while wearing a few different hats as a full-stack engineer. I built out backend APIs with Laravel and helped mentor other devs on the team.',
+      'Led Flutter team as full-stack engineer. Built backend APIs with Laravel and mentored developers.',
   },
   {
     period: 'Mar 2019 — Jan 2021',
     company: 'Various Organizations',
     role: 'Web Developer',
-    description:
-      'Worked on a bunch of different web projects using everything from Vue and React to .NET and Shopify. This is where I really got comfortable with the web development space.',
+    description: 'Web projects with Vue, React, .NET, and Shopify.',
   },
 ];
 
@@ -90,15 +81,14 @@ const projects = [
     image: rateStuffImage,
     alt: 'Screenshot of rate-stuff.online',
     description:
-      'A side project I built with React and TanStack Start, deployed on Cloudflare Workers. It was my first real deep dive into the React ecosystem and serverless architecture.',
+      'Built with React and TanStack Start, deployed on Cloudflare Workers. My deep dive into React and serverless.',
   },
   {
     title: 'Bebi App',
     url: 'https://github.com/photosunthesis/bebi-app-flutter',
     image: bebiAppImage,
     alt: 'Screenshot of Bebi App',
-    description:
-      'A couples app I made for my girlfriend :D featuring image sharing, a shared calendar, and menstruation cycle tracking. Just a side hobby project I enjoyed building.',
+    description: 'A couples app with image sharing, shared calendar, and cycle tracking.',
   },
   {
     title: 'Haandvaerker.dk',
@@ -106,7 +96,7 @@ const projects = [
     image: haandvaerkerImage,
     alt: 'Screenshot of Haandvaerker.dk',
     description:
-      'A platform connecting homeowners in Denmark with craftsmen. This was the main project I worked on at CRAFT-TEC Inc., where I built both the homeowner and craftsman Flutter apps and helped out with the backend.',
+      'Platform connecting homeowners with craftsmen in Denmark. Built both Flutter apps and contributed to the backend.',
   },
 ];
 ---
@@ -120,18 +110,20 @@ const projects = [
 >
   <div class="work-content">
     <article class="work-article" aria-labelledby="work-title">
-      <pre class="ascii-header-title">{asciiArtHeader}</pre>
+      <div class="back-to-home">
+        <a href="/" aria-label="Go to homepage">← Back to home</a>
+      </div>
+
       <h1 id="work-title" class="sr-only">Work</h1>
 
       <section class="intro-section">
         <p>
-          I've been building software for {years}+ years, starting with web development before
-          shifting to mobile. I currently specialize in Flutter and Dart, creating cross-platform
-          applications for Android, iOS, and Web with attention to both functionality and design.
+          I've been in software for {years}+ years, starting with web before shifting to mobile. I
+          specialize in Flutter and Dart for cross-platform apps on Android, iOS, and Web.
         </p>
         <p>
-          Along the way, I've developed strong skills in JavaScript (React and Vue), PHP (Laravel),
-          C# (.NET), and the Firebase and Cloudflare ecosystems.
+          Along the way, I developed skills in JavaScript (React and Vue), PHP (Laravel), C# (.NET),
+          and the Firebase and Cloudflare ecosystems.
         </p>
         <p>
           You can view my complete resume <a
@@ -184,11 +176,6 @@ const projects = [
           }
         </div>
       </section>
-
-      <footer class="work-footer">
-        To go back to the homepage, tap/type
-        <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
-      </footer>
     </article>
   </div>
 </BaseLayout>
@@ -204,15 +191,6 @@ const projects = [
     @media (max-width: 600px) {
       margin: 1.5rem 0;
       padding: 0 1rem;
-    }
-  }
-
-  .intro-section {
-    margin-bottom: 1.5rem;
-
-    p {
-      line-height: 1.7;
-      margin-bottom: 1rem;
     }
   }
 
@@ -274,9 +252,8 @@ const projects = [
   }
 
   .section-title {
-    font-size: 1.5rem;
     margin-bottom: 0.6rem;
-    margin-top: 2.5rem;
+    margin-top: 1.4rem;
     font-weight: 500;
   }
 
@@ -347,18 +324,5 @@ const projects = [
     color: var(--foreground);
     line-height: 1.6;
     margin: 0;
-  }
-
-  .work-footer {
-    color: var(--comment);
-    white-space: nowrap;
-    overflow-wrap: anywhere;
-    padding-bottom: 3rem;
-    padding-top: 3rem;
-    line-height: 1.5;
-
-    @media (max-width: 480px) {
-      white-space: normal;
-    }
   }
 </style>
