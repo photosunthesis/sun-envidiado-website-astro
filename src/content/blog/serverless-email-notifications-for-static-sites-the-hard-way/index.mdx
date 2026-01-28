@@ -73,7 +73,7 @@ It's essentially a CI/CD pipeline step that acts as my marketing team!
 Of course, it wasn't seamless.
 
 - **Double Builds**: If I run this locally without checks, I casually spam everyone with "Hello World" test posts. So I added a check to only send emails if in production.
-- **Timing**: The email sends _before_ the build finishes. Technically, for a few minutes, the link in the email 404s until Cloudflare swaps the deployment. I call this "building anticipation".
+- **Timing**: The email sends _before_ the build finishes. Technically, for a few minutes, the link in the email 404s until Cloudflare swaps the deployment. I call this "building anticipation" (Update: I fixed this by scheduling the email to send 30 minutes later, so the blog is definitely live by then).
 - **Edits**: If I fix a typo in an old post, I have to make sure the script doesn't think it's "new." The RSS comparison handles this nicely; it only cares about slugs, not content timestamps.
 
 ## Conclusion

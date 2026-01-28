@@ -2,8 +2,8 @@ import 'dotenv/config';
 import fs from 'fs/promises';
 import path from 'path';
 import { Resend } from 'resend';
-import { fileURLToPath } from 'url';
 import Parser from 'rss-parser';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -61,7 +61,7 @@ async function getPublishedBlogs(): Promise<Set<string>> {
   try {
     console.log(`📡 Fetching RSS feed from ${RSS_URL}...`);
     const feed = await parser.parseURL(RSS_URL);
-    
+
     for (const item of feed.items) {
       if (item.link) {
         const urlObj = new URL(item.link);
@@ -73,10 +73,12 @@ async function getPublishedBlogs(): Promise<Set<string>> {
     }
     console.log(`✅ Found ${publishedSlugs.size} published posts in RSS feed.`);
   } catch (error) {
-    console.warn(`⚠️ Could not fetch or parse RSS feed (${RSS_URL}). Assuming this is a first deployment or feed is broken.`);
+    console.warn(
+      `⚠️ Could not fetch or parse RSS feed (${RSS_URL}). Assuming this is a first deployment or feed is broken.`,
+    );
     console.warn(`Details: ${(error as Error).message}`);
   }
-  
+
   return publishedSlugs;
 }
 
@@ -91,7 +93,7 @@ async function getNewBlogs(): Promise<Array<{ slug: string; metadata: BlogMetada
     if (dir.startsWith('.')) continue;
 
     const blogPath = path.join(BLOG_DIR, dir);
-    
+
     try {
       const stats = await fs.stat(blogPath);
       if (!stats.isDirectory()) continue;
@@ -153,13 +155,14 @@ async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
   `;
 
   console.log(`   ✉️ Sending email for: ${blog.metadata.title}`);
-  
+
   const { data, error } = await resend.broadcasts.create({
     segmentId: BLOG_SEGMENT_ID!,
     from: `Sun Envidiado's Blogs <blogs@sun-envidiado.com>`,
     subject: `${blog.metadata.title} – Sun Envidiado`,
     html: emailHtml,
     name: blog.metadata.title,
+    scheduledAt: new Date(Date.now() + 1000 * 60 * 30).toISOString(),
     send: true,
   });
 
@@ -170,9 +173,11 @@ async function sendNewsletter(blog: { slug: string; metadata: BlogMetadata }) {
 
 async function main() {
   console.log('🔍 Checking for new blog posts to announce...');
-  
+
   if (SITE_URL.includes('localhost')) {
-    console.log('⚠️ SITE_URL contains localhost. Running in dry-run mode (no emails will be sent).');
+    console.log(
+      '⚠️ SITE_URL contains localhost. Running in dry-run mode (no emails will be sent).',
+    );
   }
 
   const newBlogs = await getNewBlogs();
