@@ -13,16 +13,24 @@ export const GET: APIRoute = async (context) => {
   );
 
   const items = [];
+  const siteUrl = context.site?.toString().replace(/\/+$/, '') || 'https://sun-envidiado.com';
+
   for (const post of posts) {
     const { Content } = await render(post);
     const content = await container.renderToString(Content);
+
+    const cleanContent = content
+      .replace(/<picture[^>]*>/g, '')
+      .replace(/<\/picture>/g, '')
+      .replace(/<source[^>]*>/g, '')
+      .replace(/src="\/([^"]+)"/g, `src="${siteUrl}/$1"`)
+      .replace(/href="\/([^"]+)"/g, `href="${siteUrl}/$1"`)
+      .replace(/srcset="\/([^"]+)"/g, `srcset="${siteUrl}/$1"`);
+
     items.push({
       ...post.data,
       link: `/blog/${post.slug}`,
-      content: content
-        .replaceAll('src="/', `src="${context.site}/`)
-        .replaceAll('href="/', `href="${context.site}/`)
-        .replaceAll('srcset="/', `srcset="${context.site}/`),
+      content: cleanContent,
       pubDate: post.data.pubDate,
     });
   }

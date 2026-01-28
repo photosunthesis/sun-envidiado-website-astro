@@ -26,7 +26,7 @@ const kaomoji = kaomojis[Math.floor(Math.random() * kaomojis.length)];
 
 // SEO metadata
 const seoMeta = {
-  title: 'Page Not Found',
+  title: 'Error 404 - Page Not Found',
   description: 'The page you are looking for does not exist.',
   noIndex: true,
 };
@@ -35,18 +35,15 @@ const seoMeta = {
 <BaseLayout title={seoMeta.title} description={seoMeta.description} noIndex={seoMeta.noIndex}>
   <div class="not-found-container">
     <h1 id="404-heading" class="not-found-heading">
-      Error 404
       <i class="not-found-kaomoji">{kaomoji}</i>
     </h1>
 
     <p class="not-found-message" role="status" aria-live="polite" aria-labelledby="404-heading">
-      The page you're looking for doesn't exist. Double-check the URL — it may be a typo, or the
-      page could have been removed.
+      The page you're looking for doesn't exist. Double-check the URL; it may be a typo, or the page
+      could have been removed.
     </p>
     <p class="not-found-end">
-      Tap/type
-      <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>
-      to go back to the homepage.
+      <a href="/" aria-label="Go to homepage">← Back to homepage</a>
     </p>
   </div>
 </BaseLayout>
@@ -54,11 +51,11 @@ const seoMeta = {
 <style lang="scss">
   .not-found-heading {
     font-size: 2rem;
-    color: var(--purple);
+    color: var(--cyan);
   }
 
   .not-found-kaomoji {
-    color: var(--comment);
+    color: var(--code-fg);
     font-style: normal;
     padding-left: 0.5rem;
     font-size: 1.8rem;
@@ -69,15 +66,18 @@ const seoMeta = {
   }
 
   .not-found-container {
-    max-width: 600px;
-    margin: 1.5rem;
+    max-width: 480px;
     color: var(--foreground);
     text-align: left;
-    padding: 2rem;
   }
 
-  .not-found-end {
-    color: var(--comment);
+  .not-found-end a {
+    color: var(--cyan);
     margin-bottom: 1rem;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 </style>

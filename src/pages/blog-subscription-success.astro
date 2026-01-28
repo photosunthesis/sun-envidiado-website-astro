@@ -10,50 +10,49 @@ const seoMeta = {
 
 <BaseLayout title={seoMeta.title} description={seoMeta.description}>
   <div class="success-content">
-    <h2 class="success-title">Subscription Confirmed!</h2>
+    <h2 class="success-title">(￣▽￣)／</h2>
     <p class="success-message">
-      Thank you for subscribing. You'll receive updates when I post new content.
+      Subscription confirmed; you'll be notified via email whenever I publish a new blog.
     </p>
     <footer class="success-footer">
-      To go to the homepage, type/tap
-      <a href="/" aria-label="Go to homepage">:home&lt;Enter&gt;</a>.
+      <a href="/" aria-label="Go to homepage">← Back to homepage</a>
     </footer>
   </div>
 </BaseLayout>
 
 <style lang="scss">
   .success-content {
-    max-width: 600px;
+    max-width: 480px;
     margin: 1.5rem;
     color: var(--foreground);
     text-align: left;
     padding: 0 1rem;
 
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       margin: 1.5rem 0;
       padding: 0 1rem;
     }
   }
 
   .success-title {
-    color: var(--purple);
-    margin-bottom: 1rem;
+    color: var(--code-fg);
+    font-style: normal;
+    font-size: 1.8rem;
   }
 
   .success-message {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
-  .success-footer {
-    color: var(--comment);
+  .success-footer a {
+    color: var(--cyan);
     white-space: nowrap;
     overflow-wrap: anywhere;
-    padding-bottom: 3rem;
     padding-top: 1rem;
     line-height: 1.5;
 
-    @media (max-width: 480px) {
-      white-space: normal;
+    &:hover {
+      text-decoration: underline;
     }
   }
 </style>
