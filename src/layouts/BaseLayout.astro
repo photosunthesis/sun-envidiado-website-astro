@@ -1,5 +1,5 @@
 ---
-import { Seo } from 'astro-seo-meta';
+import { SEO } from 'astro-seo';
 import { Schema } from 'astro-seo-schema';
 import '../styles/main.scss';
 import { buildSEOMetadata, SITE_CONFIG } from '../utils/seo';
@@ -19,54 +19,62 @@ const jsonLd = frontmatter.jsonLd || null;
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <Seo
+    <SEO
+      charset="utf-8"
       title={seo.title}
       description={seo.description}
-      keywords={seo.tags}
-      icon="/favicon-32x32.png"
-      themeColor="#000000"
-      colorScheme={'light dark' as any}
-      robots={seo.noIndex ? 'noindex, nofollow' : 'index, follow'}
-      facebook={{
-        image: seo.imageUrl,
-        url: seo.canonical,
-        type: seo.type as any,
+      canonical={seo.canonical}
+      noindex={seo.noIndex}
+      nofollow={seo.noIndex}
+      openGraph={{
+        basic: {
+          title: seo.title,
+          type: seo.type,
+          image: seo.imageUrl,
+          url: seo.canonical,
+        },
+        image: {
+          alt: seo.title,
+        },
+        optional: {
+          description: seo.description,
+          siteName: SITE_CONFIG.siteName,
+        },
+        article: {
+          publishedTime: seo.pubDate,
+          authors: seo.author ? [seo.author] : undefined,
+          tags: seo.tags,
+        },
       }}
       twitter={{
-        image: seo.imageUrl,
         card: seo.imageUrl ? 'summary_large_image' : 'summary',
+        image: seo.imageUrl,
+        title: seo.title,
+        description: seo.description,
+      }}
+      extend={{
+        link: [
+          { rel: 'icon', href: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+          { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+          { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
+          { rel: 'manifest', href: '/site.webmanifest' },
+          { rel: 'sitemap', href: '/sitemap-index.xml' },
+          {
+            rel: 'preload',
+            href: '/fonts/Web437_ToshibaSat_8x14.woff2',
+            as: 'font',
+            type: 'font/woff2',
+            crossorigin: '',
+          },
+        ],
+        meta: [
+          { name: 'theme-color', content: '#09090b' },
+          { name: 'color-scheme', content: 'light dark' },
+          { name: 'author', content: seo.author || SITE_CONFIG.authorName },
+          { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        ],
       }}
     />
-
-    <link rel="canonical" href={seo.canonical} />
-    <meta name="author" content={seo.author || SITE_CONFIG.authorName} />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-
-    {seo.pubDate && <meta property="article:published_time" content={seo.pubDate} />}
-    {seo.author && <meta property="article:author" content={seo.author} />}
-    {
-      seo.tags &&
-        Array.isArray(seo.tags) &&
-        seo.tags.length > 0 &&
-        seo.tags.map((tag: string) => <meta property="article:tag" content={tag} />)
-    }
-
-    <meta property="og:site_name" content={SITE_CONFIG.siteName} />
-
-    <slot name="seo" />
-
-    <link
-      rel="preload"
-      href="/fonts/Web437_ToshibaSat_8x14.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
 
     {jsonLd && <Schema item={jsonLd} />}
 
