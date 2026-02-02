@@ -1,4 +1,5 @@
 ---
+import SEO from '../components/SEO.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const seoMeta = {
@@ -8,7 +9,8 @@ const seoMeta = {
 };
 ---
 
-<BaseLayout title={seoMeta.title} description={seoMeta.description}>
+<BaseLayout>
+  <SEO slot="head" title={seoMeta.title} description={seoMeta.description} />
   <div class="success-content">
     <h2 class="success-title">(￣▽￣)／</h2>
     <p class="success-message">

@@ -1,8 +1,8 @@
 ---
+import SEO from '../components/SEO.astro';
 import SpinningSunAsciiArt from '../components/SpinningSunAsciiArt.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-// SEO-optimized metadata
 const seoMeta = {
   title: 'Sun Envidiado',
   description:
@@ -10,7 +10,6 @@ const seoMeta = {
   tags: ['sun envidiado', 'personal website', 'developer blog', 'gaming', 'coding', 'manila'],
 };
 
-// JSON-LD Structured Data for better SEO
 const siteBase = Astro.site ?? 'https://sun-envidiado.com';
 const imageUrl = new URL('/default.png', siteBase).toString();
 
@@ -53,13 +52,14 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout
-  title={seoMeta.title}
-  description={seoMeta.description}
-  tags={seoMeta.tags}
-  type="website"
-  jsonLd={jsonLd}
->
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={seoMeta.title}
+    description={seoMeta.description}
+    type="website"
+    jsonLd={jsonLd}
+  />
   <div class="index-main-content">
     <SpinningSunAsciiArt />
     <div class="intro-container">

@@ -1,6 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import BackButton from '../../components/BackButton.astro';
+import SEO from '../../components/SEO.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import bebiAppImage from './_assets/bebi-app.png';
 import haandvaerkerImage from './_assets/haandvaerker-dk.png';
@@ -102,13 +103,14 @@ const projects = [
 ];
 ---
 
-<BaseLayout
-  title={seoMeta.title}
-  description={seoMeta.description}
-  tags={seoMeta.tags}
-  type="website"
-  jsonLd={jsonLd}
->
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={seoMeta.title}
+    description={seoMeta.description}
+    type="website"
+    jsonLd={jsonLd}
+  />
   <div class="work-content">
     <article class="work-article" aria-labelledby="work-title">
       <BackButton />

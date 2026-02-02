@@ -1,6 +1,7 @@
 ---
 import BackButton from '../../components/BackButton.astro';
 import Newsletter from '../../components/Newsletter.astro';
+import SEO from '../../components/SEO.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 import { getCollection } from 'astro:content';
@@ -69,13 +70,14 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout
-  title={seoMeta.title}
-  description={seoMeta.description}
-  tags={seoMeta.tags}
-  type="website"
-  jsonLd={jsonLd}
->
+<BaseLayout>
+  <SEO
+    slot="head"
+    title={seoMeta.title}
+    description={seoMeta.description}
+    type="website"
+    jsonLd={jsonLd}
+  />
   <div class="blog-content">
     <header class="blog-header">
       <h1 id="blog-title" class="sr-only">Blog</h1>

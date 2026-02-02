@@ -1,0 +1,100 @@
+---
+import { SEO as AstroSEO } from 'astro-seo';
+import { Schema } from 'astro-seo-schema';
+import { SITE_CONFIG, generateCanonicalUrl, generateImageUrl } from '../utils/seo';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+  noIndex?: boolean;
+  type?: 'website' | 'article';
+  pubDate?: string;
+  author?: string;
+  tags?: string[];
+  jsonLd?: Record<string, unknown>;
+}
+
+const {
+  title = SITE_CONFIG.siteName,
+  description = SITE_CONFIG.defaultDescription,
+  image,
+  canonical,
+  noIndex = false,
+  type = 'website',
+  pubDate,
+  author,
+  tags = [],
+  jsonLd,
+} = Astro.props;
+
+const canonicalUrl = canonical?.startsWith('http')
+  ? canonical
+  : generateCanonicalUrl(canonical || Astro.url.pathname, Astro.site);
+
+const imageUrl = image?.startsWith('http')
+  ? image
+  : generateImageUrl(image || SITE_CONFIG.defaultImage, Astro.site);
+
+const finalAuthor = author || (pubDate ? SITE_CONFIG.authorName : undefined);
+---
+
+<AstroSEO
+  charset="utf-8"
+  title={title}
+  description={description}
+  canonical={canonicalUrl}
+  noindex={noIndex}
+  nofollow={noIndex}
+  openGraph={{
+    basic: {
+      title: title,
+      type: type,
+      image: imageUrl,
+      url: canonicalUrl,
+    },
+    image: {
+      alt: title,
+    },
+    optional: {
+      description: description,
+      siteName: SITE_CONFIG.siteName,
+    },
+    article: {
+      publishedTime: pubDate,
+      authors: finalAuthor ? [finalAuthor] : undefined,
+      tags: tags,
+    },
+  }}
+  twitter={{
+    card: imageUrl ? 'summary_large_image' : 'summary',
+    image: imageUrl,
+    title: title,
+    description: description,
+  }}
+  extend={{
+    link: [
+      { rel: 'icon', href: '/favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+      { rel: 'icon', href: '/favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png', sizes: '180x180' },
+      { rel: 'manifest', href: '/site.webmanifest' },
+      { rel: 'sitemap', href: '/sitemap-index.xml' },
+      {
+        rel: 'preload',
+        href: '/fonts/Web437_ToshibaSat_8x14.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: '',
+      },
+    ],
+    meta: [
+      { name: 'theme-color', content: '#09090b' },
+      { name: 'color-scheme', content: 'light dark' },
+      { name: 'author', content: finalAuthor || SITE_CONFIG.authorName },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+    ],
+  }}
+/>
+
+{jsonLd && <Schema item={jsonLd as any} />}
