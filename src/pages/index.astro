@@ -48,6 +48,12 @@ const jsonLd = {
       ],
       sameAs: ['https://github.com/photosunthesis', 'https://www.linkedin.com/in/sunenvidiado/'],
     },
+    {
+      '@type': 'SiteNavigationElement',
+      '@id': `${siteBase}/#navigation`,
+      name: ['Blog', 'About', 'Contact', 'Work'],
+      url: [`${siteBase}/blog`, `${siteBase}/about`, `${siteBase}/contact`, `${siteBase}/work`],
+    },
   ],
 };
 ---
@@ -72,8 +78,8 @@ const jsonLd = {
       >
     </div>
     <nav class="command-hints-container" aria-label="Quick commands">
-      <div class="command-hints-grid">
-        <div class="command-hint-row">
+      <ul class="command-hints-grid">
+        <li class="command-hint-row">
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
@@ -83,9 +89,9 @@ const jsonLd = {
             </span>
           </span>
           <span class="command-hint-description">to check my latest posts.</span>
-        </div>
+        </li>
 
-        <div class="command-hint-row">
+        <li class="command-hint-row">
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
@@ -95,9 +101,9 @@ const jsonLd = {
             </span>
           </span>
           <span class="command-hint-description">to learn more about me.</span>
-        </div>
+        </li>
 
-        <div class="command-hint-row">
+        <li class="command-hint-row">
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
@@ -111,9 +117,9 @@ const jsonLd = {
             </span>
           </span>
           <span class="command-hint-description">to get in touch.</span>
-        </div>
+        </li>
 
-        <div class="command-hint-row">
+        <li class="command-hint-row">
           <span class="command-hint-type">Go to</span>
           <span class="command-hint-command">
             <span class="command-action-group">
@@ -123,8 +129,8 @@ const jsonLd = {
             </span>
           </span>
           <span class="command-hint-description">for my work details.</span>
-        </div>
-      </div>
+        </li>
+      </ul>
     </nav>
   </div>
 </BaseLayout>
@@ -175,6 +181,9 @@ const jsonLd = {
     row-gap: 0.25rem;
     align-items: center;
     width: 100%;
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove default padding */
+    margin: 0; /* Remove default margin */
 
     @media (min-width: 480px) {
       gap: 0.75rem 0.1ch;
