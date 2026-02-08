@@ -8,9 +8,9 @@ import { defineConfig } from 'astro/config';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://sun-envidiado.com',
-  trailingSlash: 'always',
+  trailingSlash: 'never',
   build: {
-    format: 'directory',
+    format: 'file',
   },
   adapter: cloudflare({
     imageService: 'compile',
