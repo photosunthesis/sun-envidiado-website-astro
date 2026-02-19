@@ -6,12 +6,39 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const seoMeta = {
   title: 'Sun Envidiado',
   description:
-    "I'm a software developer, gamer, and karaoke enthusiast. This site—and all my ramblings in it—is the consequence of unsupervised internet access and a text editor.",
+    "I'm a software developer, gamer, and karaoke enthusiast. Welcome to my little corner of the internet. Expect code, games, and unsolicited opinions.",
   tags: ['sun envidiado', 'personal website', 'developer blog', 'gaming', 'coding', 'manila'],
 };
 
 const siteBase = Astro.site ?? 'https://sun-envidiado.com';
 const imageUrl = new URL('/default.png', siteBase).toString();
+
+const commands = [
+  {
+    type: 'Go to',
+    action: 'blog',
+    url: '/blog',
+    description: 'to check my latest posts.',
+  },
+  {
+    type: 'Go to',
+    action: 'about',
+    url: '/about',
+    description: 'to learn more about me.',
+  },
+  {
+    type: 'Go to',
+    action: 'contact',
+    url: '/contact',
+    description: 'to get in touch.',
+  },
+  {
+    type: 'Go to',
+    action: 'work',
+    url: '/work',
+    description: 'for my work details.',
+  },
+];
 
 const jsonLd = {
   '@context': 'https://schema.org',
@@ -71,65 +98,29 @@ const jsonLd = {
     <div class="intro-container">
       <h1 class="sr-only">{seoMeta.title}</h1>
       <span class="intro-heading">{`Hi! I'm Sun Envidiado.`}</span>
-      <span class="intro-body">
-        {
-          `I'm a software developer, gamer, and karaoke enthusiast. This site—and all my ramblings in it—is the consequence of unsupervised internet access and a text editor.`
-        }</span
-      >
+      <span class="intro-body"> {seoMeta.description}</span>
     </div>
     <nav class="command-hints-container" aria-label="Quick commands">
       <ul class="command-hints-grid">
-        <li class="command-hint-row">
-          <span class="command-hint-type">Go to</span>
-          <span class="command-hint-command">
-            <span class="command-action-group">
-              <a class="command-action command-hint-action" href="/blog" aria-label="Go to blog">
-                blog
-              </a>
-            </span>
-          </span>
-          <span class="command-hint-description">to check my latest posts.</span>
-        </li>
-
-        <li class="command-hint-row">
-          <span class="command-hint-type">Go to</span>
-          <span class="command-hint-command">
-            <span class="command-action-group">
-              <a class="command-action command-hint-action" href="/about" aria-label="Go to about">
-                about
-              </a>
-            </span>
-          </span>
-          <span class="command-hint-description">to learn more about me.</span>
-        </li>
-
-        <li class="command-hint-row">
-          <span class="command-hint-type">Go to</span>
-          <span class="command-hint-command">
-            <span class="command-action-group">
-              <a
-                class="command-action command-hint-action"
-                href="/contact"
-                aria-label="Go to contact"
-              >
-                contact
-              </a>
-            </span>
-          </span>
-          <span class="command-hint-description">to get in touch.</span>
-        </li>
-
-        <li class="command-hint-row">
-          <span class="command-hint-type">Go to</span>
-          <span class="command-hint-command">
-            <span class="command-action-group">
-              <a class="command-action command-hint-action" href="/work" aria-label="Go to work">
-                work
-              </a>
-            </span>
-          </span>
-          <span class="command-hint-description">for my work details.</span>
-        </li>
+        {
+          commands.map((cmd) => (
+            <li class="command-hint-row">
+              <span class="command-hint-type">{cmd.type}</span>
+              <span class="command-hint-command">
+                <span class="command-action-group">
+                  <a
+                    class="command-action command-hint-link"
+                    href={cmd.url}
+                    aria-label={`${cmd.type} ${cmd.action}`}
+                  >
+                    :{cmd.action}
+                  </a>
+                </span>
+              </span>
+              <span class="command-hint-description">{cmd.description}</span>
+            </li>
+          ))
+        }
       </ul>
     </nav>
   </div>
@@ -196,6 +187,7 @@ const jsonLd = {
 
   .command-hint-row {
     display: contents;
+    line-height: 1.2;
 
     @media (max-width: 480px) {
       display: block;
@@ -288,7 +280,7 @@ const jsonLd = {
     }
   }
 
-  .command-hint-action {
+  .command-hint-link {
     color: var(--cyan);
     text-decoration: none;
     background: transparent;
@@ -301,11 +293,6 @@ const jsonLd = {
     display: inline-flex;
     align-items: center;
     gap: 0.25ch;
-
-    &::after {
-      content: '↗';
-      display: inline-block;
-    }
 
     &:hover,
     &:focus {

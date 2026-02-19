@@ -42,10 +42,10 @@ body {
 
 * {
   box-sizing: border-box;
-  font-size: 1.069rem;
+  font-size: 18px;
 
   @media (max-width: 480px) {
-    font-size: 1rem;
+    font-size: 16px;
   }
 }
 
@@ -283,27 +283,27 @@ $crt-blue: rgb(40, 129, 206);
   }
 }
 
-$rgb-offset: 2px;
+$rgb-offset: 1px;
 
 /* Apply chromatic fringe on fonts site-wide */
 body .content-wrapper,
 body .content-wrapper * {
   -webkit-font-smoothing: antialiased;
   text-shadow:
-    $rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.14),
-    -$rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.26),
-    0 $rgb-offset $crt-ca-blur rgba($crt-blue, 0.26),
-    0 0 0.35px rgba(0, 0, 0, 0.1);
+    $rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.08),
+    -$rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.12),
+    0 $rgb-offset $crt-ca-blur rgba($crt-blue, 0.12),
+    0 0 0.35px rgba(0, 0, 0, 0.05);
   filter: contrast(1.02);
 
   @media (max-width: 480px) {
-    $mobile-rgb-offset: 1px;
+    $mobile-rgb-offset: 0.5px;
 
     text-shadow:
-      $mobile-rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.14),
-      -$mobile-rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.26),
-      0 $mobile-rgb-offset $crt-ca-blur rgba($crt-blue, 0.26),
-      0 0 0.35px rgba(0, 0, 0, 0.1);
+      $mobile-rgb-offset 0 $crt-ca-blur rgba($crt-red, 0.08),
+      -$mobile-rgb-offset 0 $crt-ca-blur rgba($crt-green, 0.12),
+      0 $mobile-rgb-offset $crt-ca-blur rgba($crt-blue, 0.12),
+      0 0 0.35px rgba(0, 0, 0, 0.05);
   }
 }
 
